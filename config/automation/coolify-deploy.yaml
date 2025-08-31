@@ -1,0 +1,210 @@
+# Конфигурация автоматического деплоя через Coolify
+# Этот файл содержит настройки для автоматического развертывания
+# персональной системы при изменениях в Git репозитории
+
+# Основные настройки проекта
+project:
+  name: "personal-system"
+  description: "Персональная система управления жизнью и проектами"
+  repository: "gitea-personal:username/personal-system.git"
+  branch: "main"
+  
+# Настройки деплоя
+deploy:
+  # Автоматический деплой при push в main ветку
+  auto_deploy: true
+  auto_deploy_branches: ["main"]
+  
+  # Настройки webhook
+  webhook:
+    enabled: true
+    secret: "${WEBHOOK_SECRET}"  # Переменная окружения
+    events: ["push", "pull_request"]
+    
+  # Настройки сборки
+  build:
+    # Команды для подготовки к деплою
+    pre_build:
+      - "echo 'Подготовка к деплою...'"
+      - "chmod +x automation/scripts/custom/*.sh"
+    
+    # Основная команда сборки
+    build_command: "echo 'Сборка завершена'"
+    
+    # Команды после сборки
+    post_build:
+      - "echo 'Деплой завершен'"
+      - "echo 'Система обновлена'"
+
+# Настройки окружения
+environment:
+  # Переменные окружения для деплоя
+  variables:
+    NODE_ENV: "production"
+    GITEA_URL: "https://git.yourdomain.com"
+    COOLIFY_URL: "https://your-coolify-server.com"
+    
+  # Файлы конфигурации
+  config_files:
+    - "config/global/preferences.yaml"
+    - "config/automation/*.yaml"
+
+# Настройки мониторинга
+monitoring:
+  # Уведомления о статусе деплоя
+  notifications:
+    email: "${ADMIN_EMAIL}"
+    slack: "${SLACK_WEBHOOK}"
+    
+  # Логирование
+  logging:
+    level: "info"
+    retention_days: 30
+    
+  # Проверки здоровья системы
+  health_checks:
+    - url: "/health"
+      timeout: 30
+      interval: 300
+
+# Настройки безопасности
+security:
+  # Ограничения доступа
+  access_control:
+    allowed_ips: []
+    require_authentication: true
+    
+  # Шифрование
+  encryption:
+    sensitive_files: true
+    key_rotation: "monthly"
+    
+  # Аудит
+  audit:
+    enabled: true
+    log_all_actions: true
+
+# Настройки резервного копирования
+backup:
+  # Автоматическое резервное копирование
+  auto_backup: true
+  backup_schedule: "0 2 * * *"  # Каждый день в 2:00
+  
+  # Хранение резервных копий
+  retention:
+    daily: 7
+    weekly: 4
+    monthly: 12
+    
+  # Локация резервных копий
+  storage:
+    type: "local"  # или "s3", "gcs"
+    path: "/backups/personal-system"
+
+# Настройки масштабирования
+scaling:
+  # Автоматическое масштабирование
+  auto_scaling: false
+  
+  # Лимиты ресурсов
+  resources:
+    cpu_limit: "1"
+    memory_limit: "1Gi"
+    storage_limit: "10Gi"
+    
+  # Реплики
+  replicas:
+    min: 1
+    max: 3
+    target: 1
+
+# Настройки обновлений
+updates:
+  # Стратегия обновлений
+  strategy: "rolling"  # rolling, recreate, blue-green
+  
+  # Автоматические обновления
+  auto_update: false
+  
+  # Время обновлений
+  maintenance_window:
+    start: "02:00"
+    duration: "2h"
+    timezone: "Europe/Moscow"
+
+# Настройки интеграций
+integrations:
+  # Интеграция с Gitea
+  gitea:
+    enabled: true
+    webhook_url: "${GITEA_WEBHOOK_URL}"
+    
+  # Интеграция с мониторингом
+  monitoring:
+    - name: "uptime"
+      type: "http"
+      url: "/health"
+      
+  # Интеграция с логированием
+  logging:
+    - name: "centralized_logs"
+      type: "syslog"
+      endpoint: "${LOG_ENDPOINT}"
+
+# Настройки уведомлений
+notifications:
+  # Каналы уведомлений
+  channels:
+    email:
+      enabled: true
+      recipients: ["${ADMIN_EMAIL}"]
+      
+    slack:
+      enabled: false
+      webhook: "${SLACK_WEBHOOK}"
+      
+    telegram:
+      enabled: false
+      bot_token: "${TELEGRAM_BOT_TOKEN}"
+      chat_id: "${TELEGRAM_CHAT_ID}"
+      
+  # События для уведомлений
+  events:
+    - "deploy_started"
+    - "deploy_success"
+    - "deploy_failed"
+    - "health_check_failed"
+    - "backup_completed"
+    - "backup_failed"
+
+# Настройки документации
+documentation:
+  # Автоматическая генерация документации
+  auto_generate: true
+  
+  # Форматы документации
+  formats:
+    - "markdown"
+    - "html"
+    - "pdf"
+    
+  # Обновление документации
+  update_schedule: "0 3 * * *"  # Каждый день в 3:00
+
+# Комментарии и заметки
+notes: |
+  Этот файл конфигурации используется Coolify для автоматического деплоя
+  персональной системы. Все переменные в формате ${VARIABLE_NAME} должны
+  быть определены в переменных окружения Coolify.
+  
+  Для изменения настроек:
+  1. Отредактируйте этот файл
+  2. Закоммитьте изменения
+  3. Запушьте в репозиторий
+  4. Coolify автоматически применит изменения
+  
+  Важные моменты:
+  - Убедитесь, что все секретные данные хранятся в переменных окружения
+  - Регулярно проверяйте логи деплоя
+  - Настройте мониторинг и уведомления
+  - Планируйте резервное копирование

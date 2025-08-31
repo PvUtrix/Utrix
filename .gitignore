@@ -1,41 +1,58 @@
-# Privacy Protection
-privacy/local/
-**/.private/
-*.secret
-*.key
-*.env
-
-# Logs
+# Логи
 logs/
 *.log
 
-# Personal sensitive data
-core/identity/.private/
-domains/*/data/sensitive/
-domains/*/.private/
+# Конфиденциальные данные
+privacy/
+config/global/preferences.yaml
 
-# System files
-.DS_Store
-Thumbs.db
+# Временные файлы
 *.tmp
 *.temp
-*.cache
+.DS_Store
+Thumbs.db
+
+# Автоматизация
+automation/scripts/custom/*.pyc
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Локальные настройки
+.env
+.env.local
+.env.*.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.Python
-env/
-venv/
-
-# Backups
-*.backup
-*.bak
 *~
+
+# Системные файлы
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Временные файлы
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Локальные конфигурации
+config/local/
+*.local.yaml
+*.local.yml
