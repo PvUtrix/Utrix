@@ -1,0 +1,70 @@
+# Global System Preferences
+
+system:
+  theme: light  # light/dark/auto
+  language: en
+  timezone: UTC
+  date_format: YYYY-MM-DD
+  time_format: 24h  # 12h/24h
+
+privacy:
+  default_privacy_level: private  # public/private/encrypted
+  auto_encrypt: false
+  backup_encrypted: true
+  clear_clipboard: true
+  session_timeout: 30  # minutes
+
+automation:
+  enable_scripts: true
+  morning_routine: true
+  evening_routine: true
+  weekly_review: true
+  auto_backup: true
+  backup_frequency: daily  # hourly/daily/weekly
+
+notifications:
+  enable: true
+  daily_review: "20:00"
+  weekly_review: "Sunday 10:00"
+  task_reminders: true
+  goal_check_ins: weekly
+
+ai_assistance:
+  enable: true
+  context_aware: true
+  learn_from_usage: false
+  suggestion_level: moderate  # minimal/moderate/maximum
+  privacy_mode: strict  # strict/balanced/permissive
+
+integrations:
+  calendar:
+    enabled: false
+    provider: none  # google/outlook/apple
+  task_manager:
+    enabled: false
+    provider: none  # todoist/notion/asana
+  note_taking:
+    enabled: false
+    provider: none  # obsidian/notion/roam
+
+defaults:
+  editor: vscode  # vscode/vim/emacs/nano
+  browser: default
+  terminal: default
+  file_manager: default
+
+performance:
+  cache_enabled: true
+  cache_size: 100  # MB
+  history_limit: 1000  # entries
+  log_level: info  # debug/info/warning/error
+
+backup:
+  local:
+    enabled: true
+    path: ~/backups/personal-system
+    retention_days: 30
+  cloud:
+    enabled: false
+    provider: none  # dropbox/gdrive/onedrive
+    encrypt_before_upload: true

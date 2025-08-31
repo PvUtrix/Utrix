@@ -1,0 +1,19 @@
+# Global Cursor AI Rules
+
+## Core Principles
+- Always prioritize user privacy and data security
+- Provide clear, actionable suggestions
+- Respect the domain context when providing assistance
+- Never expose sensitive information in responses
+- Validate all data modifications before execution
+
+## Response Guidelines
+- Be concise but comprehensive
+- Suggest templates when appropriate
+- Cross-reference related domains when relevant
+- Maintain consistency with existing patterns
+
+## Privacy Rules
+- Never process files in .private/ directories
+- Mask sensitive data in examples
+- Remind users about privacy best practices

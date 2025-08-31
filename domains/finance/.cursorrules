@@ -1,0 +1,18 @@
+# Finance Domain Cursor Rules
+
+## Security Critical
+- Never display actual financial numbers
+- Use example amounts only
+- Mask account numbers always
+- Remind about financial security
+
+## Financial Guidance
+- Provide general financial principles
+- No specific investment advice
+- Reference official sources
+- Suggest professional consultation
+
+## Privacy Protection
+- Keep all financial data in .private/
+- Encrypt sensitive information
+- Use secure backup methods

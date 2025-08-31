@@ -1,0 +1,41 @@
+# Privacy Protection
+privacy/local/
+**/.private/
+*.secret
+*.key
+*.env
+
+# Logs
+logs/
+*.log
+
+# Personal sensitive data
+core/identity/.private/
+domains/*/data/sensitive/
+domains/*/.private/
+
+# System files
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+
+# Backups
+*.backup
+*.bak
+*~
