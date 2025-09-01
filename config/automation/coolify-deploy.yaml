@@ -44,6 +44,13 @@ environment:
     GITEA_URL: "https://git.yourdomain.com"
     COOLIFY_URL: "https://your-coolify-server.com"
     
+    # Настройки единой базы данных
+    DB_HOST: "${SHARED_DB_HOST}"
+    DB_PORT: "${SHARED_DB_PORT:-5432}"
+    DB_NAME: "${SHARED_DB_NAME:-personal_system_db}"
+    DB_USER: "${SHARED_DB_USER}"
+    DB_PASSWORD: "${SHARED_DB_PASSWORD}"
+    
   # Файлы конфигурации
   config_files:
     - "config/global/preferences.yaml"
@@ -197,6 +204,10 @@ notes: |
   персональной системы. Все переменные в формате ${VARIABLE_NAME} должны
   быть определены в переменных окружения Coolify.
   
+  ВАЖНО: Настроена для использования ЕДИНОЙ базы данных PostgreSQL
+  для всех сервисов. Убедитесь, что переменные SHARED_DB_* настроены
+  в Coolify для подключения к общей базе данных.
+  
   Для изменения настроек:
   1. Отредактируйте этот файл
   2. Закоммитьте изменения
@@ -208,3 +219,4 @@ notes: |
   - Регулярно проверяйте логи деплоя
   - Настройте мониторинг и уведомления
   - Планируйте резервное копирование
+  - Используйте единую базу данных для всех сервисов

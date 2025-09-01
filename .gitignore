@@ -56,3 +56,4 @@ Thumbs.db
 config/local/
 *.local.yaml
 *.local.yml
+projects/git-server/

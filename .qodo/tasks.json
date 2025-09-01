@@ -1,0 +1,112 @@
+{
+  "tasks": [
+    {
+      "id": "setup_openai_whisper",
+      "content": "Set up OpenAI Whisper for voice message transcription",
+      "status": "pending",
+      "priority": "medium",
+      "category": "Features",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Configure OpenAI API and implement Whisper for voice message transcription in the Telegram bot",
+      "estimated_effort": "2-3 hours",
+      "dependencies": ["add_openai_api_key"]
+    },
+    {
+      "id": "implement_voice_transcription",
+      "content": "Implement actual voice message processing with speech-to-text",
+      "status": "completed",
+      "priority": "medium",
+      "category": "Features",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Complete the voice message handler to process and transcribe voice messages",
+      "estimated_effort": "1-2 hours",
+      "dependencies": ["setup_openai_whisper"]
+    },
+    {
+      "id": "add_openai_api_key",
+      "content": "Add OpenAI API key configuration for Whisper",
+      "status": "completed",
+      "priority": "high",
+      "category": "Configuration",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Add OpenAI API key to bot configuration and secure storage",
+      "estimated_effort": "30 minutes",
+      "dependencies": []
+    },
+    {
+      "id": "add_task_list_command",
+      "content": "Add /tasks command to bot to show prioritized TODO list",
+      "status": "completed",
+      "priority": "high",
+      "category": "Features",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Create a command that displays all pending tasks with priorities and status",
+      "estimated_effort": "1 hour",
+      "dependencies": []
+    },
+    {
+      "id": "integrate_real_data",
+      "content": "Connect AI responses to actual logged user data instead of placeholder responses",
+      "status": "pending",
+      "priority": "medium",
+      "category": "Improvements",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Replace placeholder AI responses with actual data from user's logged activities",
+      "estimated_effort": "3-4 hours",
+      "dependencies": []
+    },
+    {
+      "id": "add_priority_system",
+      "content": "Add priority levels (high/medium/low) to TODO system",
+      "status": "pending",
+      "priority": "medium",
+      "category": "Improvements",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Implement priority system for tasks with visual indicators and sorting",
+      "estimated_effort": "1-2 hours",
+      "dependencies": []
+    },
+    {
+      "id": "fix_path_warnings",
+      "content": "Fix path warnings for automation scripts, journal, and notes directories",
+      "status": "pending",
+      "priority": "low",
+      "category": "Maintenance",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Resolve path warnings by ensuring all referenced directories exist or updating paths",
+      "estimated_effort": "30 minutes",
+      "dependencies": []
+    },
+    {
+      "id": "add_natural_language_commands",
+      "content": "Allow bot to understand commands without / prefix (like 'show my tasks')",
+      "status": "pending",
+      "priority": "low",
+      "category": "Features",
+      "created": "2025-08-23T10:15:00Z",
+      "updated": "2025-08-23T10:15:00Z",
+      "description": "Implement natural language processing for bot commands without requiring / prefix",
+      "estimated_effort": "2-3 hours",
+      "dependencies": []
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2025-08-23T10:15:00Z",
+    "total_tasks": 8,
+    "pending_tasks": 5,
+    "completed_tasks": 3,
+    "priority_distribution": {
+      "high": 0,
+      "medium": 3,
+      "low": 2
+    }
+  }
+}

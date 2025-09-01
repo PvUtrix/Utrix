@@ -17,8 +17,10 @@
 4. Настройте параметры:
    - **Service Name**: `gitea-personal`
    - **Port**: `3000` (стандартный порт Gitea)
-   - **Database**: PostgreSQL (рекомендуется)
+   - **Database**: Используйте ЕДИНУЮ базу данных PostgreSQL (см. раздел "Единая база данных")
    - **Domain**: `git.yourdomain.com` (если есть домен)
+
+**ВАЖНО:** Для экономии ресурсов рекомендуется использовать единую базу данных PostgreSQL для всех сервисов. Подробности в разделе "Единая база данных" ниже.
 
 ### 1.2 Конфигурация Gitea
 После установки настройте:
@@ -26,6 +28,55 @@
 - **Repository Root Path**: `/data/git/repositories`
 - **Git LFS**: Включить для больших файлов
 - **SSH Server Domain**: `git.yourdomain.com` (или IP сервера)
+
+## Шаг 1.5: Настройка единой базы данных (Рекомендуется)
+
+### 1.5.1 Создание единой базы данных PostgreSQL
+Для экономии ресурсов и упрощения управления рекомендуется использовать одну базу данных PostgreSQL для всех сервисов:
+
+```bash
+# В Coolify создайте сервис PostgreSQL
+docker run -d \
+  --name shared-postgres \
+  --network personal-system-network \
+  -e POSTGRES_DB=personal_system_db \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=secure_password_123 \
+  -v postgres_data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres:15-alpine
+```
+
+### 1.5.2 Создание схем для изоляции данных
+```sql
+-- Подключитесь к базе данных
+psql -h localhost -U postgres -d personal_system_db
+
+-- Создайте схемы для разных сервисов
+CREATE SCHEMA IF NOT EXISTS gitea;
+CREATE SCHEMA IF NOT EXISTS coolify;
+CREATE SCHEMA IF NOT EXISTS monitoring;
+CREATE SCHEMA IF NOT EXISTS logs;
+
+-- Создайте пользователей для каждого сервиса
+CREATE USER gitea_user WITH PASSWORD 'gitea_password';
+CREATE USER coolify_user WITH PASSWORD 'coolify_password';
+
+-- Назначьте права на схемы
+GRANT USAGE ON SCHEMA gitea TO gitea_user;
+GRANT ALL PRIVILEGES ON SCHEMA gitea TO gitea_user;
+
+GRANT USAGE ON SCHEMA coolify TO coolify_user;
+GRANT ALL PRIVILEGES ON SCHEMA coolify TO coolify_user;
+```
+
+### 1.5.3 Преимущества единой базы данных
+✅ **Экономия ресурсов** - меньше памяти и CPU  
+✅ **Простота управления** - одна точка резервного копирования  
+✅ **Единый мониторинг** - все метрики в одном месте  
+✅ **Кросс-сервисные запросы** - возможность объединения данных  
+
+**Подробное руководство:** [Настройка единой базы данных](shared-database-setup.md)
 
 ## Шаг 2: Настройка SSH ключей
 
@@ -72,6 +123,20 @@ git remote -v
 
 # Первый push
 git push -u origin main
+```
+
+### 3.3 Настройка переменных окружения для единой базы данных
+Если вы используете единую базу данных, настройте переменные окружения в Gitea:
+
+```bash
+# В переменных окружения Gitea
+GITEA__database__DB_TYPE=postgres
+GITEA__database__HOST=shared-postgres
+GITEA__database__NAME=personal_system_db
+GITEA__database__USER=gitea_user
+GITEA__database__PASSWD=gitea_password
+GITEA__database__PORT=5432
+GITEA__database__SCHEMA=gitea
 ```
 
 ## Шаг 4: Настройка автоматического деплоя
@@ -195,3 +260,4 @@ git clone git@gitea-personal:username/repository-name.git
 - [Gitea Documentation](https://docs.gitea.io/)
 - [Coolify Documentation](https://coolify.io/docs)
 - [Git Best Practices](https://git-scm.com/book/en/v2)
+- [Настройка единой базы данных](shared-database-setup.md) - руководство по использованию одной PostgreSQL для всех сервисов

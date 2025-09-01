@@ -1,0 +1,54 @@
+# Google Drive Configuration
+google_drive:
+  folder_id: "YOUR_FOLDER_ID_HERE"  # ID папки с презентациями
+  credentials_path: "config/credentials.json"
+  file_types:
+    - "application/vnd.google-apps.presentation"  # Google Slides
+    - "application/pdf"  # PDF files
+    - "application/vnd.openxmlformats-officedocument.presentationml.presentation"  # PowerPoint
+
+# Processing Configuration
+processing:
+  download_pdf: true
+  extract_text: true
+  ocr_enabled: true
+  language: "rus"  # для русского языка
+  max_file_size_mb: 50
+  parallel_processing: true
+  max_workers: 4
+
+# Storage Configuration
+storage:
+  raw_data_path: "data/raw"
+  processed_data_path: "data/processed"
+  database_path: "data/database/presentations.db"
+  backup_path: "data/backup"
+  
+# Text Processing
+text_processing:
+  extract_keywords: true
+  extract_summary: true
+  min_keyword_length: 3
+  max_keywords_per_doc: 20
+  
+# Integration
+integration:
+  knowledge_base_path: "../../knowledge/notes/presentations"
+  auto_tagging: true
+  create_connections: true
+  
+# Privacy
+privacy:
+  encrypt_sensitive: true
+  private_markers:
+    - ".private"
+    - "confidential"
+    - "internal"
+  
+# Logging
+logging:
+  level: "INFO"
+  file_path: "logs/presentation_analyzer.log"
+  max_file_size_mb: 10
+  backup_count: 5
+

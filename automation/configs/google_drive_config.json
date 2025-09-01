@@ -1,0 +1,59 @@
+{
+  "credentials_path": "config/local/google_drive_credentials.json",
+  "scope_level": "readonly",
+  "workspace_root": ".",
+  "folders": {
+    "documents": {
+      "folder_id": "YOUR_DOCUMENTS_FOLDER_ID",
+      "local_path": "resources/documents",
+      "file_types": [
+        "application/pdf",
+        "application/vnd.google-apps.document",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ],
+      "description": "General documents and files"
+    },
+    "presentations": {
+      "folder_id": "YOUR_PRESENTATIONS_FOLDER_ID",
+      "local_path": "resources/presentations",
+      "file_types": [
+        "application/vnd.google-apps.presentation",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      ],
+      "description": "Presentations and slides"
+    },
+    "spreadsheets": {
+      "folder_id": "YOUR_SPREADSHEETS_FOLDER_ID",
+      "local_path": "resources/spreadsheets",
+      "file_types": [
+        "application/vnd.google-apps.spreadsheet",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ],
+      "description": "Spreadsheets and data files"
+    },
+    "images": {
+      "folder_id": "YOUR_IMAGES_FOLDER_ID",
+      "local_path": "resources/images",
+      "file_types": [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/svg+xml"
+      ],
+      "description": "Images and graphics"
+    }
+  },
+  "sync_settings": {
+    "respect_privacy": true,
+    "auto_sync": false,
+    "sync_interval_hours": 24,
+    "max_file_size_mb": 100
+  },
+  "privacy_markers": [
+    ".private",
+    ".share",
+    "confidential",
+    "internal",
+    "sensitive"
+  ]
+}

@@ -1,0 +1,69 @@
+# Personal System Telegram Bot Configuration
+
+# Telegram Bot Settings
+telegram:
+  bot_token: "7375573912:AAEvnMsA31mnthNaWagr4OEdYwR5gXRdXgU"
+  allowed_users: [71597815]  # List of Telegram user IDs allowed to use the bot
+  admin_users: [71597815]    # List of admin user IDs
+
+# Personal System Paths
+paths:
+  base_path: "../../../"  # Path to your personal system root
+  automation_scripts: "../../../automation/scripts/"
+  journal: "../../../knowledge/journal/"
+  notes: "../../../knowledge/notes/"
+  shadow_work: "../../../core/identity/shadow_work.md"
+  templates: "../../../templates/"
+
+# Data Storage
+storage:
+  data_dir: "./data/storage/"
+  cache_dir: "./data/cache/"
+  backup_dir: "./data/backups/"
+  encryption_key_file: "./data/keys/encryption.key"
+
+# Privacy Settings
+privacy:
+  encrypt_sensitive_data: true
+  respect_private_markers: true
+  auto_backup: true
+  backup_frequency: "daily"
+
+# Features Configuration
+features:
+  daily_summary: true
+  shadow_work_tracking: true
+  health_tracking: true
+  learning_tracking: true
+  journal_integration: true
+  task_management: true
+  system_status: true
+
+# Notifications
+notifications:
+  daily_reminder: "09:00"
+  evening_checkin: "21:00"
+  weekly_review: "sunday 20:00"
+  shadow_work_reminder: "18:00"
+
+# Integration Settings
+integrations:
+  enable_external_apis: false
+  health_api_key: "Z0FBQUFBQm9xYkoxMVNTRmNSbFdydDBTZTI1UGhSdmhlelFLbi1tQ29XdHVjbEFyeFhPWDEtbXB2MW1kWGRqcHhBTUczQWxkM2dJREpQX0RNVHpZbXZUQVRHZEFUbGRtQkRiSEtEVElNMnhGZDFPSThsdlVfa0Y5X0RxREpBcV9DZ1dRZ28wN3A5NmR2UzB1ZGVNYTNDdm5tT3h1V2lJZnVpeWNId3JLVFB1cGduOGJMcmNiWll4QlFZdERad3dYMTZCSThubmE3UC12MWpKYmdGWmlObXRBc3dvYXhaM0tHWGNfaVpZeG9DeEQzMC03SFZDdUhfSS14OW5aMHpDYks5LW9qRUpMNzJUbmFSZmxOemU3VWhXT3Rrd09YTTQ0QV9MUHNfc3F6YjV5czRLVmNFd2U0ZWc9"
+  finance_api_key: "Z0FBQUFBQm9xYkoxMVNTRmNSbFdydDBTZTI1UGhSdmhlelFLbi1tQ29XdHVjbEFyeFhPWDEtbXB2MW1kWGRqcHhBTUczQWxkM2dJREpQX0RNVHpZbXZUQVRHZEFUbGRtQkRiSEtEVElNMnhGZDFPSThsdlVfa0Y5X0RxREpBcV9DZ1dRZ28wN3A5NmR2UzB1ZGVNYTNDdm5tT3h1V2lJZnVpeWNId3JLVFB1cGduOGJMcmNiWll4QlFZdERad3dYMTZCSThubmE3UC12MWpKYmdGWmlObXRBc3dvYXhaM0tHWGNfaVpZeG9DeEQzMC03SFZDdUhfSS14OW5aMHpDYks5LW9qRUpMNzJUbmFSZmxOemU3VWhXT3Rrd09YTTQ0QV9MUHNfc3F6YjV5czRLVmNFd2U0ZWc9"
+  weather_api_key: "Z0FBQUFBQm9xYkoxMVNTRmNSbFdydDBTZTI1UGhSdmhlelFLbi1tQ29XdHVjbEFyeFhPWDEtbXB2MW1kWGRqcHhBTUczQWxkM2dJREpQX0RNVHpZbXZUQVRHZEFUbGRtQkRiSEtEVElNMnhGZDFPSThsdlVfa0Y5X0RxREpBcV9DZ1dRZ28wN3A5NmR2UzB1ZGVNYTNDdm5tT3h1V2lJZnVpeWNId3JLVFB1cGduOGJMcmNiWll4QlFZdERad3dYMTZCSThubmE3UC12MWpKYmdGWmlObXRBc3dvYXhaM0tHWGNfaVpZeG9DeEQzMC03SFZDdUhfSS14OW5aMHpDYks5LW9qRUpMNzJUbmFSZmxOemU3VWhXT3Rrd09YTTQ0QV9MUHNfc3F6YjV5czRLVmNFd2U0ZWc9"
+
+# OpenAI Configuration
+openai:
+  api_key: "Z0FBQUFBQm9xYkoxMVNTRmNSbFdydDBTZTI1UGhSdmhlelFLbi1tQ29XdHVjbEFyeFhPWDEtbXB2MW1kWGRqcHhBTUczQWxkM2dJREpQX0RNVHpZbXZUQVRHZEFUbGRtQkRiSEtEVElNMnhGZDFPSThsdlVfa0Y5X0RxREpBcV9DZ1dRZ28wN3A5NmR2UzB1ZGVNYTNDdm5tT3h1V2lJZnVpeWNId3JLVFB1cGduOGJMcmNiWll4QlFZdERad3dYMTZCSThubmE3UC12MWpKYmdGWmlObXRBc3dvYXhaM0tHWGNfaVpZeG9DeEQzMC03SFZDdUhfSS14OW5aMHpDYks5LW9qRUpMNzJUbmFSZmxOemU3VWhXT3Rrd09YTTQ0QV9MUHNfc3F6YjV5czRLVmNFd2U0ZWc9"  # Your OpenAI API key for Whisper transcription
+  model: "whisper-1"  # Whisper model to use
+  max_file_size: 25  # Maximum audio file size in MB
+  supported_formats: ["mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"]
+  enable_voice_transcription: true
+
+# Logging
+logging:
+  level: "INFO"
+  file: "./logs/bot.log"
+  max_size: "10MB"
+  backup_count: 5

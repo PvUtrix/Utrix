@@ -1,0 +1,310 @@
+# Конфигурация Gitea для использования единой базы данных PostgreSQL
+# Этот файл содержит настройки Gitea, которые исключают встроенные базы данных
+# и используют общую PostgreSQL базу данных для всех сервисов
+
+# Основные настройки Gitea
+gitea:
+  # Информация о сервисе
+  service:
+    name: "gitea-personal"
+    description: "Персональный Git-сервер для управления проектами"
+    version: "latest"
+    
+  # Настройки контейнера
+  container:
+    image: "gitea/gitea:latest"
+    port: 3000
+    restart_policy: "unless-stopped"
+    
+    # Переменные окружения для Gitea
+    environment:
+      # Основные настройки
+      GITEA__server__DOMAIN: "${GITEA_DOMAIN:-git.yourdomain.com}"
+      GITEA__server__ROOT_URL: "${GITEA_ROOT_URL:-https://git.yourdomain.com/}"
+      GITEA__server__SSH_DOMAIN: "${GITEA_SSH_DOMAIN:-git.yourdomain.com}"
+      GITEA__server__SSH_PORT: "${GITEA_SSH_PORT:-22}"
+      
+      # Настройки базы данных - ИСПОЛЬЗУЕМ ЕДИНУЮ БАЗУ
+      GITEA__database__DB_TYPE: "postgres"
+      GITEA__database__HOST: "${SHARED_DB_HOST}"
+      GITEA__database__NAME: "${SHARED_DB_NAME:-personal_system_db}"
+      GITEA__database__USER: "${SHARED_DB_USER}"
+      GITEA__database__PASSWD: "${SHARED_DB_PASSWORD}"
+      GITEA__database__PORT: "${SHARED_DB_PORT:-5432}"
+      GITEA__database__SSL_MODE: "disable"
+      
+      # Настройки кэша Redis (если используется общий Redis)
+      GITEA__cache__ADAPTER: "redis"
+      GITEA__cache__HOST: "${SHARED_REDIS_HOST:-localhost}"
+      GITEA__cache__PORT: "${SHARED_REDIS_PORT:-6379}"
+      GITEA__cache__PASSWORD: "${SHARED_REDIS_PASSWORD:-}"
+      GITEA__cache__DB: "${SHARED_REDIS_DB:-0}"
+      
+      # Настройки сессий
+      GITEA__session__PROVIDER: "redis"
+      GITEA__session__PROVIDER_CONFIG: "network=tcp,addr=${SHARED_REDIS_HOST:-localhost}:${SHARED_REDIS_PORT:-6379},password=${SHARED_REDIS_PASSWORD:-},db=1,pool_size=100,idle_timeout=180"
+      
+      # Настройки очередей
+      GITEA__queue__TYPE: "redis"
+      GITEA__queue__REDIS_HOST: "${SHARED_REDIS_HOST:-localhost}"
+      GITEA__queue__REDIS_PORT: "${SHARED_REDIS_PORT:-6379}"
+      GITEA__queue__REDIS_PASSWORD: "${SHARED_REDIS_PASSWORD:-}"
+      GITEA__queue__REDIS_DB: "${SHARED_REDIS_DB:-2}"
+      
+      # Настройки логирования
+      GITEA__log__LEVEL: "Info"
+      GITEA__log__MODE: "console"
+      
+      # Настройки безопасности
+      GITEA__security__INSTALL_LOCK: "true"
+      GITEA__security__SECRET_KEY: "${GITEA_SECRET_KEY}"
+      GITEA__security__INTERNAL_TOKEN: "${GITEA_INTERNAL_TOKEN}"
+      
+      # Настройки администратора
+      GITEA__admin__USERNAME: "${GITEA_ADMIN_USER:-admin}"
+      GITEA__admin__EMAIL: "${GITEA_ADMIN_EMAIL}"
+      GITEA__admin__PASSWORD: "${GITEA_ADMIN_PASSWORD}"
+      
+      # Настройки репозиториев
+      GITEA__repository__ROOT: "/data/git/repositories"
+      GITEA__repository__SCRIPT_TYPE: "bash"
+      GITEA__repository__DEFAULT_BRANCH: "main"
+      
+      # Настройки Git LFS
+      GITEA__lfs__PATH: "/data/git/lfs"
+      GITEA__lfs__STORAGE_TYPE: "local"
+      
+      # Настройки вложений
+      GITEA__attachment__PATH: "/data/git/attachments"
+      GITEA__attachment__MAX_SIZE: "4"
+      GITEA__attachment__ALLOWED_TYPES: ".doc,.docx,.pdf,.txt,.md,.jpg,.jpeg,.png,.gif"
+      
+      # Настройки аватаров
+      GITEA__picture__AVATAR_UPLOAD_PATH: "/data/git/avatars"
+      GITEA__picture__REPOSITORY_AVATAR_UPLOAD_PATH: "/data/git/repo-avatars"
+      
+      # Настройки индексации
+      GITEA__indexer__REPO_INDEXER_ENABLED: "true"
+      GITEA__indexer__MAX_FILE_SIZE: "1048576"
+      
+      # Настройки уведомлений
+      GITEA__service__ENABLE_NOTIFY_MAIL: "false"
+      GITEA__service__ENABLE_NOTIFY_WEBHOOK: "true"
+      
+      # Настройки веб-хуков
+      GITEA__webhook__QUEUE_LENGTH: "1000"
+      GITEA__webhook__DELIVER_TIMEOUT: "5"
+      GITEA__webhook__SKIP_TLS_VERIFY: "false"
+      
+      # Настройки API
+      GITEA__api__ENABLE_SWAGGER: "true"
+      GITEA__api__MAX_RESPONSE_ITEMS: "50"
+      
+      # Настройки UI
+      GITEA__ui__SHOW_USER_EMAIL: "false"
+      GITEA__ui__THEMES: "auto,gitea,arc-green"
+      GITEA__ui__DEFAULT_THEME: "auto"
+      
+      # Настройки поиска
+      GITEA__search__REPO_INDEXER_ENABLED: "true"
+      GITEA__search__MAX_FILE_SIZE: "1048576"
+      
+      # Настройки времени
+      GITEA__time__DEFAULT_UI_LOCATION: "Europe/Moscow"
+      
+    # Тома для данных
+    volumes:
+      - "/data/git:/data"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      
+    # Порты
+    ports:
+      - "3000:3000"
+      - "22:22"
+      
+    # Сеть
+    network_mode: "bridge"
+    
+    # Зависимости
+    depends_on:
+      - "shared-postgres"
+      - "shared-redis"
+
+# Настройки единой базы данных PostgreSQL
+shared_database:
+  # Информация о базе данных
+  description: "Единая PostgreSQL база данных для всех сервисов"
+  
+  # Переменные окружения для подключения
+  environment_variables:
+    # Основные настройки
+    SHARED_DB_HOST: "${SHARED_DB_HOST:-localhost}"
+    SHARED_DB_PORT: "${SHARED_DB_PORT:-5432}"
+    SHARED_DB_NAME: "${SHARED_DB_NAME:-personal_system_db}"
+    SHARED_DB_USER: "${SHARED_DB_USER:-postgres}"
+    SHARED_DB_PASSWORD: "${SHARED_DB_PASSWORD}"
+    
+    # Настройки пула соединений
+    SHARED_DB_POOL_SIZE: "${SHARED_DB_POOL_SIZE:-20}"
+    SHARED_DB_MAX_CONNECTIONS: "${SHARED_DB_MAX_CONNECTIONS:-100}"
+    
+    # Настройки SSL
+    SHARED_DB_SSL_MODE: "${SHARED_DB_SSL_MODE:-disable}"
+    SHARED_DB_SSL_CERT: "${SHARED_DB_SSL_CERT:-}"
+    SHARED_DB_SSL_KEY: "${SHARED_DB_SSL_KEY:-}"
+    SHARED_DB_SSL_CA: "${SHARED_DB_SSL_CA:-}"
+    
+  # Схемы для разных сервисов
+  schemas:
+    gitea: "gitea"
+    coolify: "coolify"
+    monitoring: "monitoring"
+    logs: "logs"
+    
+  # Размеры таблиц и индексов
+  sizing:
+    initial_size: "100MB"
+    max_size: "10GB"
+    auto_vacuum: true
+    maintenance_work_mem: "64MB"
+    shared_buffers: "128MB"
+    
+  # Резервное копирование
+  backup:
+    enabled: true
+    schedule: "0 1 * * *"  # Каждый день в 1:00
+    retention_days: 30
+    compression: true
+    location: "/backups/database"
+
+# Настройки общего Redis (опционально)
+shared_redis:
+  # Информация о Redis
+  description: "Общий Redis для кэширования и сессий"
+  
+  # Переменные окружения
+  environment_variables:
+    SHARED_REDIS_HOST: "${SHARED_REDIS_HOST:-localhost}"
+    SHARED_REDIS_PORT: "${SHARED_REDIS_PORT:-6379}"
+    SHARED_REDIS_PASSWORD: "${SHARED_REDIS_PASSWORD:-}"
+    SHARED_REDIS_DB: "${SHARED_REDIS_DB:-0}"
+    
+  # Настройки производительности
+  performance:
+    max_memory: "256MB"
+    max_memory_policy: "allkeys-lru"
+    save_interval: "900 1 300 10 60 10000"
+    
+  # Резервное копирование
+  backup:
+    enabled: true
+    schedule: "0 2 * * *"  # Каждый день в 2:00
+    retention_days: 7
+
+# Настройки мониторинга
+monitoring:
+  # Проверки здоровья
+  health_checks:
+    database:
+      command: "pg_isready -h ${SHARED_DB_HOST} -p ${SHARED_DB_PORT} -U ${SHARED_DB_USER}"
+      interval: "30s"
+      timeout: "10s"
+      retries: 3
+      
+    redis:
+      command: "redis-cli -h ${SHARED_REDIS_HOST} -p ${SHARED_REDIS_PORT} ping"
+      interval: "30s"
+      timeout: "10s"
+      retries: 3
+      
+    gitea:
+      url: "http://localhost:3000/health"
+      interval: "60s"
+      timeout: "30s"
+      retries: 3
+      
+  # Метрики
+  metrics:
+    database:
+      enabled: true
+      port: 9187
+      path: "/metrics"
+      
+    redis:
+      enabled: true
+      port: 9121
+      path: "/metrics"
+      
+    gitea:
+      enabled: true
+      port: 3000
+      path: "/metrics"
+
+# Настройки безопасности
+security:
+  # Ограничения доступа
+  access_control:
+    allowed_ips: []
+    require_authentication: true
+    
+  # Шифрование
+  encryption:
+    database_connections: true
+    redis_connections: true
+    file_storage: true
+    
+  # Аудит
+  audit:
+    database_queries: true
+    user_actions: true
+    system_events: true
+
+# Настройки масштабирования
+scaling:
+  # Автоматическое масштабирование
+  auto_scaling: false
+  
+  # Реплики
+  replicas:
+    gitea: 1
+    database: 1
+    redis: 1
+    
+  # Лимиты ресурсов
+  resources:
+    gitea:
+      cpu_limit: "1"
+      memory_limit: "1Gi"
+      storage_limit: "10Gi"
+      
+    database:
+      cpu_limit: "2"
+      memory_limit: "2Gi"
+      storage_limit: "20Gi"
+      
+    redis:
+      cpu_limit: "0.5"
+      memory_limit: "512Mi"
+      storage_limit: "1Gi"
+
+# Комментарии и заметки
+notes: |
+  ВАЖНО: Эта конфигурация настроена для использования ЕДИНОЙ базы данных
+  PostgreSQL для всех сервисов. Это исключает необходимость в отдельных
+  базах данных для каждого сервиса.
+  
+  Преимущества единой базы данных:
+  - Меньше ресурсов сервера
+  - Проще управление и резервное копирование
+  - Единая точка мониторинга
+  - Возможность кросс-сервисных запросов
+  
+  Для настройки в Coolify:
+  1. Создайте один контейнер PostgreSQL
+  2. Создайте один контейнер Redis (опционально)
+  3. Создайте контейнер Gitea с этой конфигурацией
+  4. Настройте переменные окружения SHARED_DB_* и SHARED_REDIS_*
+  
+  Все сервисы будут использовать одну базу данных с разными схемами,
+  что обеспечивает изоляцию данных между сервисами.
