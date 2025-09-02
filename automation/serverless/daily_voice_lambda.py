@@ -255,8 +255,8 @@ if __name__ == "__main__":
             duration = word_count * 0.25
             cost = bot.tts.estimate_cost(content)
 
-            print("
-📊 Stats:"            print(f"  Words: {word_count}")
+            print("📊 Stats:")
+            print(f"  Words: {word_count}")
             print(f"  Duration: {duration:.1f} seconds")
             print(f"  Cost: ${cost:.6f}")
             print(f"  Under 3min: {'✅' if duration <= 180 else '❌'}")

@@ -44,6 +44,13 @@ print_help() {
     echo "  webhook-test   Test Gitea webhook handling"
     echo "  coolify-list   List Coolify deployments"
     echo ""
+    echo "Prosperity Course Commands:"
+    echo "  course-status  Show course progress"
+    echo "  course-pause   Pause the course"
+    echo "  course-resume  Resume the course"
+    echo "  course-reset   Reset course progress"
+    echo "  course-journal Create journal template for today"
+    echo ""
     echo "Examples:"
     echo "  $0 setup --all"
     echo "  $0 monitor --sizes"
@@ -126,6 +133,50 @@ run_coolify_list() {
     python3 coolify_deployer.py list
 }
 
+# Prosperity Course Functions
+run_course_status() {
+    echo -e "${GREEN}🎯 Checking prosperity course status...${NC}"
+    python3 ../../automation/scripts/prosperity-course-manager.py status
+}
+
+run_course_pause() {
+    echo -e "${GREEN}⏸️ Pausing prosperity course...${NC}"
+    python3 ../../automation/scripts/prosperity-course-manager.py pause
+}
+
+run_course_resume() {
+    echo -e "${GREEN}▶️ Resuming prosperity course...${NC}"
+    python3 ../../automation/scripts/prosperity-course-manager.py resume
+}
+
+run_course_reset() {
+    echo -e "${GREEN}🔄 Resetting prosperity course...${NC}"
+    python3 ../../automation/scripts/prosperity-course-manager.py reset
+}
+
+run_course_journal() {
+    echo -e "${GREEN}📝 Creating journal template...${NC}"
+    # Get current day from course status
+    python3 ../../automation/scripts/prosperity-course-manager.py journal $(python3 -c "
+import json
+from pathlib import Path
+from datetime import datetime
+config_path = Path('../../domains/learning/prosperity-course-config.json')
+if config_path.exists():
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    start_date = datetime.strptime(config['start_date'], '%Y-%m-%d')
+    current_date = datetime.now()
+    days_into_course = (current_date - start_date).days + 1
+    if 1 <= days_into_course <= 5:
+        print(days_into_course)
+    else:
+        print(1)
+else:
+    print(1)
+")
+}
+
 case "$1" in
     "setup")
         shift
@@ -189,6 +240,21 @@ case "$1" in
         ;;
     "coolify-list")
         run_coolify_list
+        ;;
+    "course-status")
+        run_course_status
+        ;;
+    "course-pause")
+        run_course_pause
+        ;;
+    "course-resume")
+        run_course_resume
+        ;;
+    "course-reset")
+        run_course_reset
+        ;;
+    "course-journal")
+        run_course_journal
         ;;
     "help"|"-h"|"--help"|"")
         print_help

@@ -1,0 +1,19 @@
+{
+  "course_name": "Prosperity Mindset Crash Course",
+  "start_date": "2025-09-01",
+  "duration_days": 5,
+  "status": "active",
+  "current_day": 1,
+  "description": "5-day crash course to shift from scarcity to abundance mindset",
+  "reminder_times": [
+    "07:00",
+    "20:00"
+  ],
+  "voice_enabled": true,
+  "tracking_enabled": true,
+  "completion_requirements": {
+    "daily_journal": true,
+    "practice_completion": true,
+    "reflection_written": true
+  }
+}

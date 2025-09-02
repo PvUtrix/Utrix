@@ -17,3 +17,125 @@
 - Never process files in .private/ directories
 - Mask sensitive data in examples
 - Remind users about privacy best practices
+
+## README.md Requirements
+
+### Folder Documentation Standards
+Every folder in the system must include a `README.md` file that describes:
+- **Purpose** - What this folder contains and why it exists
+- **Contents** - Overview of files and subdirectories
+- **Usage** - How to use the contents of this folder
+- **Related** - Links to related folders or components
+- **Last Updated** - Date of last modification
+
+### README.md Maintenance Rules
+- **Create README.md** for every new folder immediately upon creation
+- **Update README.md** after any significant work on the folder contents
+- **Include examples** of how to use the folder's contents
+- **Cross-reference** related components and workflows
+- **Keep current** with actual folder contents and structure
+
+### README.md Template Structure
+```markdown
+# [Folder Name]
+
+## Purpose
+Brief description of what this folder contains and its role in the system.
+
+## Contents
+- `file1.py` - Description of file purpose
+- `file2.md` - Description of file purpose
+- `subfolder/` - Description of subfolder contents
+
+## Usage
+How to use the contents of this folder, with examples.
+
+## Related
+- Links to related folders: `../related-folder/`
+- Links to related workflows: `../../workflows/daily/`
+- Links to related automation: `../../automation/scripts/`
+
+## Last Updated
+[Date] - [Brief description of what was updated]
+```
+
+## Project Structure Overview
+
+### Core Architecture
+This is a comprehensive personal knowledge management and automation system organized around life domains and workflows.
+
+#### Root Organization
+- **`core/`** - Central identity, knowledge, principles, and workflow definitions
+- **`domains/`** - Life area management (career, health, finance, learning, relationships, startups)
+- **`automation/`** - Scripts, integrations, and automated workflows
+- **`projects/`** - Active, planned, and archived project management
+- **`config/`** - Configuration files for various environments and services
+- **`privacy/`** - Encrypted data, keys, and privacy policies
+- **`workflows/`** - Time-based workflow templates (daily, weekly, monthly, quarterly, annual)
+
+#### Core Components
+- **`core/identity/`** - Personal goals, values, vision, and shadow work tracking
+- **`core/knowledge/`** - Journal, notes, insights, and knowledge connections
+- **`core/principles/`** - Decision-making frameworks and life principles
+- **`core/workflows/`** - Base workflow templates and daily/weekly routines
+
+#### Domain Management
+- **`domains/career/`** - Professional development, skills, network, opportunities
+- **`domains/health/`** - Physical, mental health, nutrition, workouts, medical data
+- **`domains/finance/`** - Budgeting, investments, planning, taxes
+- **`domains/learning/`** - Courses, books, skills, knowledge acquisition
+- **`domains/startups/`** - Business ideas, venture investing, startup management
+- **`domains/relationships/`** - Personal and professional relationship management
+
+#### Automation Layer
+- **`automation/scripts/`** - Python scripts for daily operations, data processing
+- **`automation/integrations/`** - API integrations, Google Drive sync, webhooks
+- **`automation/serverless/`** - AWS Lambda functions, serverless deployments
+- **`automation/outputs/`** - Generated summaries, reports, and data exports
+- **`automation/tools/`** - Data processors, validators, and utility functions
+
+#### Project Management
+- **`projects/active/`** - Currently active projects and initiatives
+- **`projects/planned/`** - Future project ideas and planning
+- **`projects/archive/`** - Completed and archived projects
+- **`projects/templates/`** - Project templates and frameworks
+
+#### Configuration Management
+- **`config/global/`** - System-wide preferences and settings
+- **`config/environments/`** - Environment-specific configurations
+- **`config/domains/`** - Domain-specific configuration files
+- **`config/automation/`** - Automation and deployment configurations
+
+#### Privacy & Security
+- **`privacy/encrypted/`** - Encrypted sensitive data
+- **`privacy/keys/`** - Encryption keys and certificates
+- **`privacy/vault/`** - Secure data storage
+- **`privacy/policies/`** - Privacy and security policies
+
+#### Workflow Templates
+- **`workflows/daily/`** - Daily routine templates and checklists
+- **`workflows/weekly/`** - Weekly planning and review templates
+- **`workflows/monthly/`** - Monthly goal setting and reflection
+- **`workflows/quarterly/`** - Quarterly planning and assessment
+- **`workflows/annual/`** - Annual goal setting and life planning
+
+### File Naming Conventions
+- Use descriptive, lowercase names with underscores for spaces
+- Group related files in appropriately named directories
+- Use consistent extensions (.md for documentation, .py for Python, .yaml/.yml for configs)
+- Prefix automation scripts with descriptive names (e.g., `daily_summary.py`, `google_drive_sync.py`)
+
+### Key Integration Points
+- **Google Drive Sync** - Automated backup and synchronization
+- **Serverless Functions** - AWS Lambda for automated workflows
+- **Webhooks** - External service integrations
+- **Database Management** - Gitea and shared database configurations
+- **Deployment** - Coolify and container orchestration
+
+### Maintenance Guidelines
+- Keep domain-specific content organized within respective directories
+- Maintain consistent structure across similar domain folders
+- Update automation scripts when adding new workflows
+- Ensure privacy-sensitive data remains in encrypted directories
+- Regular backup and synchronization of critical data
+- **Always maintain README.md files for every folder**

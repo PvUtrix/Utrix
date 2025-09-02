@@ -71,50 +71,37 @@ check_prerequisites() {
 setup_environment() {
     print_step "Setting up environment..."
 
-    # Create .env file template
+    # Check for .env file
     if [[ ! -f ".env" ]]; then
-        cat > .env << EOF
-# Core Database (Supabase Free Tier)
-CORE_SUPABASE_URL=https://your-project.supabase.co
-CORE_SUPABASE_ANON_KEY=your_core_anon_key
-
-# Main Database (Self-hosted Supabase)
-MAIN_SUPABASE_URL=http://supabase:54321
-MAIN_SUPABASE_ANON_KEY=your_main_anon_key
-
-# ElevenLabs Voice
-ELEVENLABS_API_KEY=your_elevenlabs_key
-ELEVENLABS_VOICE_ID=21m00Tcm4TlvDq8ikWAM
-
-# Telegram
-TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_CHAT_ID=your_chat_id
-
-# Gitea
-GITEA_URL=https://git.yourdomain.com
-GITEA_TOKEN=your_gitea_token
-GITEA_WEBHOOK_SECRET=your_webhook_secret
-
-# Coolify
-COOLIFY_URL=https://coolify.yourdomain.com
-COOLIFY_API_TOKEN=your_coolify_token
-COOLIFY_PROJECT_UUID=your_project_uuid
-COOLIFY_APPLICATION_UUID=your_app_uuid
-
-# AWS (for Lambda)
-AWS_ACCESS_KEY_ID=your_aws_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret
-AWS_REGION=us-east-1
-EOF
-        print_warning "Created .env template file. Please fill in your actual values."
-        echo "Edit .env file with your credentials before continuing."
-        exit 0
+        print_warning "No .env file found!"
+        echo "📖 Please see ENVIRONMENT_SETUP.md for complete configuration guide"
+        echo ""
+        echo "Quick setup:"
+        echo "1. Copy the template from ENVIRONMENT_SETUP.md"
+        echo "2. Create .env file with your credentials"
+        echo "3. Fill in all required API keys"
+        echo ""
+        print_error "Please create .env file with your credentials first"
+        exit 1
     fi
 
     # Load environment variables
     if [[ -f ".env" ]]; then
         export $(grep -v '^#' .env | xargs)
         echo "✅ Environment variables loaded from .env"
+
+        # Quick validation
+        if [[ -z "$ELEVENLABS_API_KEY" ]]; then
+            print_warning "ELEVENLABS_API_KEY not set - voice features will be disabled"
+        fi
+
+        if [[ -z "$TELEGRAM_BOT_TOKEN" ]]; then
+            print_warning "TELEGRAM_BOT_TOKEN not set - notifications will be disabled"
+        fi
+
+        if [[ -z "$CORE_SUPABASE_ANON_KEY" ]]; then
+            print_warning "CORE_SUPABASE_ANON_KEY not set - database features will be disabled"
+        fi
     fi
 }
 

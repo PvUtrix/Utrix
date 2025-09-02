@@ -1,52 +1,32 @@
-# Health Domain
+# Health
 
 ## Purpose
-Track and optimize physical and mental health through data-driven insights and consistent habits.
+The health domain manages all aspects of physical and mental well-being, including nutrition, workouts, medical data, and mental health tracking. This domain ensures comprehensive health management and supports overall life quality.
 
-## Structure
+## Contents
+- `data/` - Health metrics and tracking data
+- `medical/` - Medical records and healthcare information
+- `mental/` - Mental health tracking and resources
+- `nutrition/` - Nutrition plans and dietary tracking
+- `plans/` - Health improvement plans and strategies
+- `resources/` - Health-related resources and references
+- `workouts/` - Exercise routines and fitness tracking
 
-```
-health/
-├── data/           # Health metrics and tracking
-├── plans/          # Health plans and protocols
-├── resources/      # Health information and research
-└── .private/       # Sensitive medical information
-```
+## Usage
+The health domain provides a comprehensive approach to well-being:
 
-## Key Areas
+- **Physical Health**: Exercise routines, nutrition tracking, medical data
+- **Mental Health**: Stress management, mood tracking, mental health resources
+- **Preventive Care**: Regular checkups, screenings, and health monitoring
+- **Performance**: Fitness goals, strength training, and endurance building
+- **Recovery**: Rest, sleep tracking, and injury management
 
-### Physical Health
-- Exercise tracking
-- Nutrition planning
-- Sleep optimization
-- Medical records
+## Related
+- `../../core/identity/` - Personal values that guide health decisions
+- `../../workflows/daily/` - Daily health routines and check-ins
+- `../../workflows/weekly/` - Weekly health planning and review
+- `../../automation/scripts/` - Health data processing and tracking
+- `../../config/domains/` - Health-specific configuration settings
 
-### Mental Health
-- Mood tracking
-- Stress management
-- Meditation practice
-- Therapy notes
-
-### Preventive Care
-- Check-up schedules
-- Vaccination records
-- Health screenings
-- Risk assessments
-
-## Quick Links
-
-- [Current Health Plan](plans/current-plan.md)
-- [Exercise Log](data/exercise-log.md)
-- [Nutrition Tracker](data/nutrition.md)
-- [Medical History](.private/medical-history.md)
-
-## Important Reminders
-
-- Annual physical: [Month]
-- Dental cleaning: Every 6 months
-- Eye exam: Every 2 years
-- Blood work: Annually
-
----
-
-*Health is wealth. Invest daily.*
+## Last Updated
+2024-12-19 - Initial README creation

@@ -11,6 +11,7 @@ from typing import Dict, List, Any
 from supabase import create_client, Client
 import logging
 import random
+import pathlib
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -85,6 +86,11 @@ class VoiceContentGenerator:
         # Weekly context
         if weekly_context:
             sections.append(self._generate_weekly_context(weekly_context))
+
+        # Prosperity course content (if active)
+        prosperity_content = self._get_prosperity_course_content()
+        if prosperity_content:
+            sections.append(prosperity_content)
 
         # Affirmations
         sections.append(self._generate_affirmations())
@@ -270,6 +276,48 @@ class VoiceContentGenerator:
         affirmation_text = " ".join(affirmations)
 
         return f"Remember: {affirmation_text} "
+
+    def _get_prosperity_course_content(self) -> str:
+        """Generate prosperity course content for today's voice message"""
+        try:
+            # Load prosperity course configuration
+            config_path = pathlib.Path(__file__).parent.parent.parent / "domains" / "learning" / "prosperity-course-config.json"
+
+            if not config_path.exists():
+                return ""
+
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+
+            # Check if course is active
+            if config.get('status') != 'active':
+                return ""
+
+            # Calculate current day
+            start_date = datetime.strptime(config['start_date'], '%Y-%m-%d')
+            current_date = datetime.now()
+            days_into_course = (current_date - start_date).days + 1
+
+            # Check if course is completed
+            if days_into_course > config['duration_days'] or days_into_course < 1:
+                return ""
+
+            # Prosperity course content based on day
+            course_content = {
+                1: "Today continues your prosperity mindset journey with Day 1: the Money Story Audit. Take 20 minutes to journal about your earliest money memories and beliefs. This awareness is the foundation for abundance.",
+                2: "Day 2 of your prosperity course: Focus on gratitude and opportunity spotting. Start your morning with 5 specific gratitudes, and end your day by finding opportunities in 3 challenges you faced.",
+                3: "Day 3: Value Exchange Principle. Today, identify one skill you have and consciously provide value to someone without expecting anything in return. Prosperity flows from giving first.",
+                4: "Day 4: Define Your Personal Prosperity. Write a detailed description of your ideal average Tuesday five years from now. Include all your senses and how abundance feels in your daily life.",
+                5: "Final day of your prosperity course! Curate your environment for abundance. Clean up your digital space by unfollowing scarcity-focused accounts and following growth-oriented ones. Schedule time with a positive, can-do person this week."
+            }
+
+            if days_into_course in course_content:
+                return f"🎯 Prosperity Course - Day {days_into_course}: {course_content[days_into_course]} "
+
+        except Exception as e:
+            logger.warning(f"Could not generate prosperity course content: {e}")
+
+        return ""
 
     def _truncate_content(self, content: str, max_words: int) -> str:
         """Truncate content to fit within word limit"""

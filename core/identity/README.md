@@ -1,69 +1,34 @@
-# Identity Core
-
-This directory contains the foundational elements of who I am and what I stand for.
-
-## Structure
-
-- `values.md` - Core values and principles
-- `vision.md` - Long-term vision and life goals
-- `strengths.md` - Personal strengths and superpowers
-- `goals.md` - Life goals and milestones
-- `shadow_work.md` - Shadow work analysis and practices
-- `SHADOW_WORK_GUIDE.md` - Complete guide to shadow work
-- `growth_areas.md` - Areas for improvement
-- `biography.md` - Personal story and journey
+# Identity
 
 ## Purpose
+The identity directory contains the foundational elements that define who you are - your goals, values, vision, strengths, and shadow work. This serves as the compass for all other life decisions and domain management.
 
-Understanding myself deeply enables:
-- Better decision making
-- Authentic relationships
-- Aligned opportunities
-- Sustainable growth
-- **Shadow integration for wholeness**
+## Contents
+- `goals.md` - Personal and life goals with progress tracking
+- `intro.md` - Personal introduction and self-description
+- `personal_vector.md` - Personal direction and momentum tracking
+- `shadow_work.md` - Shadow work tracking and insights
+- `strengths.md` - Personal strengths and capabilities assessment
+- `values.md` - Core values and principles
+- `vision.md` - Long-term vision and life direction
+- `SHADOW_WORK_GUIDE.md` - Guide for shadow work practices
+- `private/` - Private identity documents and reflections
 
-## Shadow Work Integration
+## Usage
+This directory serves as your personal foundation:
 
-### New Addition: Shadow Work System
-- **Analysis**: Complete shadow analysis based on identity archetypes
-- **Rituals**: Daily, weekly, monthly, and quarterly shadow work practices
-- **Automation**: Python tracker for progress monitoring
-- **Templates**: Ready-to-use templates for all shadow work practices
+- **Goals**: Define and track progress on personal objectives
+- **Values**: Establish decision-making frameworks based on core principles
+- **Vision**: Maintain long-term direction and purpose
+- **Strengths**: Leverage personal capabilities in all domains
+- **Shadow Work**: Process and integrate challenging aspects of self
 
-### Key Shadow Aspects Identified
-1. **Visionary Builder Shadow**: Perfectionism, control, neglecting human needs
-2. **Freedom Seeker Shadow**: Commitment issues, restlessness, avoiding responsibility
-3. **Connector Shadow**: People-pleasing, losing self in others, surface relationships
-4. **Resilient Innovator Shadow**: Toxic positivity, avoiding vulnerability, burnout
-5. **Ethical Entrepreneur Shadow**: Self-righteousness, judgment, unrealistic expectations
+## Related
+- `../knowledge/` - Journal entries and insights that inform identity
+- `../principles/` - Decision-making frameworks based on identity
+- `../../domains/` - Life areas that express your identity
+- `../../workflows/` - Planning that aligns with your identity
+- `../../automation/scripts/` - Scripts that track identity-related progress
 
-### Quick Start Shadow Work
-```bash
-# Set current focus
-python3 automation/scripts/shadow_work_tracker.py --action focus --shadow-aspect "perfectionism" --goal "Accept imperfection and move forward"
-
-# Daily check-in
-python3 automation/scripts/shadow_work_tracker.py --action checkin --shadow-aspect "perfectionism"
-
-# Record insights
-python3 automation/scripts/shadow_work_tracker.py --action insight --insight "Your insight here"
-
-# Generate report
-python3 automation/scripts/shadow_work_tracker.py --action report
-```
-
-## Review Schedule
-
-- **Daily**: Quick values check during morning routine + shadow check-in
-- **Weekly**: Strengths application review + shadow archetype exploration
-- **Monthly**: Growth area progress + shadow integration ceremony
-- **Quarterly**: Full identity audit + deep shadow dive
-- **Annually**: Vision and values deep dive + shadow work celebration
-
-## Privacy Note
-
-These files contain deeply personal information. They are:
-- Never shared without explicit permission
-- Encrypted in backups
-- Referenced but not quoted in public content
-- **Shadow work data stored securely in automation/outputs/**
+## Last Updated
+2024-12-19 - Initial README creation

@@ -1,88 +1,97 @@
 #!/usr/bin/env python3
 # Daily Summary Generator
 # Collects data from various sources and creates a daily summary
+# 
+# IMPORTANT: This script follows the "No Fake Data" policy.
+# All metrics must come from real sources or manual input.
+# See INTEGRATION_ROADMAP.md for implementation details.
 
 import json
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Any
-import random
 
 class DailySummaryGenerator:
-    def __init__(self, base_path: str = "../../"):
+    def __init__(self, base_path: str = "."):
         self.base_path = Path(base_path)
         self.today = datetime.now()
         self.summary_data = {
             "date": self.today.strftime("%Y-%m-%d"),
-            "sections": {}
+            "sections": {},
+            "reflections": {}  # Добавляем поле для ответов на вопросы
         }
     
     def collect_health_data(self) -> Dict[str, Any]:
         """Collect health metrics for the day"""
-        # In production, this would connect to real health tracking APIs
-        return {
-            "steps": random.randint(8000, 15000),
-            "sleep_hours": round(random.uniform(6.5, 8.5), 1),
-            "water_glasses": random.randint(6, 10),
-            "workout_completed": random.choice([True, False]),
-            "meditation_minutes": random.choice([0, 10, 15, 20, 30]),
-            "energy_level": random.randint(6, 10)
-        }
+        # TODO: Connect to real health tracking APIs (Apple Health, Google Fit, Fitbit)
+        # For now, return None to indicate no real data available
+        print("⚠️  WARNING: Health data not connected to real sources")
+        print("   Please implement integrations with health tracking apps")
+        return None
     
     def collect_productivity_data(self) -> Dict[str, Any]:
         """Collect productivity metrics"""
-        return {
-            "tasks_completed": random.randint(5, 15),
-            "focus_time_hours": round(random.uniform(4, 8), 1),
-            "meetings_attended": random.randint(0, 5),
-            "code_commits": random.randint(0, 10),
-            "documents_created": random.randint(0, 5),
-            "emails_processed": random.randint(10, 50)
-        }
+        # TODO: Connect to real productivity tools (Todoist, Notion, RescueTime, Toggl, GitHub)
+        # For now, return None to indicate no real data available
+        print("⚠️  WARNING: Productivity data not connected to real sources")
+        print("   Please implement integrations with productivity tools")
+        return None
     
     def collect_learning_data(self) -> Dict[str, Any]:
         """Collect learning progress"""
-        topics = ["Python", "System Design", "Machine Learning", "Leadership", "Finance"]
-        return {
-            "reading_minutes": random.randint(15, 60),
-            "courses_progress": f"{random.randint(1, 5)} lessons completed",
-            "notes_created": random.randint(1, 10),
-            "topics_studied": random.sample(topics, k=random.randint(1, 3))
-        }
+        # TODO: Connect to real learning platforms (Coursera, Udemy, Notion, Obsidian)
+        # For now, return None to indicate no real data available
+        print("⚠️  WARNING: Learning data not connected to real sources")
+        print("   Please implement integrations with learning platforms")
+        return None
     
     def collect_finance_data(self) -> Dict[str, Any]:
         """Collect financial data"""
-        return {
-            "spending_today": round(random.uniform(20, 200), 2),
-            "budget_remaining": round(random.uniform(500, 2000), 2),
-            "investment_change": round(random.uniform(-2, 5), 2),
-            "savings_rate": f"{random.randint(40, 70)}%"
-        }
+        # TODO: Connect to real financial tools (Banking APIs, YNAB, Mint)
+        # For now, return None to indicate no real data available
+        print("⚠️  WARNING: Finance data not connected to real sources")
+        print("   Please implement integrations with financial tools")
+        return None
     
     def analyze_patterns(self) -> List[str]:
         """Analyze patterns and generate insights"""
-        insights = [
-            "Your most productive hours were 9 AM - 12 PM",
-            "Sleep quality improved by 15% this week",
-            "You're on track with your monthly savings goal",
-            "Consider scheduling deep work in the morning",
-            "Your learning consistency is improving",
-            "Energy levels peak after morning exercise"
-        ]
-        return random.sample(insights, k=3)
+        # TODO: Implement real pattern analysis based on actual data
+        # For now, return empty list since we have no real data
+        print("⚠️  WARNING: Pattern analysis requires real data")
+        return []
     
     def generate_recommendations(self) -> List[str]:
         """Generate personalized recommendations"""
-        recommendations = [
-            "Try to get to bed 30 minutes earlier tonight",
-            "Schedule tomorrow's most important task for 9 AM",
-            "You haven't called Mom this week - schedule it",
-            "Review your investment portfolio this weekend",
-            "Take a 15-minute walk to boost afternoon energy",
-            "Prepare tomorrow's clothes tonight"
-        ]
-        return random.sample(recommendations, k=3)
+        # TODO: Implement real recommendations based on actual data patterns
+        # For now, return empty list since we have no real data
+        print("⚠️  WARNING: Recommendations require real data analysis")
+        return []
+    
+    def collect_reflections(self) -> Dict[str, str]:
+        """Collect user reflections for the day"""
+        print("\n📝 Daily Reflection Questions")
+        print("=" * 40)
+        
+        reflections = {}
+        
+        try:
+            print("\n1. What was your biggest win today?")
+            reflections["biggest_win"] = input("Your answer: ").strip()
+            
+            print("\n2. What challenged you the most?")
+            reflections["biggest_challenge"] = input("Your answer: ").strip()
+            
+            print("\n3. What are you grateful for?")
+            reflections["grateful_for"] = input("Your answer: ").strip()
+            
+            print("\n4. What will you do differently tomorrow?")
+            reflections["tomorrow_plan"] = input("Your answer: ").strip()
+            
+            return reflections
+        except KeyboardInterrupt:
+            print("\n❌ Reflection collection cancelled.")
+            return {}
     
     def create_summary(self) -> str:
         """Create the complete daily summary"""
@@ -94,60 +103,104 @@ class DailySummaryGenerator:
         self.summary_data["insights"] = self.analyze_patterns()
         self.summary_data["recommendations"] = self.generate_recommendations()
         
-        # Format as markdown
-        health_data = self.summary_data['sections']['health']
-        prod_data = self.summary_data['sections']['productivity']
-        learn_data = self.summary_data['sections']['learning']
-        finance_data = self.summary_data['sections']['finance']
+        # Collect reflections
+        self.summary_data["reflections"] = self.collect_reflections()
+        
+        # Check if we have any real data
+        has_real_data = any(
+            data is not None for data in self.summary_data['sections'].values()
+        )
+        
+        if not has_real_data:
+            summary = f"""# Daily Summary - {self.today.strftime('%B %d, %Y')}
 
-        summary = f"""# Daily Summary - {self.today.strftime('%B %d, %Y')}
+## ⚠️ No Real Data Available
 
-## 📊 Quick Stats
+**All data sources are currently disconnected.** This summary contains no real metrics.
 
-### 🏃 Health & Wellness
-- **Steps**: {health_data['steps']:,}
-- **Sleep**: {health_data['sleep_hours']} hours
-- **Water**: {health_data['water_glasses']} glasses
-- **Workout**: {'✅ Completed' if health_data['workout_completed'] else '❌ Missed'}
-- **Meditation**: {health_data['meditation_minutes']} minutes
-- **Energy**: {health_data['energy_level']}/10
+### 🔌 Required Integrations
+- **Health**: Apple Health, Google Fit, Fitbit, or manual input
+- **Productivity**: Todoist, Notion, RescueTime, Toggl, GitHub
+- **Learning**: Coursera, Udemy, Notion, Obsidian, or manual tracking
+- **Finance**: Banking APIs, YNAB, Mint, or manual tracking
 
-### 💼 Productivity
-- **Tasks Completed**: {prod_data['tasks_completed']}
-- **Focus Time**: {prod_data['focus_time_hours']} hours
-- **Meetings**: {prod_data['meetings_attended']}
-- **Code Commits**: {prod_data['code_commits']}
-- **Documents**: {prod_data['documents_created']}
-- **Emails**: {prod_data['emails_processed']}
+### 📝 Manual Input Option
+Until integrations are implemented, consider adding manual input forms for daily tracking.
 
-### 📚 Learning & Growth
-- **Reading**: {learn_data['reading_minutes']} minutes
-- **Course Progress**: {learn_data['courses_progress']}
-- **Notes Created**: {learn_data['notes_created']}
-- **Topics**: {', '.join(learn_data['topics_studied'])}
+## 📝 Your Reflections
+"""
+            # Add reflections if available
+            if self.summary_data["reflections"]:
+                reflections = self.summary_data["reflections"]
+                summary += f"""
+### 🎯 Biggest Win Today
+{reflections.get('biggest_win', 'Not provided')}
 
-### 💰 Finance
-- **Spent Today**: ${finance_data['spending_today']}
-- **Budget Remaining**: ${finance_data['budget_remaining']}
-- **Investment Change**: {finance_data['investment_change']}%
-- **Savings Rate**: {finance_data['savings_rate']}
+### 🚧 Biggest Challenge
+{reflections.get('biggest_challenge', 'Not provided')}
 
-## 💡 Insights
-{chr(10).join(f"- {insight}" for insight in self.summary_data['insights'])}
+### 🙏 Grateful For
+{reflections.get('grateful_for', 'Not provided')}
 
-## 🎯 Recommendations for Tomorrow
-{chr(10).join(f"{i+1}. {rec}" for i, rec in enumerate(self.summary_data['recommendations']))}
-
-## 📝 Reflection Prompts
+### 🔮 Tomorrow's Plan
+{reflections.get('tomorrow_plan', 'Not provided')}
+"""
+            else:
+                summary += """
+### Reflection Prompts
 - What was your biggest win today?
 - What challenged you the most?
 - What are you grateful for?
 - What will you do differently tomorrow?
+"""
+            
+            summary += f"""
 
 ---
 *Generated at {datetime.now().strftime('%H:%M')} | Next summary in 24 hours*
 """
-        return summary
+            return summary
+        
+        # If we have some real data, format it appropriately
+        summary_parts = [f"# Daily Summary - {self.today.strftime('%B %d, %Y')}\n"]
+        
+        if self.summary_data['sections']['health']:
+            health_data = self.summary_data['sections']['health']
+            summary_parts.append("## 🏃 Health & Wellness")
+            # Add health data formatting here when real data is available
+        
+        if self.summary_data['sections']['productivity']:
+            summary_parts.append("## 💼 Productivity")
+            # Add productivity data formatting here when real data is available
+        
+        if self.summary_data['sections']['learning']:
+            summary_parts.append("## 📚 Learning & Growth")
+            # Add learning data formatting here when real data is available
+        
+        if self.summary_data['sections']['finance']:
+            summary_parts.append("## 💰 Finance")
+            # Add finance data formatting here when real data is available
+        
+        # Add insights and recommendations if available
+        if self.summary_data['insights']:
+            summary_parts.append("## 💡 Insights")
+            summary_parts.extend(f"- {insight}" for insight in self.summary_data['insights'])
+        
+        if self.summary_data['recommendations']:
+            summary_parts.append("## 🎯 Recommendations for Tomorrow")
+            summary_parts.extend(f"{i+1}. {rec}" for i, rec in enumerate(self.summary_data['recommendations']))
+        
+        summary_parts.append("## 📝 Reflection Prompts")
+        summary_parts.extend([
+            "- What was your biggest win today?",
+            "- What challenged you the most?",
+            "- What are you grateful for?",
+            "- What will you do differently tomorrow?"
+        ])
+        
+        summary_parts.append(f"\n---\n*Generated at {datetime.now().strftime('%H:%M')} | Next summary in 24 hours*")
+        
+        return "\n".join(summary_parts)
     
     def save_summary(self, summary: str):
         """Save the summary to file"""
@@ -158,13 +211,13 @@ class DailySummaryGenerator:
         # Save markdown file
         filename = f"summary_{self.today.strftime('%Y%m%d')}.md"
         filepath = output_dir / filename
-        filepath.write_text(summary)
+        filepath.write_text(summary, encoding='utf-8')
         
         # Save JSON data
         json_filename = f"data_{self.today.strftime('%Y%m%d')}.json"
         json_filepath = output_dir / json_filename
-        with open(json_filepath, 'w') as f:
-            json.dump(self.summary_data, f, indent=2, default=str)
+        with open(json_filepath, 'w', encoding='utf-8') as f:
+            json.dump(self.summary_data, f, indent=2, default=str, ensure_ascii=False)
         
         print(f"✅ Summary saved to {filepath}")
         print(f"📊 Data saved to {json_filepath}")
