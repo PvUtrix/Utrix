@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   personal-system:
-    build: .
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
     ports:
       - "8000:8000"
     environment:

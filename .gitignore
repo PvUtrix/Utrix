@@ -1,43 +1,82 @@
-# Логи
+# ========================================
+# PERSONAL SYSTEM - GIT IGNORE
+# ========================================
+
+# ========================================
+# LOGS AND DEBUGGING
+# ========================================
 logs/
 *.log
+*.log.*
+debug/
+*.debug
 
-# Конфиденциальные данные
+# ========================================
+# PRIVACY AND SECURITY
+# ========================================
 privacy/
 config/global/preferences.yaml
-
-# Временные файлы
-*.tmp
-*.temp
-.DS_Store
-Thumbs.db
-
-# Автоматизация
-automation/scripts/custom/*.pyc
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Локальные настройки
 .env
 .env.local
 .env.*.local
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+keys/
 
-# IDE
-.vscode/
-.idea/
+# ========================================
+# PYTHON ENVIRONMENT
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv.bak/
+
+# ========================================
+# TEMPORARY AND CACHE FILES
+# ========================================
+*.tmp
+*.temp
+*.bak
+*.backup
 *.swp
 *.swo
 *~
+.cache/
+.temp/
 
-# Системные файлы
+# ========================================
+# SYSTEM FILES
+# ========================================
+# macOS
 .DS_Store
 .DS_Store?
 ._*
@@ -46,14 +85,78 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Временные файлы
-*.tmp
-*.temp
-*.bak
-*.backup
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Локальные конфигурации
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ========================================
+# IDE AND EDITOR FILES
+# ========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.atom/
+.brackets.json
+.sublime-project
+.sublime-workspace
+
+# ========================================
+# AUTOMATION AND BUILD
+# ========================================
+automation/scripts/custom/*.pyc
+automation/outputs/temp/
+automation/logs/
+build/
+dist/
+*.pyc
+*.pyo
+*.pyd
+
+# ========================================
+# LOCAL CONFIGURATIONS
+# ========================================
 config/local/
 *.local.yaml
 *.local.yml
+*.local.json
+config.local.*
+
+# ========================================
+# PROJECT SPECIFIC
+# ========================================
 projects/git-server/
+.qodo/
+temp/
+tmp/
+
+# ========================================
+# BACKUP AND ARCHIVE
+# ========================================
+backups/weekly/
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# ========================================
+# TESTING AND COVERAGE
+# ========================================
+.coverage
+.pytest_cache/
+.tox/
+.nox/
+htmlcov/
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/

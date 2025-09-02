@@ -5,7 +5,7 @@ services:
   personal-system:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: deployment/docker/Dockerfile
     environment:
       - CORE_SUPABASE_URL=${CORE_SUPABASE_URL}
       - CORE_SUPABASE_ANON_KEY=${CORE_SUPABASE_ANON_KEY}

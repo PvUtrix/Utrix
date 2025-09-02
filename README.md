@@ -2,6 +2,8 @@
 
 A **privacy-first, AI-powered system** for managing personal knowledge, projects, and automation across all life domains with **voice notifications** and **serverless deployment**.
 
+
+
 [![Deploy with Coolify](https://img.shields.io/badge/Deploy-Coolify-blue)](COOLIFY_DEPLOYMENT_COMPLETE.md)
 [![Voice Enabled](https://img.shields.io/badge/Voice-ElevenLabs-green)](automation/serverless/VOICE_README.md)
 [![CI/CD Ready](https://img.shields.io/badge/CI/CD-Gitea-orange)](automation/serverless/CICD_SETUP.md)
@@ -27,7 +29,7 @@ git clone https://git.yourdomain.com/yourusername/personal-system.git
 cd personal-system
 
 # 2. Run automated deployment
-./coolify-deploy.sh all
+./deployment/coolify/coolify-deploy.sh all
 
 # 3. Configure environment variables
 nano .env  # Add your API keys
@@ -62,10 +64,11 @@ python main.py
 
 ```bash
 # Build and run with Docker
-docker build -t personal-system .
+docker build -t personal-system -f deployment/docker/Dockerfile .
 docker run -p 8000:8000 --env-file .env personal-system
 
 # Or use docker-compose
+cd deployment/docker
 docker-compose up -d
 ```
 
@@ -249,6 +252,35 @@ cat .env
 
 ## 📚 Documentation
 
+### 📖 User Guides
+- [🚀 Getting Started](docs/guides/getting-started.md)
+- [📅 Daily Usage](docs/guides/daily-usage.md)
+- [⚙️ Workflow Management](docs/guides/workflow-management.md)
+- [🤖 Automation Setup](docs/guides/automation-setup.md)
+- [🎵 Voice Features](docs/guides/voice-features.md)
+- [🔧 Troubleshooting](docs/guides/troubleshooting.md)
+
+### 🛠️ Setup & Deployment
+- [⚙️ Initial Setup](docs/setup/initial-setup.md)
+- [🌍 Environment Setup](docs/setup/environment-setup.md)
+- [🐳 Docker Setup](docs/setup/docker-setup.md)
+- [🚀 Coolify Deployment](docs/deployment/coolify/)
+- [📊 System Monitoring](docs/deployment/monitoring/)
+
+### 🔌 API & Integration
+- [📡 API Reference](docs/api/endpoints.md)
+- [🔐 Authentication](docs/api/authentication.md)
+- [💡 Examples](docs/api/examples.md)
+- [🔗 Integrations](docs/api/integrations.md)
+- [🔔 Webhooks](docs/api/webhooks.md)
+
+### 👥 Contributing
+- [📋 Guidelines](docs/contributing/guidelines.md)
+- [💻 Development Setup](docs/contributing/development-setup.md)
+- [📏 Code Standards](docs/contributing/code-standards.md)
+- [🧪 Testing](docs/contributing/testing.md)
+
+### 📚 Legacy Documentation
 - [🚀 Complete Deployment Guide](COOLIFY_DEPLOYMENT_COMPLETE.md)
 - [🎵 Voice System Setup](automation/serverless/VOICE_README.md)
 - [🔄 CI/CD Pipeline](automation/serverless/CICD_SETUP.md)

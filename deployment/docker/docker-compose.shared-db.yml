@@ -1,0 +1,100 @@
+# Docker Compose для персональной системы с единой базой данных
+# Этот файл настраивает Gitea, PostgreSQL и Redis для локальной разработки
+# Все сервисы используют одну базу данных PostgreSQL
+
+version: '3.8'
+
+services:
+  # Единая база данных PostgreSQL для всех сервисов
+  shared-postgres:
+    image: postgres:15-alpine
+    container_name: personal-system-postgres
+    restart: unless-stopped
+    
+    # Переменные окружения для базы данных
+    environment:
+      POSTGRES_DB: personal_system_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${SHARED_DB_PASSWORD:-secure_password_123}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      
+    # Тома для данных
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/database/init:/docker-entrypoint-initdb.d
+      - ./backups:/backups
+      
+    # Порты
+    ports:
+      - "5432:5432"
+      
+    # Настройки сети
+    networks:
+      - personal-system-network
+      
+    # Проверки здоровья
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      
+    # Лимиты ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Общий Redis для кэширования и сессий
+  shared-redis:
+    image: redis:7-alpine
+    container_name: personal-system-redis
+    restart: unless-stopped
+    
+    # Переменные окружения для Redis
+    environment:
+      REDIS_PASSWORD: ${SHARED_REDIS_PASSWORD:-redis_password_123}
+      
+    # Тома для данных
+    volumes:
+      - redis_data:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      
+    # Порты
+    ports:
+      - "6379:6379"
+      
+    # Настройки сети
+    networks:
+      - personal-system-network
+      
+    # Команда запуска с конфигурацией
+    command: redis-server /usr/local/etc/redis/redis.conf
+      
+    # Проверки здоровья
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+      
+    # Лимиты ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  # Gitea - Git-сервер
+  gitea:
+    image: gitea/gitea:latest
+    container_name: personal-system-gitea
