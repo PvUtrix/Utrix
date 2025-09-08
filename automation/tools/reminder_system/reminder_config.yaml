@@ -1,0 +1,36 @@
+# Reminder System Configuration
+
+reminders:
+  daily_task_check:
+    enabled: true
+    time: "09:00"
+    message: "Daily task check - review and update progress"
+    command: "python3 automation/tools/task_manager/main.py --list --priority high"
+    
+  weekly_review:
+    enabled: true
+    day: "monday"
+    time: "10:00"
+    message: "Weekly task review - generate progress report"
+    command: "python3 automation/tools/task_manager/main.py --report"
+    
+  overdue_tasks:
+    enabled: true
+    check_interval_hours: 24
+    message: "You have overdue tasks that need attention"
+
+notifications:
+  desktop: true
+  file: true
+  email: false
+  
+task_thresholds:
+  high_priority_pending: 2
+  overdue_days: 7
+
+# Custom reminder templates
+templates:
+  task_review: "Time to review your tasks and update progress"
+  weekly_planning: "Weekly planning session - review completed tasks and plan next week"
+  quality_check: "Run code quality analysis to identify improvement opportunities"
+  testing_reminder: "Don't forget to add tests for new features"

@@ -1,0 +1,428 @@
+{
+  "/Users/PvUtrix_1/Library/CloudStorage/Dropbox/Cursor/personal-system/automation/serverless/configs/serverless.yml": {
+    "versionFramework": "4.18.2",
+    "servicePath": "/Users/PvUtrix_1/Library/CloudStorage/Dropbox/Cursor/personal-system/automation/serverless/configs/serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "personal-system-serverless",
+      "frameworkVersion": "4",
+      "provider": {
+        "name": "aws",
+        "runtime": "python3.9",
+        "region": "eu-central-1",
+        "stage": "prod",
+        "memorySize": 256,
+        "timeout": 30,
+        "deploymentBucket": "personal-system-serverless-deployments-680429660492",
+        "environment": {
+          "CORE_SUPABASE_URL": "db.pcknefrfautvwwawghbr.supabase.co",
+          "CORE_SUPABASE_ANON_KEY": "sbp_0c64314e0a8a465d52d7aa8b3e5e32a96223fe5c",
+          "MAIN_SUPABASE_URL": "",
+          "MAIN_SUPABASE_ANON_KEY": "",
+          "ELEVENLABS_API_KEY": "<REDACTED>",
+          "ELEVENLABS_VOICE_ID": "21m00Tcm4TlvDq8ikWAM",
+          "TELEGRAM_BOT_TOKEN": "<REDACTED>",
+          "TELEGRAM_CHAT_ID": "71597815",
+          "GITEA_URL": "http://coolify.pvutrix.com:3000/",
+          "GITEA_TOKEN": "<REDACTED>",
+          "GITEA_WEBHOOK_SECRET": "<REDACTED>",
+          "COOLIFY_URL": "",
+          "COOLIFY_API_TOKEN": "<REDACTED>",
+          "COOLIFY_PROJECT_UUID": "",
+          "COOLIFY_APPLICATION_UUID": ""
+        },
+        "versionFunctions": true,
+        "deploymentBucketObject": {
+          "name": "personal-system-serverless-deployments-680429660492",
+          "serverSideEncryption": "AES256"
+        }
+      },
+      "functions": {
+        "daily-summary": {
+          "handler": "daily_summary_simple.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 12 * * ? *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "environment": {
+            "TELEGRAM_BOT_TOKEN": "<REDACTED>",
+            "TELEGRAM_CHAT_ID": "71597815"
+          },
+          "name": "personal-system-serverless-prod-daily-summary"
+        },
+        "gitea-webhook-handler": {
+          "handler": "simple_test.lambda_handler",
+          "timeout": 30,
+          "memorySize": 256,
+          "events": [
+            {
+              "http": {
+                "path": "/webhook/gitea",
+                "method": "post",
+                "cors": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-gitea-webhook-handler"
+        },
+        "cicd-orchestrator": {
+          "handler": "simple_test.lambda_handler",
+          "timeout": 60,
+          "memorySize": 256,
+          "events": [],
+          "name": "personal-system-serverless-prod-cicd-orchestrator"
+        },
+        "daily-voice-message": {
+          "handler": "voice_generator_simple.lambda_handler",
+          "timeout": 120,
+          "memorySize": 512,
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 7 * * ? *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-daily-voice-message"
+        },
+        "voice-content-generator": {
+          "handler": "voice_generator_simple.lambda_handler",
+          "timeout": 60,
+          "events": [],
+          "name": "personal-system-serverless-prod-voice-content-generator"
+        },
+        "elevenlabs-tts": {
+          "handler": "voice_generator_simple.lambda_handler",
+          "timeout": 120,
+          "memorySize": 512,
+          "events": [],
+          "name": "personal-system-serverless-prod-elevenlabs-tts"
+        },
+        "data-sync-manager": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "rate(4 hours)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-data-sync-manager"
+        },
+        "data-lifecycle-manager": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 2 ? * SUN *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-data-lifecycle-manager"
+        },
+        "data-monitor": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 9 * * ? *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-data-monitor"
+        },
+        "comprehensive-monitor": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "rate(6 hours)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-comprehensive-monitor"
+        },
+        "cost-monitor": {
+          "handler": "cost_monitor_simple.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 2 * * ? *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-cost-monitor"
+        },
+        "daily-projection": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 6 * * ? *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-daily-projection"
+        },
+        "home-server-archiver": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 4 ? * SUN *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-home-server-archiver"
+        },
+        "multi-tier-quota-manager": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "schedule": {
+                "rate": [
+                  "cron(0 3 * * ? *)"
+                ],
+                "enabled": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-multi-tier-quota-manager"
+        },
+        "intelligent-load-balancer": {
+          "handler": "simple_test.lambda_handler",
+          "events": [
+            {
+              "http": {
+                "path": "/load-balancer",
+                "method": "any",
+                "cors": true
+              }
+            }
+          ],
+          "name": "personal-system-serverless-prod-intelligent-load-balancer"
+        }
+      },
+      "plugins": [
+        "serverless-python-requirements"
+      ],
+      "custom": {
+        "pythonRequirements": {
+          "dockerizePip": false,
+          "layer": false,
+          "slim": true,
+          "strip": false,
+          "noDeps": false
+        }
+      },
+      "package": {
+        "patterns": [
+          "!**/*.pyc",
+          "!**/__pycache__",
+          "!**/node_modules/**",
+          "!**/.git/**",
+          "!README.md",
+          "!serverless.yml",
+          "!requirements.txt",
+          "!deploy.sh",
+          "!run.sh",
+          "!multi_tier_config.yaml",
+          "!multi_tier_config.local.yaml"
+        ],
+        "artifactsS3KeyDirname": "serverless/personal-system-serverless/prod/code-artifacts"
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "python3.9",
+      "region": "eu-central-1",
+      "stage": "prod",
+      "memorySize": 256,
+      "timeout": 30,
+      "deploymentBucket": "personal-system-serverless-deployments-680429660492",
+      "environment": {
+        "CORE_SUPABASE_URL": "db.pcknefrfautvwwawghbr.supabase.co",
+        "CORE_SUPABASE_ANON_KEY": "sbp_0c64314e0a8a465d52d7aa8b3e5e32a96223fe5c",
+        "MAIN_SUPABASE_URL": "",
+        "MAIN_SUPABASE_ANON_KEY": "",
+        "ELEVENLABS_API_KEY": "<REDACTED>",
+        "ELEVENLABS_VOICE_ID": "21m00Tcm4TlvDq8ikWAM",
+        "TELEGRAM_BOT_TOKEN": "<REDACTED>",
+        "TELEGRAM_CHAT_ID": "71597815",
+        "GITEA_URL": "http://coolify.pvutrix.com:3000/",
+        "GITEA_TOKEN": "<REDACTED>",
+        "GITEA_WEBHOOK_SECRET": "<REDACTED>",
+        "COOLIFY_URL": "",
+        "COOLIFY_API_TOKEN": "<REDACTED>",
+        "COOLIFY_PROJECT_UUID": "",
+        "COOLIFY_APPLICATION_UUID": ""
+      },
+      "versionFunctions": true,
+      "deploymentBucketObject": {
+        "name": "personal-system-serverless-deployments-680429660492",
+        "serverSideEncryption": "AES256"
+      }
+    },
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "serviceRawFile": "service: personal-system-serverless\n\nframeworkVersion: '4'\n\nprovider:\n  name: aws\n  runtime: python3.9\n  region: eu-central-1\n  stage: prod\n  memorySize: 256\n  timeout: 30\n  deploymentBucket:\n    name: personal-system-serverless-deployments-680429660492\n    serverSideEncryption: AES256\n  environment:\n    # Core Database (Free Tier)\n    CORE_SUPABASE_URL: ${env:CORE_SUPABASE_URL, ''}\n    CORE_SUPABASE_ANON_KEY: ${env:CORE_SUPABASE_ANON_KEY, ''}\n    # Main Database (Self-hosted)\n    MAIN_SUPABASE_URL: ${env:MAIN_SUPABASE_URL, ''}\n    MAIN_SUPABASE_ANON_KEY: ${env:MAIN_SUPABASE_ANON_KEY, ''}\n    # ElevenLabs\n    ELEVENLABS_API_KEY: ${env:ELEVENLABS_API_KEY, ''}\n    ELEVENLABS_VOICE_ID: ${env:ELEVENLABS_VOICE_ID, '21m00Tcm4TlvDq8ikWAM'}\n    # Telegram\n    TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN, ''}\n    TELEGRAM_CHAT_ID: ${env:TELEGRAM_CHAT_ID, ''}\n    # Gitea (optional)\n    GITEA_URL: ${env:GITEA_URL, ''}\n    GITEA_TOKEN: ${env:GITEA_TOKEN, ''}\n    GITEA_WEBHOOK_SECRET: ${env:GITEA_WEBHOOK_SECRET, ''}\n    # Coolify (optional)\n    COOLIFY_URL: ${env:COOLIFY_URL, ''}\n    COOLIFY_API_TOKEN: ${env:COOLIFY_API_TOKEN, ''}\n    COOLIFY_PROJECT_UUID: ${env:COOLIFY_PROJECT_UUID, ''}\n    COOLIFY_APPLICATION_UUID: ${env:COOLIFY_APPLICATION_UUID, ''}\n\nfunctions:\n  # Daily Summary (simplified)\n  daily-summary:\n    handler: daily_summary_simple.lambda_handler\n    events:\n      - schedule:\n          rate: cron(0 12 * * ? *)  # Daily at 12 PM UTC\n          enabled: true\n    environment:\n      TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN, ''}\n      TELEGRAM_CHAT_ID: ${env:TELEGRAM_CHAT_ID, ''}\n\n  # CI/CD Webhook Handler (simplified)\n  gitea-webhook-handler:\n    handler: simple_test.lambda_handler  # Using simple test for now\n    timeout: 30\n    memorySize: 256\n    events:\n      - http:\n          path: /webhook/gitea\n          method: post\n          cors: true\n\n  # CI/CD Orchestrator (simplified)\n  cicd-orchestrator:\n    handler: simple_test.lambda_handler  # Using simple test for now\n    timeout: 60\n    memorySize: 256\n\n  # Coolify Deployer (moved to deployment/coolify/)\n  # coolify-deployer:\n  #   handler: ../../deployment/coolify/coolify_deployer.lambda_handler\n  #   timeout: 300\n  #   memorySize: 512\n  #   environment:\n  #     COOLIFY_URL: ${env:COOLIFY_URL, ''}\n  #     COOLIFY_API_TOKEN: ${env:COOLIFY_API_TOKEN, ''}\n  #     COOLIFY_PROJECT_UUID: ${env:COOLIFY_PROJECT_UUID, ''}\n  #     COOLIFY_APPLICATION_UUID: ${env:COOLIFY_APPLICATION_UUID, ''}\n\n  # Daily Voice Message (simplified)\n  daily-voice-message:\n    handler: voice_generator_simple.lambda_handler\n    timeout: 120  # Longer timeout for voice generation\n    memorySize: 512  # More memory for voice processing\n    events:\n      - schedule:\n          rate: cron(0 7 * * ? *)  # Daily at 7 AM UTC\n          enabled: true\n\n  # Voice Content Generator (simplified)\n  voice-content-generator:\n    handler: voice_generator_simple.lambda_handler\n    timeout: 60\n\n  # ElevenLabs TTS (simplified)\n  elevenlabs-tts:\n    handler: voice_generator_simple.lambda_handler\n    timeout: 120\n    memorySize: 512\n\n  # Data Sync Manager (simplified)\n  data-sync-manager:\n    handler: simple_test.lambda_handler\n    events:\n      - schedule:\n          rate: rate(4 hours)  # Every 4 hours\n          enabled: true\n\n  # Data Lifecycle Manager (simplified)\n  data-lifecycle-manager:\n    handler: simple_test.lambda_handler\n    events:\n      - schedule:\n          rate: cron(0 2 ? * SUN *)  # Weekly on Sunday at 2 AM UTC\n          enabled: true\n\n  # Data Monitor (simplified)\n  data-monitor:\n    handler: simple_test.lambda_handler\n    events:\n      - schedule:\n          rate: cron(0 9 * * ? *)  # Daily at 9 AM UTC\n          enabled: true\n\n  # Comprehensive Monitor (simplified)\n  comprehensive-monitor:\n    handler: simple_test.lambda_handler\n    events:\n      - schedule:\n          rate: rate(6 hours)  # Every 6 hours\n          enabled: true\n\n  # Cost Monitor (simplified)\n  cost-monitor:\n    handler: cost_monitor_simple.lambda_handler\n    events:\n      - schedule:\n          rate: cron(0 2 * * ? *)  # Daily at 2 AM UTC\n          enabled: true\n\n  # Daily Projection Calculator (simplified)\n  daily-projection:\n    handler: simple_test.lambda_handler\n    events:\n      - schedule:\n          rate: cron(0 6 * * ? *)  # Daily at 6 AM UTC\n          enabled: true\n\n  # Home Server Archiver (simplified)\n  home-server-archiver:\n    handler: simple_test.lambda_handler\n    events:\n      - schedule:\n          rate: cron(0 4 ? * SUN *)  # Weekly on Sunday at 4 AM UTC\n          enabled: true\n\n  # Multi-Tier Quota Manager (simplified)\n  multi-tier-quota-manager:\n    handler: simple_test.lambda_handler\n    events:\n      - schedule:\n          rate: cron(0 3 * * ? *)  # Daily at 3 AM UTC\n          enabled: true\n\n  # Intelligent Load Balancer (simplified)\n  intelligent-load-balancer:\n    handler: simple_test.lambda_handler\n    events:\n      - http:\n          path: /load-balancer\n          method: any\n          cors: true\n\nplugins:\n  - serverless-python-requirements\n\ncustom:\n  pythonRequirements:\n    dockerizePip: false\n    layer: false\n    slim: true\n    strip: false\n    noDeps: false\n\npackage:\n  patterns:\n    - '!**/*.pyc'\n    - '!**/__pycache__'\n    - '!**/node_modules/**'\n    - '!**/.git/**'\n    - '!README.md'\n    - '!serverless.yml'\n    - '!requirements.txt'\n    - '!deploy.sh'\n    - '!run.sh'\n    - '!multi_tier_config.yaml'\n    - '!multi_tier_config.local.yaml'\n",
+    "command": [
+      "invoke"
+    ],
+    "options": {
+      "function": "voice-content-generator",
+      "stage": "prod",
+      "data": "{\"text\": \"Hello! This is a test of the fixed voice generation system. You should now receive an actual voice message in Telegram!\"}"
+    },
+    "orgId": "128ea6eb-78a8-4820-92b9-5f831d53a5cd",
+    "orgName": "pvutrix",
+    "userId": "xYclRmtLh2FFK776CZ",
+    "userName": "pvutrix",
+    "serviceProviderAwsAccountId": "680429660492",
+    "serviceProviderAwsCfStackName": "personal-system-serverless-prod",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:eu-central-1:680429660492:stack/personal-system-serverless-prod/7f4393e0-8ce5-11f0-9544-06ced5d2cfbb",
+    "serviceProviderAwsCfStackCreated": "2025-09-08T18:56:16.278Z",
+    "serviceProviderAwsCfStackUpdated": "2025-09-08T20:55:03.842Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "MultiDashtierDashquotaDashmanagerLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-multi-tier-quota-manager:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-MultiDashtierDashquotaDashmanagerLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "DailyDashprojectionLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-daily-projection:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-DailyDashprojectionLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "ElevenlabsDashttsLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-elevenlabs-tts:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-ElevenlabsDashttsLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "DailyDashvoiceDashmessageLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-daily-voice-message:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-DailyDashvoiceDashmessageLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "ComprehensiveDashmonitorLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-comprehensive-monitor:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-ComprehensiveDashmonitorLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "CicdDashorchestratorLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-cicd-orchestrator:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-CicdDashorchestratorLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "GiteaDashwebhookDashhandlerLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-gitea-webhook-handler:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-GiteaDashwebhookDashhandlerLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "IntelligentDashloadDashbalancerLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-intelligent-load-balancer:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-IntelligentDashloadDashbalancerLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "ServerlessDeploymentBucketName",
+        "OutputValue": "personal-system-serverless-deployments-680429660492",
+        "ExportName": "sls-personal-system-serverless-prod-ServerlessDeploymentBucketName"
+      },
+      {
+        "OutputKey": "HomeDashserverDasharchiverLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-home-server-archiver:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-HomeDashserverDasharchiverLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "DailyDashsummaryLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-daily-summary:7",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-DailyDashsummaryLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "CostDashmonitorLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-cost-monitor:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-CostDashmonitorLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "VoiceDashcontentDashgeneratorLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-voice-content-generator:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-VoiceDashcontentDashgeneratorLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "DataDashsyncDashmanagerLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-data-sync-manager:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-DataDashsyncDashmanagerLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "DataDashmonitorLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-data-monitor:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-DataDashmonitorLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "DataDashlifecycleDashmanagerLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-central-1:680429660492:function:personal-system-serverless-prod-data-lifecycle-manager:2",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-personal-system-serverless-prod-DataDashlifecycleDashmanagerLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "ServiceEndpoint",
+        "OutputValue": "https://1pubjgwn81.execute-api.eu-central-1.amazonaws.com/prod",
+        "Description": "URL of the service endpoint",
+        "ExportName": "sls-personal-system-serverless-prod-ServiceEndpoint"
+      }
+    ]
+  }
+}

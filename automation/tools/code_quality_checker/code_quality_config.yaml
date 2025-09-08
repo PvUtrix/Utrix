@@ -1,0 +1,49 @@
+# Code Quality Checker Configuration
+
+type_hints:
+  required: true
+  exclude_patterns:
+    - "test_"
+    - "__init__"
+    - "_private"
+
+docstrings:
+  required: true
+  exclude_patterns:
+    - "test_"
+    - "_private"
+
+logging:
+  required: true
+  exclude_patterns:
+    - "test_"
+    - "_private"
+
+error_handling:
+  required: true
+  exclude_generic_exceptions: true
+  require_try_except_for:
+    - "open"
+    - "request"
+    - "get"
+    - "post"
+    - "put"
+    - "delete"
+    - "execute"
+    - "query"
+
+file_standards:
+  max_line_length: 100
+  require_shebang: true
+  require_encoding: "utf-8"
+
+naming_conventions:
+  functions: "snake_case"
+  classes: "PascalCase"
+  constants: "UPPER_SNAKE_CASE"
+  variables: "snake_case"
+
+import_standards:
+  require_future_imports: false
+  sort_imports: true
+  group_imports: true

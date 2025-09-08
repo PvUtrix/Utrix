@@ -1,0 +1,153 @@
+# 🧹 Automated Cleanup Configuration
+# This file defines what files should be automatically cleaned up
+
+# File patterns to automatically remove
+auto_remove:
+  # Test files
+  test_files:
+    - "**/test_*.py"
+    - "**/test_*.js"
+    - "**/test_*.md"
+    - "**/*_test.py"
+    - "**/*_test.js"
+    - "**/test_output.*"
+    - "**/test_*.mp3"
+    - "**/test_*.wav"
+    - "**/test_*.json"
+    - "**/test_*.log"
+  
+  # Build artifacts
+  build_artifacts:
+    - "**/node_modules/"
+    - "**/__pycache__/"
+    - "**/deployment-package/"
+    - "**/.serverless/"
+    - "**/dist/"
+    - "**/build/"
+    - "**/*.zip"
+    - "**/*.tar.gz"
+    - "**/*.egg-info/"
+    - "**/package-lock.json"
+  
+  # Temporary files
+  temporary_files:
+    - "**/.env.old"
+    - "**/.env.backup"
+    - "**/response.json"
+    - "**/temp_*"
+    - "**/tmp_*"
+    - "**/*.tmp"
+    - "**/*.temp"
+    - "**/.DS_Store"
+    - "**/Thumbs.db"
+  
+  # Redundant documentation
+  redundant_docs:
+    - "**/DEPLOYMENT_STATUS.md"
+    - "**/DEPLOYMENT_SUCCESS.md"
+    - "**/SCHEDULE_UPDATED.md"
+    - "**/SCHEDULING_ENABLED.md"
+    - "**/AWS_CONNECTION_STATUS.md"
+    - "**/QUICK_START.md"
+    - "**/FREE_TIER_GUIDE.md"
+    - "**/DEPLOYMENT_ALTERNATIVES.md"
+    - "**/DEPLOYMENT_GUIDE.md"
+
+# Files to mark for review (not auto-removed)
+mark_for_review:
+  # Multiple config variants
+  config_variants:
+    - "**/serverless-*.yml"
+    - "**/config-*.yaml"
+    - "**/setup-*.sh"
+    - "**/fix_*.sh"
+  
+  # Documentation duplicates
+  doc_duplicates:
+    - "**/README.md.backup"
+    - "**/README.md.old"
+    - "**/SETUP.md"
+    - "**/ENVIRONMENT_SETUP.md"
+
+# Files to preserve (never remove)
+preserve:
+  - "README.md"
+  - "LICENSE"
+  - "requirements.txt"
+  - "package.json"
+  - "main.py"
+  - "**/.gitignore"
+  - "**/.cursorrules"
+  - "**/config.yaml"
+  - "**/config.yml"
+  - "**/.env.example"
+  - "**/serverless.yml"  # Keep main config
+  - "**/docker-compose.yml"
+  - "**/Dockerfile"
+
+# Directory-specific rules
+directory_rules:
+  automation/serverless:
+    auto_remove:
+      - "**/test_*.py"
+      - "**/simple_*.py"
+      - "**/*.zip"
+      - "**/node_modules/"
+      - "**/deployment-package/"
+    mark_for_review:
+      - "**/serverless-*.yml"
+      - "**/fix_*.sh"
+  
+  projects/*/:
+    preserve:
+      - "**/test_*.py"  # Keep project-specific tests
+      - "**/README.md"
+      - "**/requirements.txt"
+  
+  domains/*/:
+    preserve:
+      - "**/README.md"
+      - "**/*.md"  # Keep all domain documentation
+
+# Cleanup schedules
+schedules:
+  # Run cleanup before commits
+  pre_commit: true
+  
+  # Run cleanup weekly
+  weekly: true
+  
+  # Run cleanup on deployment
+  pre_deployment: true
+
+# Cleanup actions
+actions:
+  # What to do with marked files
+  marked_files:
+    action: "move_to_archive"  # Options: remove, move_to_archive, move_to_temp
+    archive_dir: ".cleanup_archive"
+    temp_dir: ".cleanup_temp"
+  
+  # Backup before cleanup
+  backup:
+    enabled: true
+    backup_dir: ".cleanup_backup"
+    max_backups: 5
+  
+  # Logging
+  logging:
+    enabled: true
+    log_file: "logs/cleanup.log"
+    verbose: true
+
+# Notification settings
+notifications:
+  # Notify on cleanup
+  enabled: true
+  channels:
+    - "console"
+    - "log_file"
+  
+  # Summary report
+  summary_report: true
+  report_file: "logs/cleanup_summary.md"

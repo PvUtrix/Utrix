@@ -1,0 +1,51 @@
+# Lab Analyzer Configuration
+
+analysis:
+  reference_ranges:
+    # Common lab values with normal ranges
+    hemoglobin:
+      male: [13.8, 17.2]  # g/dL
+      female: [12.1, 15.1]  # g/dL
+    hematocrit:
+      male: [40.7, 50.3]  # %
+      female: [36.1, 44.3]  # %
+    glucose:
+      fasting: [70, 100]  # mg/dL
+      random: [70, 140]  # mg/dL
+    cholesterol:
+      total: [0, 200]  # mg/dL
+      ldl: [0, 100]  # mg/dL
+      hdl:
+        male: [40, 999]  # mg/dL
+        female: [50, 999]  # mg/dL
+    triglycerides: [0, 150]  # mg/dL
+
+  alert_thresholds:
+    critical_high: 1.5  # 150% of upper normal
+    critical_low: 0.5   # 50% of lower normal
+    warning_high: 1.2   # 120% of upper normal
+    warning_low: 0.8    # 80% of lower normal
+
+  trend_analysis:
+    min_data_points: 3
+    trend_period_days: 90
+    significant_change_threshold: 0.1  # 10% change
+
+output:
+  formats:
+    - "json"
+    - "html"
+    - "pdf"
+  
+  report_templates:
+    basic: "templates/basic_report.html"
+    detailed: "templates/detailed_report.html"
+    summary: "templates/summary_report.html"
+
+  output_directory: "domains/health/lab_analysis/"
+
+logging:
+  level: "INFO"
+  file: "logs/lab_analyzer.log"
+  max_size: "10MB"
+  backup_count: 5
