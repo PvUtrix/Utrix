@@ -27,6 +27,22 @@ secrets/
 keys/
 
 # ========================================
+# NODE.JS AND NPM
+# ========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+yarn.lock
+.pnp.*
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+
+# ========================================
 # PYTHON ENVIRONMENT
 # ========================================
 __pycache__/
@@ -109,6 +125,8 @@ $RECYCLE.BIN/
 .brackets.json
 .sublime-project
 .sublime-workspace
+.cursor/
+*.code-workspace
 
 # ========================================
 # AUTOMATION AND BUILD
