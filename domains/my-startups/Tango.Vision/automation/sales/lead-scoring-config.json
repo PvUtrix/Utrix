@@ -1,0 +1,23 @@
+{
+  "engagement_weight": 0.35,
+  "qualification_weight": 0.65,
+  "thresholds": {
+    "hot_lead": 80,
+    "warm_lead": 60,
+    "cold_lead": 40
+  },
+  "criteria": {
+    "engagement": {
+      "website_visits": 5,
+      "email_opens": 2,
+      "email_clicks": 5,
+      "demo_requests": 20
+    },
+    "qualification": {
+      "company_size": 10,
+      "budget_range": 15,
+      "decision_timeline": 10,
+      "authority_level": 15
+    }
+  }
+}

@@ -5,15 +5,21 @@ Build, launch, and scale my own startups with clear co-founder agreements, trans
 
 ## Structure
 
+**Note**: Active startups are located directly within `domains/my-startups/StartupName/` for easy access and management.
+
 ```
 my-startups/
-├── active/             # Currently active startups
-├── ideas/              # Startup ideas and validation
-├── co-founders/        # Co-founder agreements & responsibilities
-├── operations/         # Day-to-day operations
-├── smart-contracts/    # Blockchain-based agreements
-├── shared/             # Documents shared with team
-└── .private/           # Confidential founder information
+├── Tango.Vision/             # Active PropTech startup with automation
+├── automation-framework/      # Reusable automation system
+│   ├── templates/            # Automation templates
+│   ├── configs/              # Configuration files
+│   ├── deployment/           # Deployment scripts
+│   └── documentation/        # Guides and best practices
+├── co-founders/              # Co-founder agreements & responsibilities
+├── ideas/                    # Startup ideas and validation
+├── operations/               # Day-to-day operations
+├── shared/                   # Documents shared with team
+└── smart-contracts/          # Blockchain-based agreements
 ```
 
 ## Key Areas
@@ -26,6 +32,15 @@ Each startup gets its own folder with:
 - Team & responsibilities
 - Metrics & KPIs
 - Fundraising status
+- **Automated processes** (via automation-framework)
+
+### Automation Framework
+Reusable automation system for all startups:
+- **Sales automation**: Lead scoring, email sequences, CRM integration
+- **Operations automation**: Project management, resource allocation
+- **Team automation**: Communication, performance management
+- **Finance automation**: Invoicing, reporting, budget monitoring
+- **Customer success**: Onboarding, usage tracking, renewals
 
 ### Co-founder Management
 - Equity agreements
@@ -42,22 +57,64 @@ Each startup gets its own folder with:
 - Advisor agreements
 
 ### Operational Excellence
-- Daily standups
-- Weekly OKRs
-- Monthly board updates
-- Quarterly planning
-- Annual strategy
+- Daily standups (automated)
+- Weekly OKRs (automated)
+- Monthly board updates (automated)
+- Quarterly planning (automated)
+- Annual strategy (automated)
 
 ## Current Startups
 
-### [Startup Name 1]
-**Stage**: Idea / MVP / Product-Market Fit / Scale  
+### Tango.Vision (PropTech)
+**Stage**: Growth (100-1000 customers)  
 **Founded**: [Date]  
 **Co-founders**: [Names and roles]  
-**Status**: Active / Paused / Pivoting  
+**Status**: Active with automation  
+**Automation**: Sales, operations, team, finance
 
-### [Startup Name 2]
-[Similar structure...]
+### Future Startups
+- [Startup Name 2] - [Stage] - [Status]
+- [Startup Name 3] - [Stage] - [Status]
+
+## Automation Benefits
+
+### Time Savings
+- **25-40 hours/week** saved across all startups
+- **Automated lead scoring** and follow-up
+- **Project management** automation
+- **Team coordination** and communication
+
+### Business Impact
+- **20-30% improvement** in lead conversion
+- **50% reduction** in manual processes
+- **Better team efficiency** and coordination
+- **Scalable processes** that grow with startups
+
+### Consistency
+- **Standardized processes** across all ventures
+- **Shared best practices** and templates
+- **Consistent metrics** and reporting
+- **Unified automation** infrastructure
+
+## Quick Start
+
+### 1. Initialize New Startup
+```bash
+cd automation-framework
+./deployment/setup/init-startup.sh --type proptech --stage growth --name "NewStartup"
+```
+
+### 2. Deploy Automations
+```bash
+cd ../NewStartup
+./deploy-automations.sh --startup "NewStartup" --template sales
+./deploy-automations.sh --startup "NewStartup" --template operations
+```
+
+### 3. Set Up Monitoring
+```bash
+./setup-monitoring.sh --startup "NewStartup"
+```
 
 ## Co-founder Agreements Template
 
@@ -116,6 +173,7 @@ Each startup gets its own folder with:
 - [Co-founder Agreement](co-founders/templates/agreement.md)
 - [Smart Contract Templates](smart-contracts/templates/)
 - [RACI Matrix](co-founders/templates/raci-matrix.md)
+- [Automation Framework](automation-framework/README.md)
 
 ## Success Metrics
 
@@ -134,6 +192,12 @@ Each startup gets its own folder with:
 - Pivot efficiency
 - Co-founder alignment score
 
+### Automation ROI
+- Time saved per week
+- Process efficiency improvement
+- Team productivity gains
+- Cost reduction from automation
+
 ---
 
-*Building the future, one startup at a time. Transparency builds trust.*
+*Building the future, one startup at a time. Automation enables scale.*

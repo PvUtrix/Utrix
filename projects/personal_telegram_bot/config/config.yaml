@@ -2,18 +2,18 @@
 
 # Telegram Bot Settings
 telegram:
-  bot_token: "7375573912:AAEvnMsA31mnthNaWagr4OEdYwR5gXRdXgU"
+  bot_token: "8433928834:AAEVArfPyUMqh4z_mYLP3NMxkBQVmH3Up_4"
   allowed_users: [71597815]  # List of Telegram user IDs allowed to use the bot
   admin_users: [71597815]    # List of admin user IDs
 
 # Personal System Paths
 paths:
-  base_path: "../../../"  # Path to your personal system root
-  automation_scripts: "../../../automation/scripts/"
-  journal: "../../../knowledge/journal/"
-  notes: "../../../knowledge/notes/"
-  shadow_work: "../../../core/identity/shadow_work.md"
-  templates: "../../../templates/"
+  base_path: "../../"  # Path to your personal system root
+  automation_scripts: "../../automation/scripts/"
+  journal: "../../core/knowledge/journal/"
+  notes: "../../core/knowledge/notes/"
+  shadow_work: "../../core/identity/shadow_work.md"
+  templates: "../../templates/"
 
 # Data Storage
 storage:

@@ -1,0 +1,26 @@
+{
+  "team_allocation": {
+    "rules": [
+      "skill_based_assignment",
+      "workload_balancing",
+      "availability_checking",
+      "performance_consideration"
+    ]
+  },
+  "capacity_planning": {
+    "metrics": [
+      "team_utilization",
+      "project_capacity",
+      "skill_availability",
+      "workload_distribution"
+    ]
+  },
+  "optimization": {
+    "algorithms": [
+      "workload_balancing",
+      "skill_matching",
+      "deadline_optimization",
+      "resource_efficiency"
+    ]
+  }
+}

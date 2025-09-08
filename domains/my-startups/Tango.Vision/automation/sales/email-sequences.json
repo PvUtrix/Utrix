@@ -1,0 +1,40 @@
+{
+  "welcome": {
+    "emails": [
+      {
+        "subject": "Welcome to {company_name}",
+        "delay": 0,
+        "content": "Welcome message and company overview"
+      },
+      {
+        "subject": "How {company_name} can help you",
+        "delay": 2,
+        "content": "Value proposition and case studies"
+      },
+      {
+        "subject": "Ready to see {company_name} in action?",
+        "delay": 5,
+        "content": "Demo invitation and next steps"
+      }
+    ]
+  },
+  "nurture": {
+    "emails": [
+      {
+        "subject": "Industry insights from {company_name}",
+        "delay": 0,
+        "content": "Industry trends and insights"
+      },
+      {
+        "subject": "Success story: {company_name} client",
+        "delay": 7,
+        "content": "Customer success story"
+      },
+      {
+        "subject": "5 ways {company_name} saves time",
+        "delay": 14,
+        "content": "Key features and benefits"
+      }
+    ]
+  }
+}

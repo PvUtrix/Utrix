@@ -1,0 +1,97 @@
+# Genetic Mutations Data
+# This file contains structured genetic test results and risk assessments
+
+subject:
+  name: "Pavel Shershnyov"
+  test_date: null  # To be filled in
+  testing_company: null  # To be filled in
+
+pathogenic_mutations:
+  biotinidase_deficiency:
+    status: "detected"
+    severity: "pathogenic"
+    implication: "Disease can occur throughout life"
+    gene: null  # To be specified
+    recommendation: "Monitor biotin levels, consider supplementation under medical supervision"
+    monitoring_frequency: "regular"
+    
+  hemochromatosis:
+    status: "carrier"
+    severity: "pathogenic"
+    implication: "Will not develop disease, but children may develop it"
+    gene: null  # To be specified
+    recommendation: "Monitor iron levels, inform children about genetic risk"
+    monitoring_frequency: "regular"
+
+high_risk_factors:
+  hormonal:
+    elevated_estradiol:
+      risk_level: "high"
+      description: "High risk of elevated estradiol levels"
+      monitoring: "hormonal panel testing"
+      
+    estradiol_testosterone_ratio:
+      risk_level: "high"
+      description: "High risk of increased ratio of estradiol to testosterone"
+      monitoring: "hormonal panel testing"
+      
+  metabolic:
+    leptin_related_weight:
+      risk_level: "high"
+      description: "High risk of excess weight associated with leptin"
+      monitoring: "weight and body composition tracking"
+
+condition_likelihoods:
+  high_risk:
+    nicotine_addiction:
+      likelihood: 72
+      unit: "percent"
+      category: "addiction"
+      
+    atopy:
+      likelihood: 58
+      unit: "percent"
+      category: "allergic"
+      
+  moderate_risk:
+    obesity:
+      likelihood: 46
+      unit: "percent"
+      category: "metabolic"
+      
+  lower_risk:
+    suicidal_thoughts:
+      likelihood: 13
+      unit: "percent"
+      category: "mental_health"
+
+recommendations:
+  immediate_actions:
+    - "Consult with genetic counselor about pathogenic mutations"
+    - "Schedule appointment with endocrinologist for hormonal risk factors"
+    - "Meet with nutritionist for weight management strategies"
+    - "Consider mental health screening for suicide risk assessment"
+    
+  monitoring:
+    - "Regular blood work for iron levels (hemochromatosis carrier)"
+    - "Biotin levels monitoring"
+    - "Hormonal panel testing"
+    - "Weight and body composition tracking"
+    - "Mental health monitoring"
+    
+  lifestyle_modifications:
+    diet: "Focus on iron management and biotin-rich foods"
+    exercise: "Regular physical activity for weight management"
+    mental_health: "Stress management and emotional support"
+    avoidance: "Smoking cessation support, allergen management"
+
+follow_up_schedule:
+  initial_consultations: "3 months"
+  follow_up_testing: "6 months"
+  annual_review: "annually"
+
+metadata:
+  last_updated: "2024-12-19"
+  confidentiality: "high"
+  data_source: "genetic_testing"
+  version: "1.0"

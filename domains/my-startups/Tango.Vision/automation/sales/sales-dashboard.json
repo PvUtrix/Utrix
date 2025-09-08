@@ -1,0 +1,28 @@
+{
+  "name": "Sales Performance Dashboard",
+  "widgets": [
+    {
+      "name": "Lead Conversion Rate",
+      "type": "gauge",
+      "metric": "lead_conversion_rate",
+      "target": 25
+    },
+    {
+      "name": "Sales Pipeline",
+      "type": "funnel",
+      "metric": "sales_pipeline",
+      "stages": [
+        "leads",
+        "qualified",
+        "proposals",
+        "closed"
+      ]
+    },
+    {
+      "name": "Revenue Growth",
+      "type": "line",
+      "metric": "revenue_growth",
+      "period": "monthly"
+    }
+  ]
+}

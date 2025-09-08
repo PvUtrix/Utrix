@@ -4,8 +4,8 @@
 The health domain manages all aspects of physical and mental well-being, including nutrition, workouts, medical data, and mental health tracking. This domain ensures comprehensive health management and supports overall life quality.
 
 ## Contents
-- `data/` - Health metrics and tracking data
-- `medical/` - Medical records and healthcare information
+- `data/` - Health metrics and tracking data (including genetic data)
+- `medical/` - Medical records and healthcare information (including genetic testing)
 - `mental/` - Mental health tracking and resources
 - `nutrition/` - Nutrition plans and dietary tracking
 - `plans/` - Health improvement plans and strategies
@@ -29,4 +29,4 @@ The health domain provides a comprehensive approach to well-being:
 - `../../config/domains/` - Health-specific configuration settings
 
 ## Last Updated
-2024-12-19 - Initial README creation
+2024-12-19 - Added comprehensive genetic testing structure and data

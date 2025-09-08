@@ -1,0 +1,30 @@
+{
+  "daily_standup": {
+    "enabled": true,
+    "time": "09:00",
+    "questions": [
+      "What did you accomplish yesterday?",
+      "What are you working on today?",
+      "Any blockers or challenges?",
+      "How can the team help?"
+    ],
+    "automation": {
+      "reminder": true,
+      "summary_generation": true,
+      "follow_up": true
+    }
+  },
+  "team_coordination": {
+    "enabled": true,
+    "channels": [
+      "slack",
+      "teams",
+      "email"
+    ],
+    "automation": {
+      "task_assignment": true,
+      "progress_tracking": true,
+      "meeting_scheduling": true
+    }
+  }
+}

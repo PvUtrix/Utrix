@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 class HealthCheck:
     """Simple health check server for monitoring."""
     
-    def __init__(self, port: int = 8000):
+    def __init__(self, port: int = 8001):
         self.port = port
         self.start_time = datetime.now()
     

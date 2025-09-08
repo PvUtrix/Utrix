@@ -1,0 +1,25 @@
+{
+  "id": "senior-product-manager-role-at-techcorp-20250905-1315",
+  "name": "Senior Product Manager Role at TechCorp",
+  "type": "Employment",
+  "source": "LinkedIn message from recruiter",
+  "status": "Evaluating",
+  "priority": "High",
+  "created": "2025-09-05T13:15:05.813892",
+  "deadline": "2024-12-15",
+  "score": 75,
+  "evaluation_date": "2025-09-05T13:15:11.450584",
+  "scores": {
+    "career_growth": 8,
+    "financial_impact": 7,
+    "learning_opportunity": 6,
+    "network_expansion": 7,
+    "fairness": 8,
+    "freedom": 6,
+    "sustainability": 7,
+    "current_capacity": 5,
+    "opportunity_cost": 6,
+    "market_timing": 8,
+    "life_stage_fit": 7
+  }
+}

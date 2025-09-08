@@ -1,0 +1,41 @@
+# Startup Configuration for Tango.Vision
+startup_name: "Tango.Vision"
+startup_type: "proptech"
+growth_stage: "growth"
+created_date: "2025-09-04T22:48:21Z"
+version: "1.0.0"
+
+# Custom settings
+custom_settings:
+  timezone: "UTC"
+  currency: "USD"
+  language: "en"
+  
+# Team settings
+team:
+  size: "small"
+  roles: []
+  
+# Integration settings
+integrations:
+  crm: ""
+  email_marketing: ""
+  project_management: ""
+  communication: ""
+  analytics: ""
+  
+# Automation settings
+automation:
+  deployed_templates:
+    - team  deployed_templates:
+    - operations  deployed_templates:
+    - sales  enabled: true
+  level: "basic"
+  templates: []
+  
+# Monitoring settings
+monitoring:
+  enabled: true
+  dashboards: []
+  alerts: []
+  reports: []

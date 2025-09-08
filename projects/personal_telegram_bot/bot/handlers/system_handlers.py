@@ -368,3 +368,49 @@ async def tasks_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "❌ Sorry, there was an error loading your tasks. Please try again."
         )
+
+
+async def test_notification_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle /test_notification command."""
+    user_id = context.user_data.get('user_id')
+    username = context.user_data.get('username', 'unknown')
+    
+    log_command(get_logger(__name__), user_id, username, "/test_notification")
+    
+    # Check if user is admin
+    if not context.user_data.get('is_admin', False):
+        await update.message.reply_text(
+            "🔒 **Access Denied**\n\n"
+            "Test notification functionality is restricted to administrators only.",
+            parse_mode='Markdown'
+        )
+        return
+    
+    try:
+        # Send test notification
+        test_message = """
+🧪 **Test Notification**
+
+✅ This is a test message from your Personal System Bot!
+
+**Bot Status:** Online and responsive
+**Time:** {timestamp}
+**User:** @{username}
+
+If you received this message, the bot's notification system is working correctly! 🎉
+        """.format(
+            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            username=username
+        )
+        
+        await update.message.reply_text(test_message, parse_mode='Markdown')
+        
+        # Log the test
+        get_logger(__name__).info(f"Test notification sent to admin {user_id}")
+        
+    except Exception as e:
+        get_logger(__name__).error(f"Failed to send test notification: {e}")
+        await update.message.reply_text(
+            f"❌ **Test Failed**\n\nError sending test notification: {str(e)}",
+            parse_mode='Markdown'
+        )

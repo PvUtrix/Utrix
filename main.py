@@ -10,6 +10,10 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Import our custom modules
 from automation.serverless.voice_content_generator import VoiceContentGenerator
@@ -43,10 +47,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize components
-voice_generator = VoiceContentGenerator()
-tts = ElevenLabsTTS()
-data_monitor = DataMonitor()
+# Initialize components (with error handling)
+try:
+    voice_generator = VoiceContentGenerator()
+    print("✅ VoiceContentGenerator initialized")
+except Exception as e:
+    print(f"⚠️ VoiceContentGenerator initialization failed: {e}")
+    voice_generator = None
+
+try:
+    tts = ElevenLabsTTS()
+    print("✅ ElevenLabsTTS initialized")
+except Exception as e:
+    print(f"⚠️ ElevenLabsTTS initialization failed: {e}")
+    tts = None
+
+try:
+    data_monitor = DataMonitor()
+    print("✅ DataMonitor initialized")
+except Exception as e:
+    print(f"⚠️ DataMonitor initialization failed: {e}")
+    data_monitor = None
 
 @app.get("/")
 def read_root():
@@ -61,8 +82,10 @@ def read_root():
 def health_check():
     """Health check endpoint"""
     try:
-        # Test database connection
-        db_status = "OK"
+        # Check component status
+        voice_generator_status = "OK" if voice_generator else "Failed to initialize"
+        tts_status = "OK" if tts else "Failed to initialize"
+        data_monitor_status = "OK" if data_monitor else "Failed to initialize"
 
         # Test ElevenLabs connection
         elevenlabs_status = "OK" if os.getenv('ELEVENLABS_API_KEY') else "Not configured"
@@ -70,11 +93,18 @@ def health_check():
         # Test Telegram connection
         telegram_status = "OK" if os.getenv('TELEGRAM_BOT_TOKEN') else "Not configured"
 
+        # Overall status
+        overall_status = "healthy" if voice_generator and tts and data_monitor else "degraded"
+
         return {
-            "status": "healthy",
+            "status": overall_status,
             "timestamp": datetime.now().isoformat(),
+            "components": {
+                "voice_generator": voice_generator_status,
+                "tts": tts_status,
+                "data_monitor": data_monitor_status
+            },
             "services": {
-                "database": db_status,
                 "elevenlabs": elevenlabs_status,
                 "telegram": telegram_status
             }

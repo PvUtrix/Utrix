@@ -1,0 +1,28 @@
+{
+  "goal_setting": {
+    "enabled": true,
+    "frequency": "quarterly",
+    "automation": {
+      "goal_tracking": true,
+      "progress_monitoring": true,
+      "reminder_notifications": true
+    }
+  },
+  "performance_reviews": {
+    "enabled": true,
+    "frequency": "quarterly",
+    "automation": {
+      "review_scheduling": true,
+      "feedback_collection": true,
+      "report_generation": true
+    }
+  },
+  "recognition": {
+    "enabled": true,
+    "automation": {
+      "achievement_tracking": true,
+      "recognition_notifications": true,
+      "reward_management": true
+    }
+  }
+}

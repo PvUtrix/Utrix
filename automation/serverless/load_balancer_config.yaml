@@ -1,0 +1,324 @@
+# Intelligent Load Balancer Configuration
+# Configures load balancing strategies and provider management
+
+# Load Balancing Strategy
+strategy: "cost_optimized"  # cost_optimized, performance, balanced, round_robin, least_connections
+
+# Health Check Configuration
+health_check_interval_seconds: 300  # 5 minutes
+execution_timeout_seconds: 30
+max_retries: 3
+retry_delay_seconds: 1
+
+# Circuit Breaker Configuration
+circuit_breaker_threshold: 5  # Mark provider unhealthy after 5 consecutive failures
+circuit_breaker_timeout_seconds: 300  # Reset circuit breaker after 5 minutes
+
+# Performance Monitoring
+performance_window_minutes: 60  # Window for calculating performance metrics
+response_time_threshold_ms: 5000  # Mark as slow if response time > 5s
+error_rate_threshold: 0.1  # Mark as unhealthy if error rate > 10%
+
+# Load Balancing Weights (for balanced strategy)
+cost_optimization_weight: 0.4
+performance_weight: 0.3
+quota_utilization_weight: 0.3
+
+# Function Routing Configuration
+function_routing:
+  daily_summary:
+    preferred_providers: ["aws_lambda", "google_cloud_functions"]
+    estimated_duration_ms: 5000
+    memory_mb: 256
+    priority: "high"
+    timeout_seconds: 30
+    
+  shadow_work_tracker:
+    preferred_providers: ["google_cloud_functions", "azure_functions"]
+    estimated_duration_ms: 2000
+    memory_mb: 128
+    priority: "normal"
+    timeout_seconds: 15
+    
+  google_drive_sync:
+    preferred_providers: ["aws_lambda"]
+    estimated_duration_ms: 45000
+    memory_mb: 512
+    priority: "low"
+    timeout_seconds: 60
+    
+  voice_generation:
+    preferred_providers: ["azure_functions", "aws_lambda"]
+    estimated_duration_ms: 10000
+    memory_mb: 1024
+    priority: "normal"
+    timeout_seconds: 30
+    
+  data_processing:
+    preferred_providers: ["google_cloud_functions", "aws_lambda"]
+    estimated_duration_ms: 15000
+    memory_mb: 1024
+    priority: "normal"
+    timeout_seconds: 45
+    
+  health_check:
+    preferred_providers: ["aws_lambda", "google_cloud_functions"]
+    estimated_duration_ms: 1000
+    memory_mb: 128
+    priority: "high"
+    timeout_seconds: 10
+    
+  notification:
+    preferred_providers: ["google_cloud_functions", "azure_functions"]
+    estimated_duration_ms: 2000
+    memory_mb: 128
+    priority: "high"
+    timeout_seconds: 15
+
+# Provider-Specific Configuration
+provider_configs:
+  aws_lambda:
+    region: "us-east-1"
+    default_memory_mb: 256
+    default_timeout_seconds: 30
+    max_memory_mb: 10240
+    max_timeout_seconds: 900
+    
+  google_cloud_functions:
+    region: "us-central1"
+    default_memory_mb: 256
+    default_timeout_seconds: 60
+    max_memory_mb: 8192
+    max_timeout_seconds: 540
+    
+  azure_functions:
+    region: "East US"
+    default_memory_mb: 1536
+    default_timeout_seconds: 30
+    max_memory_mb: 1536
+    max_timeout_seconds: 600
+
+# Retry Configuration
+retry_config:
+  exponential_backoff: true
+  base_delay_seconds: 1
+  max_delay_seconds: 60
+  jitter: true  # Add random jitter to prevent thundering herd
+  
+# Monitoring and Metrics
+monitoring:
+  enable_execution_tracking: true
+  enable_performance_metrics: true
+  enable_cost_tracking: true
+  enable_provider_health_tracking: true
+  
+  # Metrics retention
+  execution_history_size: 1000
+  performance_window_hours: 24
+  cost_tracking_days: 30
+  
+  # Alerting thresholds
+  alert_thresholds:
+    high_error_rate: 0.15  # 15%
+    slow_response_time_ms: 10000  # 10 seconds
+    high_cost_per_execution: 0.001  # $0.001
+    provider_unavailable_minutes: 5
+
+# Fallback Configuration
+fallback:
+  enabled: true
+  strategy: "least_used"  # least_used, round_robin, random
+  
+  # Fallback triggers
+  triggers:
+    - "no_healthy_providers"
+    - "quota_exceeded"
+    - "provider_timeout"
+    - "circuit_breaker_open"
+  
+  # Fallback behavior
+  behavior:
+    retry_original_provider: false
+    notify_on_fallback: true
+    log_fallback_reason: true
+
+# Cost Optimization
+cost_optimization:
+  enabled: true
+  
+  # Cost thresholds
+  cost_thresholds:
+    warning_cost_per_execution: 0.0005  # $0.0005
+    critical_cost_per_execution: 0.001  # $0.001
+    monthly_budget_limit: 0.10  # $0.10
+  
+  # Cost-based routing
+  prefer_cheaper_providers: true
+  cost_weight_in_balanced_strategy: 0.4
+  
+  # Cost monitoring
+  track_cost_per_function: true
+  generate_cost_reports: true
+  cost_report_frequency: "daily"
+
+# Performance Optimization
+performance_optimization:
+  enabled: true
+  
+  # Performance thresholds
+  performance_thresholds:
+    slow_execution_ms: 5000
+    very_slow_execution_ms: 10000
+    high_error_rate: 0.1
+    
+  # Performance-based routing
+  prefer_faster_providers: true
+  performance_weight_in_balanced_strategy: 0.3
+  
+  # Performance monitoring
+  track_response_times: true
+  track_error_rates: true
+  generate_performance_reports: true
+
+# Quota Management Integration
+quota_management:
+  enabled: true
+  
+  # Quota thresholds
+  quota_thresholds:
+    warning_usage_percent: 80
+    critical_usage_percent: 95
+    
+  # Quota-based routing
+  respect_quota_limits: true
+  quota_weight_in_balanced_strategy: 0.3
+  
+  # Quota monitoring
+  track_quota_usage: true
+  generate_quota_reports: true
+  quota_report_frequency: "daily"
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Log files
+  log_files:
+    execution_log: "./logs/load_balancer_executions.log"
+    error_log: "./logs/load_balancer_errors.log"
+    performance_log: "./logs/load_balancer_performance.log"
+    cost_log: "./logs/load_balancer_costs.log"
+  
+  # Log rotation
+  log_rotation:
+    enabled: true
+    max_size_mb: 100
+    backup_count: 5
+
+# Security Configuration
+security:
+  # Request validation
+  validate_requests: true
+  max_payload_size_mb: 10
+  
+  # Rate limiting
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_limit: 20
+  
+  # Authentication (if needed)
+  authentication:
+    enabled: false
+    api_key_required: false
+    api_key_env: "LOAD_BALANCER_API_KEY"
+
+# Development and Testing
+development:
+  # Mock mode for testing
+  mock_mode: false
+  
+  # Test data generation
+  generate_test_data: false
+  
+  # Debug settings
+  debug_mode: false
+  verbose_logging: false
+  
+  # Test endpoints
+  test_endpoints:
+    enabled: false
+    port: 8080
+    host: "localhost"
+
+# Environment Variables
+environment_variables:
+  # Load balancer specific
+  LOAD_BALANCER_API_KEY: "your-load-balancer-api-key"
+  
+  # Provider credentials (inherited from quota manager)
+  AWS_ACCESS_KEY_ID: "your-aws-access-key"
+  AWS_SECRET_ACCESS_KEY: "your-aws-secret-key"
+  GCP_PROJECT_ID: "your-gcp-project-id"
+  GOOGLE_APPLICATION_CREDENTIALS: "/path/to/service-account.json"
+  AZURE_SUBSCRIPTION_ID: "your-azure-subscription-id"
+  AZURE_RESOURCE_GROUP: "your-resource-group"
+  AZURE_FUNCTION_APP: "your-function-app-name"
+  
+  # Notification settings
+  TELEGRAM_BOT_TOKEN: "your-telegram-bot-token"
+  TELEGRAM_CHAT_ID: "your-telegram-chat-id"
+
+# Usage Examples
+usage_examples:
+  check_status: |
+    python3 intelligent_load_balancer.py --status
+    
+  health_check: |
+    python3 intelligent_load_balancer.py --health-check
+    
+  test_execution: |
+    python3 intelligent_load_balancer.py --test-execution daily_summary
+    
+  change_strategy: |
+    python3 intelligent_load_balancer.py --strategy performance
+    
+  generate_report: |
+    python3 intelligent_load_balancer.py --status > load_balancer_report.json
+
+# Integration Examples
+integration_examples:
+  python_api: |
+    from intelligent_load_balancer import IntelligentLoadBalancer, FunctionRequest, FunctionType
+    
+    balancer = IntelligentLoadBalancer()
+    
+    request = FunctionRequest(
+        function_name="daily_summary",
+        function_type=FunctionType.DAILY_SUMMARY,
+        payload={"date": "2024-01-01"},
+        priority="high"
+    )
+    
+    result = await balancer.execute_function(request)
+    print(f"Success: {result.success}, Provider: {result.provider.value}")
+  
+  http_api: |
+    # Example HTTP API integration
+    POST /execute
+    {
+      "function_name": "daily_summary",
+      "function_type": "daily_summary",
+      "payload": {"date": "2024-01-01"},
+      "priority": "high"
+    }
+    
+    Response:
+    {
+      "success": true,
+      "provider": "aws_lambda",
+      "execution_time_ms": 1250,
+      "cost_estimate": 0.000012,
+      "response_data": {...}
+    }

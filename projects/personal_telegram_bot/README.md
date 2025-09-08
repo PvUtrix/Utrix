@@ -1,19 +1,35 @@
 # Personal System Telegram Bot
 
-A Telegram bot interface for your personal knowledge management and automation system. This bot provides quick access to your system's features, data collection, and insights through natural language commands.
+A comprehensive Telegram bot interface for your personal knowledge management and automation system. This bot provides voice-controlled access to all your automation scripts, interactive menus, and natural language commands.
 
-## Features
+## 🚀 Features
 
-### Core Functionality
-- **Daily Summary**: Get your daily health, productivity, learning, and finance summary
-- **Morning Routine**: Voice-guided morning routine with automatic delivery at 6:00 AM
-- **Shadow Work Tracking**: Log shadow work insights and get prompts
-- **Quick Notes**: Capture thoughts and ideas on the go
-- **System Status**: Check various system metrics and status
-- **Journal Entries**: Create quick journal entries
-- **Task Management**: Add and track tasks
-- **Health Tracking**: Log health metrics
-- **Learning Progress**: Track learning activities
+### 🎤 Voice Commands
+- **Voice Transcription**: Send voice messages for hands-free interaction
+- **Action Parsing**: Automatically parse voice commands into actionable items
+- **Confirmation System**: Review and approve actions before execution
+- **Natural Language**: Use natural speech patterns for commands
+
+### 📱 Interactive Menus
+- **Categorized Navigation**: Organized menus for all system features
+- **Quick Access**: One-tap access to automation scripts
+- **Visual Interface**: Clean, intuitive button-based navigation
+- **Context-Aware**: Smart menus that adapt to your needs
+
+### ⚡ Automation Integration
+- **Shadow Work Tracker**: Daily check-ins, insights, prompts, and reports
+- **Opportunity Manager**: Create, evaluate, and manage career opportunities
+- **Business Opportunity Manager**: Track business and investment opportunities
+- **Daily Summary Generator**: Automated daily summaries and insights
+- **Prosperity Course Manager**: Track course progress and status
+- **Google Drive Sync**: Automated data synchronization
+- **System Backup**: Automated backup creation and management
+
+### 🔒 Privacy & Security
+- **End-to-End Encryption**: All sensitive data encrypted locally
+- **Privacy Markers**: Respects .private file markers
+- **Secure Authentication**: User-based access control
+- **Local Storage**: Data stored locally with optional cloud sync
 
 ### Privacy & Security
 - End-to-end encryption for sensitive data
@@ -55,34 +71,50 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## Commands
+## 🎯 Usage
 
-### Basic Commands
-- `/start` - Welcome message and help
-- `/help` - Show available commands
+### 🎤 Voice Commands
+Send voice messages for natural interaction:
+
+**Opportunity Management:**
+- "Create a new opportunity for software engineer role at Google"
+- "Show my pending opportunities"
+- "Evaluate opportunity [ID]"
+- "Check upcoming deadlines"
+
+**Shadow Work:**
+- "Log shadow work insight: I noticed I avoid difficult conversations"
+- "Daily shadow work check-in"
+- "Get shadow work prompt"
+- "Show shadow work progress"
+
+**Daily Operations:**
+- "Generate daily summary"
+- "Add task: Review quarterly goals"
+- "Log health metrics"
+- "Capture idea: New app concept"
+
+**System Management:**
+- "Backup my system"
+- "Sync with Google Drive"
+- "Show system statistics"
+
+### 📱 Interactive Menus
+Use `/start` or `/menu` to access the main menu with categorized options:
+
+- **📊 Daily Operations**: Summary, health tracking, learning logs
+- **🧠 Shadow Work**: Check-ins, insights, prompts, reports
+- **📝 Journal & Notes**: Entries, ideas, tasks
+- **💼 Opportunities**: Career and business opportunity management
+- **⚙️ System Management**: Backup, sync, statistics
+- **🎤 Voice Commands**: Examples and help
+- **❓ Help & Examples**: Comprehensive guidance
+
+### ⚡ Quick Commands
+- `/start` - Main menu with interactive buttons
+- `/menu` - Show main navigation menu
+- `/help` - Detailed help and examples
 - `/status` - System status overview
-
-### Daily Operations
-- `/summary` - Get daily summary
-- `/morning_routine` - Get voice-guided morning routine
-- `/log_health` - Log health metrics
-- `/log_learning` - Log learning activity
-- `/quick_note` - Capture a quick thought
-
-### Shadow Work
-- `/shadow_checkin` - Daily shadow work check-in
-- `/shadow_log` - Log shadow work insight
-- `/shadow_prompt` - Get shadow work prompt
-
-### Journal & Notes
-- `/journal` - Create journal entry
-- `/idea` - Capture new idea
-- `/task` - Add new task
-
-### System Management
-- `/backup` - Create system backup
-- `/sync` - Sync data across devices
-- `/stats` - View system statistics
 
 ## Architecture
 

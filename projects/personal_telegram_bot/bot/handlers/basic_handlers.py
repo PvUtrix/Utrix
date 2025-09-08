@@ -1,48 +1,47 @@
 """
 Basic command handlers for the Personal System Telegram Bot.
-Handles start, help, and status commands.
+Handles start, help, status, and menu commands with inline keyboards.
 """
 
 import logging
 from datetime import datetime
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from utils.logger import get_logger, log_command
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle /start command."""
+    """Handle /start command with main menu."""
     user_id = context.user_data.get('user_id')
     username = context.user_data.get('username', 'unknown')
     
     log_command(get_logger(__name__), user_id, username, "/start")
     
     welcome_message = """
-🤖 **Welcome to Your Personal System Bot!**
+🤖 **Personal System Bot**
 
-This bot is your interface to your personal knowledge management and automation system.
+Welcome to your personal automation assistant! I can help you manage your entire personal system through voice commands and interactive menus.
 
-**Quick Commands:**
-• `/summary` - Get your daily summary
-• `/shadow_checkin` - Daily shadow work check-in
-• `/quick_note` - Capture a thought quickly
-• `/journal` - Create a journal entry
-• `/help` - See all available commands
+🎤 **Voice Commands**: Send voice messages for natural interaction
+📱 **Interactive Menus**: Use buttons for quick access
+⚡ **Automation**: Execute scripts and workflows
+🔒 **Privacy**: All data encrypted and secure
 
-**AI Features:**
-• Ask me anything about your system
-• Get personalized insights and recommendations
-• Send voice messages for hands-free interaction
-
-**Privacy & Security:**
-• All data is stored locally and encrypted
-• Your privacy markers are respected
-• Only you can access your personal data
-
-Start exploring your system! 🚀
+Choose an option below to get started:
     """
     
-    await update.message.reply_text(welcome_message, parse_mode='Markdown')
+    keyboard = [
+        [InlineKeyboardButton("📊 Daily Operations", callback_data="menu_daily")],
+        [InlineKeyboardButton("🧠 Shadow Work", callback_data="menu_shadow")],
+        [InlineKeyboardButton("📝 Journal & Notes", callback_data="menu_journal")],
+        [InlineKeyboardButton("💼 Opportunities", callback_data="menu_opportunities")],
+        [InlineKeyboardButton("⚙️ System Management", callback_data="menu_system")],
+        [InlineKeyboardButton("🎤 Voice Commands", callback_data="menu_voice")],
+        [InlineKeyboardButton("❓ Help & Examples", callback_data="menu_help")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    await update.message.reply_text(welcome_message, parse_mode='Markdown', reply_markup=reply_markup)
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -95,6 +94,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 • `/admin sync` - Force data synchronization
 • `/admin health_check` - Check system health
 • `/admin set_openai_key YOUR_API_KEY` - Securely store OpenAI API key
+• `/test_notification` - Test bot notification system
 
 **Usage Tips:**
 • Use natural language for most commands
@@ -147,3 +147,30 @@ Everything looks good! 🟢
     """
     
     await update.message.reply_text(status_message, parse_mode='Markdown')
+
+
+async def menu_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle /menu command - show main menu."""
+    user_id = context.user_data.get('user_id')
+    username = context.user_data.get('username', 'unknown')
+    
+    log_command(get_logger(__name__), user_id, username, "/menu")
+    
+    menu_message = """
+📱 **Main Menu**
+
+Choose a category to access your personal system features:
+    """
+    
+    keyboard = [
+        [InlineKeyboardButton("📊 Daily Operations", callback_data="menu_daily")],
+        [InlineKeyboardButton("🧠 Shadow Work", callback_data="menu_shadow")],
+        [InlineKeyboardButton("📝 Journal & Notes", callback_data="menu_journal")],
+        [InlineKeyboardButton("💼 Opportunities", callback_data="menu_opportunities")],
+        [InlineKeyboardButton("⚙️ System Management", callback_data="menu_system")],
+        [InlineKeyboardButton("🎤 Voice Commands", callback_data="menu_voice")],
+        [InlineKeyboardButton("❓ Help & Examples", callback_data="menu_help")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    await update.message.reply_text(menu_message, parse_mode='Markdown', reply_markup=reply_markup)

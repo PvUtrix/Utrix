@@ -1,0 +1,34 @@
+{
+  "project_templates": {
+    "digital_twin": {
+      "phases": [
+        "requirements_gathering",
+        "data_collection",
+        "3d_modeling",
+        "system_integration",
+        "testing",
+        "deployment"
+      ],
+      "timeline": 56,
+      "team_size": 5
+    },
+    "building_automation": {
+      "phases": [
+        "assessment",
+        "system_design",
+        "equipment_selection",
+        "installation",
+        "configuration",
+        "testing"
+      ],
+      "timeline": 45,
+      "team_size": 4
+    }
+  },
+  "automation": {
+    "task_assignment": true,
+    "progress_tracking": true,
+    "milestone_notifications": true,
+    "resource_allocation": true
+  }
+}
