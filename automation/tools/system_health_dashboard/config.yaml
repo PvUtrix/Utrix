@@ -183,3 +183,4 @@ components:
       start_script: "deployment/coolify/coolify-deploy.sh"
       dependencies: ["COOLIFY_URL", "COOLIFY_API_TOKEN"]
       description: "Coolify deployment service"
+

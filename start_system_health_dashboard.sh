@@ -91,3 +91,4 @@ echo ""
 # Run the dashboard
 cd "$PROJECT_ROOT"
 python3 "$DASHBOARD_DIR/main.py" --dashboard "${@}"
+
