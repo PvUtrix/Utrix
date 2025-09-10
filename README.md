@@ -5,8 +5,8 @@ A **privacy-first, AI-powered system** for managing personal knowledge, projects
 
 
 [![Deploy with Coolify](https://img.shields.io/badge/Deploy-Coolify-blue)](deployment/coolify/deployment-complete.md)
-[![Voice Enabled](https://img.shields.io/badge/Voice-ElevenLabs-green)](automation/serverless/VOICE_README.md)
-[![CI/CD Ready](https://img.shields.io/badge/CI/CD-Gitea-orange)](automation/serverless/CICD_SETUP.md)
+[![Voice Enabled](https://img.shields.io/badge/Voice-ElevenLabs-green)](services/serverless-functions/docs/VOICE_README.md)
+[![CI/CD Ready](https://img.shields.io/badge/CI/CD-Gitea-orange)](services/serverless-functions/docs/CICD_SETUP.md)
 
 ## 🎤 What Makes This Special
 
@@ -299,10 +299,10 @@ cat .env
 
 ### 📚 Legacy Documentation
 - [🚀 Complete Deployment Guide](deployment/coolify/deployment-complete.md)
-- [🎵 Voice System Setup](automation/serverless/VOICE_README.md)
-- [🔄 CI/CD Pipeline](automation/serverless/CICD_SETUP.md)
-- [🗄️ Multi-Tier Database](automation/serverless/MULTI_TIER_README.md)
-- [📊 System Monitoring](automation/serverless/README.md)
+- [🎵 Voice System Setup](services/serverless-functions/docs/VOICE_README.md)
+- [🔄 CI/CD Pipeline](services/serverless-functions/docs/CICD_SETUP.md)
+- [🗄️ Multi-Tier Database](services/serverless-functions/docs/MULTI_TIER_README.md)
+- [📊 System Monitoring](services/serverless-functions/README.md)
 
 ## 💰 Cost Breakdown
 

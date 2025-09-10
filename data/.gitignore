@@ -1,0 +1,9 @@
+# Runtime data - exclude from version control
+*
+
+# But keep the README and .gitignore files
+!README.md
+!.gitignore
+
+# Allow empty directories to be tracked
+!.gitkeep
