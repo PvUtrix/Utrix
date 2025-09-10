@@ -30,19 +30,54 @@
 
 ## Directory Structure
 ```
-../../active/Tango.Vision/
+Tango.Vision/
 ├── automation/          # Automation scripts and templates
 ├── configs/            # Configuration files
 ├── monitoring/         # Monitoring and reporting
-└── documentation/      # Documentation and guides
+├── documentation/      # Documentation and guides
+└── projects/           # Project management system
+    ├── project_manager.py      # Main project management system
+    ├── create_project.py       # Interactive project creation
+    ├── daily_workflow.py       # Daily workflow integration
+    ├── integration_script.py   # System integration setup
+    ├── project_template.yaml   # Project templates
+    ├── README.md              # Project management documentation
+    ├── QUICK_START.md         # Quick start guide
+    └── proj_XXX_*/            # Individual project directories
 ```
 
+## Project Management System
+
+### Quick Start
+```bash
+cd projects/
+python3 project_manager.py list          # View all projects
+python3 project_manager.py daily         # Check daily tasks
+python3 create_project.py               # Create new project
+```
+
+### Key Features
+- **Project Management**: Create, track, and manage multiple projects
+- **Priority System**: Critical, High, Medium, Low priority levels
+- **Financial Tracking**: Budget, spending, revenue potential, ROI
+- **Daily Tasks**: Mark tasks as daily recurring items
+- **Integration**: Seamless integration with personal automation system
+- **Reporting**: Comprehensive project and financial reports
+
+### Integration
+The project management system integrates with your personal system:
+- Daily tasks appear in your personal daily workflow
+- Project summaries sync with your task manager
+- Reports are saved to automation outputs
+- Runs with your daily automation scripts
+
 ## Next Steps
-1. Review and customize configuration files
-2. Deploy relevant automation templates
-3. Set up monitoring and reporting
-4. Train your team on new processes
-5. Monitor performance and optimize
+1. **Set up project management**: `cd projects/ && python3 integration_script.py --setup-all`
+2. Review and customize configuration files
+3. Deploy relevant automation templates
+4. Set up monitoring and reporting
+5. Train your team on new processes
+6. Monitor performance and optimize
 
 ## Support
 - Framework documentation: `../documentation/`

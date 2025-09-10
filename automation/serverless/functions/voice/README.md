@@ -1,120 +1,117 @@
-# 🎤 Voice Functions
+# 🎤 Voice Transcription Serverless Function
 
-Voice generation and text-to-speech functions for your personal system.
+## Overview
+This serverless function handles voice message transcription using OpenAI Whisper API. It can be deployed to AWS Lambda or Vercel.
 
-## 📁 Contents
+## Features
+- ✅ **OpenAI Whisper Integration** - High-quality voice transcription
+- ✅ **Multiple Format Support** - OGG, MP3, WAV, M4A, WebM
+- ✅ **Base64 Audio Processing** - Handles audio data from Telegram
+- ✅ **Error Handling** - Robust error handling and logging
+- ✅ **Dual Platform Support** - AWS Lambda and Vercel compatible
 
-- `elevenlabs_tts.py` - Text-to-speech conversion using ElevenLabs
-- `voice_content_generator.py` - Generate voice content from text
+## Deployment Options
 
-## 🎯 Purpose
+### AWS Lambda
+1. **Package the function**:
+   ```bash
+   pip install -r requirements.txt -t .
+   zip -r voice-transcription.zip .
+   ```
 
-These functions handle voice generation and audio content:
+2. **Deploy to Lambda**:
+   - Create new Lambda function
+   - Upload the zip file
+   - Set environment variables:
+     - `OPENAI_API_KEY`: Your OpenAI API key
+   - Set timeout to 30 seconds
+   - Set memory to 512MB
 
-- **Text-to-Speech**: Convert text to natural-sounding speech
-- **Voice Content**: Generate voice content from various text sources
-- **Audio Processing**: Handle audio file generation and processing
+3. **Create API Gateway**:
+   - Create REST API
+   - Create POST method
+   - Link to Lambda function
+   - Deploy API
 
-## ⏰ Schedule
+### Vercel
+1. **Install Vercel CLI**:
+   ```bash
+   npm i -g vercel
+   ```
 
-- **Voice Content Generator**: Runs daily at 7 AM UTC
-- **ElevenLabs TTS**: Triggered by voice content generator
+2. **Deploy**:
+   ```bash
+   vercel --prod
+   ```
 
-## 🔧 Configuration
+3. **Set Environment Variables**:
+   - `OPENAI_API_KEY`: Your OpenAI API key
 
-```bash
-# ElevenLabs Configuration
-ELEVENLABS_API_KEY=your_elevenlabs_api_key
-ELEVENLABS_VOICE_ID=your_voice_id
+## API Usage
 
-# Voice Settings
-VOICE_SPEED=1.0
-VOICE_STABILITY=0.5
-VOICE_SIMILARITY_BOOST=0.75
-
-# Output Configuration
-AUDIO_FORMAT=mp3
-AUDIO_QUALITY=high
+### Request Format
+```json
+{
+  "audio_data": "base64_encoded_audio_data",
+  "file_format": "ogg",
+  "user_id": "telegram_user_id",
+  "message_id": "telegram_message_id"
+}
 ```
 
-## 🚀 Usage
-
-### Local Testing
-
-```bash
-# Test voice content generator
-serverless invoke local --function voice-content-generator
-
-# Test ElevenLabs TTS
-serverless invoke local --function elevenlabs-tts
+### Response Format
+```json
+{
+  "success": true,
+  "transcription": "Transcribed text here",
+  "user_id": "telegram_user_id",
+  "message_id": "telegram_message_id",
+  "service": "openai_whisper"
+}
 ```
 
-### Deployment
+## Environment Variables
+- `OPENAI_API_KEY`: Your OpenAI API key for Whisper transcription
 
+## Cost Estimation
+- **AWS Lambda**: ~$0.20 per 1M requests + compute time
+- **Vercel**: Free tier includes 100GB-hours/month
+- **OpenAI Whisper**: $0.006 per minute of audio
+
+## Integration with Telegram Bot
+1. Update your bot's `config.yaml`:
+   ```yaml
+   serverless:
+     transcription_url: "https://your-function-url.com/voice-transcription"
+     enable_serverless_transcription: true
+   ```
+
+2. Update bot handler in `bot.py`:
+   ```python
+   from bot.handlers import serverless_voice_handlers
+   serverless_voice_handlers.initialize_voice_handler(self.config)
+   self.application.add_handler(MessageHandler(filters.VOICE, self._with_auth(serverless_voice_handlers.voice_message_handler)))
+   ```
+
+## Testing
+Test the function with a sample audio file:
 ```bash
-# Deploy voice functions
-serverless deploy --function voice-content-generator
-serverless deploy --function elevenlabs-tts
+# Encode audio to base64
+base64 -i test_audio.ogg
+
+# Send POST request
+curl -X POST https://your-function-url.com/voice-transcription \
+  -H "Content-Type: application/json" \
+  -d '{
+    "audio_data": "base64_encoded_audio_here",
+    "file_format": "ogg",
+    "user_id": "test_user",
+    "message_id": "test_message"
+  }'
 ```
 
-## 🎵 Voice Features
-
-### ElevenLabs TTS
-- **Natural Speech**: High-quality text-to-speech conversion
-- **Voice Cloning**: Custom voice generation
-- **Multiple Languages**: Support for various languages
-- **Emotion Control**: Adjustable emotional tone
-
-### Voice Content Generator
-- **Daily Summaries**: Convert daily summaries to audio
-- **News Updates**: Generate voice news updates
-- **Reminders**: Create voice reminders
-- **Custom Content**: Generate voice from any text
-
-## 📊 Output
-
-- **Audio Files**: MP3 format audio files
-- **Metadata**: Audio file metadata and information
-- **Storage**: Audio files stored in cloud storage
-- **Delivery**: Audio sent via Telegram or email
-
-## 💰 Cost Optimization
-
-- **Free Tier**: Stays within ElevenLabs free tier limits
-- **Caching**: Cache generated audio to reduce API calls
-- **Compression**: Optimize audio file sizes
-- **Batch Processing**: Process multiple texts in single call
-
-## 🔒 Privacy
-
-- **Local Processing**: Text processed locally when possible
-- **Secure Storage**: Audio files stored securely
-- **No Retention**: Audio files deleted after delivery
-- **Encrypted Transfer**: Secure transmission of audio files
-
-## 🛠️ Development
-
-### Testing Voice Quality
-
-```bash
-# Test with sample text
-python3 -c "
-from elevenlabs_tts import ElevenLabsTTS
-tts = ElevenLabsTTS()
-audio = tts.generate_speech('Hello, this is a test.')
-print('Audio generated successfully')
-"
-```
-
-### Custom Voice Training
-
-```bash
-# Upload voice samples for custom voice
-# (Requires ElevenLabs Pro account)
-```
-
-## 📚 Resources
-
-- [ElevenLabs API Documentation](https://docs.elevenlabs.io/)
-- [Voice Cloning Guide](https://docs.elevenlabs.io/voice-cloning)
-- [Audio Format Options](https://docs.elevenlabs.io/audio-generation)
+## Troubleshooting
+- **Timeout errors**: Increase Lambda timeout to 30 seconds
+- **Memory errors**: Increase Lambda memory to 512MB
+- **API key errors**: Verify OPENAI_API_KEY is set correctly
+- **Audio format errors**: Ensure audio is in supported format

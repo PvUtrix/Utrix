@@ -131,7 +131,8 @@ When integrations aren't available, provide manual input forms rather than gener
 ```
 personal-system/
 ├── 📁 core/           # Your identity & knowledge base
-│   └── 📁 identity/   # values.md, goals.md, vision.md
+│   ├── 📁 identity/   # values.md, goals.md, vision.md
+│   └── 📁 telegram_interface/ # Primary user interface
 ├── 📁 domains/        # Life domains (health, finance, career)
 ├── 📁 projects/       # Active projects & startups
 ├── 📁 automation/     # Scripts & serverless functions
@@ -187,7 +188,7 @@ COOLIFY_API_TOKEN=your_coolify_token
 ### ✅ Voice & Communication
 - Daily personalized voice messages
 - CI/CD deployment notifications
-- Telegram bot integration
+- **Primary Telegram Interface** - Main system interaction gateway
 - ElevenLabs text-to-speech
 
 ### ✅ Database & Data Management

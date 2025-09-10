@@ -1,0 +1,19 @@
+[
+  {
+    "date": "2025-09-09",
+    "timestamp": "2025-09-09T01:25:00.355452",
+    "activities": [
+      {
+        "type": "reading",
+        "duration": 30.0,
+        "description": "Python documentation",
+        "course": "Python Programming",
+        "skill": "Programming",
+        "timestamp": "2025-09-09T01:25:00.355457",
+        "notes": ""
+      }
+    ],
+    "total_time": 30.0,
+    "notes": []
+  }
+]

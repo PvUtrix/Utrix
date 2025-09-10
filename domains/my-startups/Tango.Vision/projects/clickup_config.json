@@ -1,0 +1,27 @@
+{
+  "api_token": "YOUR_CLICKUP_API_TOKEN_HERE",
+  "team_id": "YOUR_TEAM_ID_HERE",
+  "space_id": "YOUR_SPACE_ID_HERE",
+  "rate_limit_delay": 0.1,
+  "custom_fields": {
+    "budget": "Budget Amount",
+    "revenue_potential": "Revenue Potential",
+    "roi_estimate": "ROI Estimate",
+    "project_priority": "Project Priority",
+    "estimated_hours": "Estimated Hours",
+    "actual_hours": "Actual Hours"
+  },
+  "list_mappings": {
+    "planning": "📋 Planning",
+    "in_progress": "🚀 In Progress", 
+    "completed": "✅ Completed",
+    "documentation": "📝 Documentation",
+    "financial": "💰 Financial"
+  },
+  "priority_mappings": {
+    "critical": 1,
+    "high": 2,
+    "medium": 3,
+    "low": 4
+  }
+}

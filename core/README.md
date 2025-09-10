@@ -8,6 +8,7 @@ The core directory contains the fundamental components of your personal system -
 - `knowledge/` - Journal, notes, insights, and knowledge connections
 - `principles/` - Decision-making frameworks and life principles
 - `workflows/` - Base workflow templates and daily/weekly routines
+- `telegram_interface/` - Primary user interface for system interaction
 
 ## Usage
 This directory serves as the central hub for your personal development and life management:
@@ -16,12 +17,14 @@ This directory serves as the central hub for your personal development and life 
 - **Knowledge**: Capture insights, journal entries, and build knowledge connections
 - **Principles**: Establish decision-making frameworks for consistent choices
 - **Workflows**: Create and maintain daily, weekly, and monthly routines
+- **Telegram Interface**: Primary interface for interacting with all system components
 
 ## Related
 - `domains/` - Life areas that apply these core principles
 - `workflows/` - Time-based workflow templates
 - `automation/scripts/` - Scripts that process core data
 - `config/global/` - Global system preferences
+- `core/telegram_interface/` - Primary interface for system interaction
 
 ## Last Updated
 2024-12-19 - Initial README creation

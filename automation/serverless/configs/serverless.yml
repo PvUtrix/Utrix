@@ -75,15 +75,15 @@ functions:
   #     COOLIFY_PROJECT_UUID: ${env:COOLIFY_PROJECT_UUID, ''}
   #     COOLIFY_APPLICATION_UUID: ${env:COOLIFY_APPLICATION_UUID, ''}
 
-  # Daily Voice Message (simplified)
-  daily-voice-message:
-    handler: voice_generator_simple.lambda_handler
-    timeout: 120  # Longer timeout for voice generation
-    memorySize: 512  # More memory for voice processing
-    events:
-      - schedule:
-          rate: cron(0 7 * * ? *)  # Daily at 7 AM UTC
-          enabled: true
+  # Daily Voice Message (simplified) - DISABLED
+  # daily-voice-message:
+  #   handler: voice_generator_simple.lambda_handler
+  #   timeout: 120  # Longer timeout for voice generation
+  #   memorySize: 512  # More memory for voice processing
+  #   events:
+  #     - schedule:
+  #         rate: cron(0 7 * * ? *)  # Daily at 7 AM UTC
+  #         enabled: false
 
   # Voice Content Generator (simplified)
   voice-content-generator:
@@ -95,6 +95,20 @@ functions:
     handler: voice_generator_simple.lambda_handler
     timeout: 120
     memorySize: 512
+
+  # Voice Transcription (ElevenLabs Scribe + OpenAI Whisper)
+  voice-transcription:
+    handler: voice_transcription_simple.lambda_handler
+    timeout: 30
+    memorySize: 512
+    events:
+      - http:
+          path: /voice-transcription
+          method: post
+          cors: true
+    environment:
+      ELEVENLABS_API_KEY: ${env:ELEVENLABS_API_KEY, ''}
+      OPENAI_API_KEY: ${env:OPENAI_API_KEY, ''}
 
   # Data Sync Manager (simplified)
   data-sync-manager:

@@ -1,0 +1,144 @@
+# Tango.Vision Project Template
+# Use this template to create new projects with consistent structure
+
+project:
+  name: "Project Name"
+  description: "Brief description of the project"
+  priority: "medium"  # critical, high, medium, low
+  status: "planning"  # planning, active, on_hold, completed, cancelled
+  owner: "Your Name"
+  team_members: []
+  tags: []
+  
+  # Timeline
+  start_date: ""  # YYYY-MM-DD format
+  target_completion: ""  # YYYY-MM-DD format
+  actual_completion: ""  # YYYY-MM-DD format
+  
+  # Financial Metrics
+  financial:
+    budget: 0.0
+    spent: 0.0
+    revenue_potential: 0.0
+    roi_estimate: 0.0
+    break_even_date: ""  # YYYY-MM-DD format
+  
+  # Project Structure
+  structure:
+    phases: []
+    milestones: []
+    deliverables: []
+  
+  # Risk Management
+  risks:
+    high_risk_items: []
+    mitigation_strategies: []
+    contingency_plans: []
+  
+  # Success Metrics
+  success_metrics:
+    kpis: []
+    targets: []
+    measurement_frequency: "weekly"  # daily, weekly, monthly
+  
+  # Daily Tasks Template
+  daily_tasks:
+    - title: "Daily standup"
+      description: "Team sync and progress review"
+      priority: "high"
+      estimated_hours: 0.5
+      daily_task: true
+    
+    - title: "Progress update"
+      description: "Update project status and blockers"
+      priority: "medium"
+      estimated_hours: 0.25
+      daily_task: true
+
+# Task Categories
+task_categories:
+  development:
+    - "Feature development"
+    - "Bug fixes"
+    - "Code review"
+    - "Testing"
+  
+  business:
+    - "Market research"
+    - "Customer interviews"
+    - "Sales activities"
+    - "Partnership discussions"
+  
+  operations:
+    - "Documentation"
+    - "Process improvement"
+    - "Team coordination"
+    - "Resource planning"
+  
+  marketing:
+    - "Content creation"
+    - "Social media"
+    - "Campaign management"
+    - "Analytics review"
+
+# Priority Guidelines
+priority_guidelines:
+  critical:
+    description: "Must be completed immediately, blocking other work"
+    examples:
+      - "Critical security fixes"
+      - "Revenue-blocking issues"
+      - "Legal compliance deadlines"
+  
+  high:
+    description: "Important for project success, should be completed soon"
+    examples:
+      - "Core feature development"
+      - "Key customer deliverables"
+      - "Important business milestones"
+  
+  medium:
+    description: "Important but not urgent, can be scheduled"
+    examples:
+      - "Feature enhancements"
+      - "Process improvements"
+      - "Documentation updates"
+  
+  low:
+    description: "Nice to have, can be done when time permits"
+    examples:
+      - "Code refactoring"
+      - "Optional features"
+      - "Nice-to-have improvements"
+
+# Financial Tracking Guidelines
+financial_guidelines:
+  budget_allocation:
+    development: 60  # percentage
+    marketing: 20
+    operations: 15
+    contingency: 5
+  
+  revenue_tracking:
+    direct_revenue: "Sales, subscriptions, licenses"
+    indirect_revenue: "Partnerships, referrals, data"
+    future_revenue: "Projected based on market analysis"
+  
+  cost_tracking:
+    personnel: "Salaries, contractors, consultants"
+    tools: "Software, hardware, services"
+    marketing: "Ads, events, content creation"
+    operations: "Office, utilities, legal, accounting"
+
+# Integration Points
+integration:
+  personal_system:
+    task_manager: "automation/tools/task_manager/"
+    daily_workflows: "core/workflows/daily.md"
+    automation: "automation/scripts/"
+  
+  external_tools:
+    project_management: "Jira, Asana, Trello"
+    communication: "Slack, Teams, Discord"
+    documentation: "Notion, Confluence, GitBook"
+    analytics: "Google Analytics, Mixpanel, Amplitude"

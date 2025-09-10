@@ -13,7 +13,6 @@ The projects directory manages all your active, planned, and completed projects.
 - `git-server/` - Git server infrastructure project
 - `habit_tracker/` - Personal habit tracking application
 - `personal_api/` - Personal API development project
-- `personal_telegram_bot/` - Telegram bot automation project
 - `presentation_analyzer/` - Presentation analysis tool project
 
 ## Usage
