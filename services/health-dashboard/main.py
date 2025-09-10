@@ -678,6 +678,98 @@ Total Components: {metrics.total_components}
         except Exception as e:
             logger.error(f"Error saving report: {e}")
 
+# Web server for health endpoints
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+import uvicorn
+
+# Initialize FastAPI app
+app = FastAPI(
+    title="Health Dashboard",
+    description="Personal System Health Monitoring Dashboard",
+    version="1.0.0"
+)
+
+# Global dashboard instance
+dashboard = SystemHealthDashboard()
+
+@app.get("/")
+async def root():
+    """Root endpoint with basic info."""
+    return {
+        "service": "Personal System Health Dashboard",
+        "version": "1.0.0",
+        "endpoints": {
+            "health": "/health",
+            "metrics": "/metrics",
+            "dashboard": "/dashboard"
+        }
+    }
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Coolify."""
+    try:
+        metrics = dashboard.get_system_metrics()
+        return {
+            "status": "healthy",
+            "timestamp": metrics.last_updated,
+            "overall_health_score": dashboard._calculate_overall_health_score(metrics),
+            "components_healthy": metrics.healthy_components,
+            "components_total": metrics.total_components
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "error": str(e),
+            "timestamp": datetime.now()
+        }
+
+@app.get("/metrics")
+async def get_metrics():
+    """Get system metrics in JSON format."""
+    try:
+        metrics = dashboard.get_system_metrics()
+        return asdict(metrics)
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def get_dashboard():
+    """Get dashboard as HTML."""
+    try:
+        report = dashboard.generate_dashboard_report()
+        # Convert to HTML
+        html_report = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Personal System Health Dashboard</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>
+                body {{ font-family: 'Courier New', monospace; margin: 20px; background: #1a1a1a; color: #00ff00; }}
+                pre {{ white-space: pre-wrap; word-wrap: break-word; }}
+                .refresh {{ margin-top: 20px; }}
+                .refresh button {{ padding: 10px 20px; background: #00ff00; color: #000; border: none; cursor: pointer; }}
+            </style>
+        </head>
+        <body>
+            <pre>{report}</pre>
+            <div class="refresh">
+                <button onclick="location.reload()">Refresh Dashboard</button>
+            </div>
+            <script>
+                // Auto-refresh every 30 seconds
+                setTimeout(() => location.reload(), 30000);
+            </script>
+        </body>
+        </html>
+        """
+        return HTMLResponse(content=html_report)
+    except Exception as e:
+        return HTMLResponse(content=f"<h1>Error loading dashboard</h1><p>{str(e)}</p>")
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Personal System Health Dashboard")
@@ -687,13 +779,20 @@ def main():
     parser.add_argument("--save", help="Save report to file")
     parser.add_argument("--refresh", type=int, help="Dashboard refresh interval in seconds")
     parser.add_argument("--json", action="store_true", help="Output in JSON format")
+    parser.add_argument("--web", action="store_true", help="Start web server")
+    parser.add_argument("--host", default="0.0.0.0", help="Host to bind to")
+    parser.add_argument("--port", type=int, default=8000, help="Port to bind to")
     
     args = parser.parse_args()
     
     # Initialize dashboard
+    global dashboard
     dashboard = SystemHealthDashboard(args.config)
     
-    if args.json:
+    if args.web:
+        # Start web server
+        uvicorn.run(app, host=args.host, port=args.port)
+    elif args.json:
         # Output metrics in JSON format
         metrics = dashboard.get_system_metrics()
         print(json.dumps(asdict(metrics), indent=2, default=str))

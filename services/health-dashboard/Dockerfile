@@ -43,5 +43,5 @@ RUN useradd --create-home --shell /bin/bash dashboarduser && \
     chown -R dashboarduser:dashboarduser /app
 USER dashboarduser
 
-# Run the dashboard
-CMD ["python", "main.py"]
+# Run the dashboard web server
+CMD ["python", "main.py", "--web", "--host", "0.0.0.0", "--port", "8000"]
