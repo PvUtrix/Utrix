@@ -326,7 +326,8 @@ async def handle_action_callback(query, context: ContextTypes.DEFAULT_TYPE):
         return
     
     # Handle other actions with script execution
-    if action in ["log_health", "log_learning", "add_task", "quick_note", "morning_routine", "health_stats"]:
+    if action in ["log_health", "log_learning", "add_task", "quick_note", "morning_routine", "health_stats", 
+                  "shadow_checkin", "shadow_log", "shadow_prompt", "shadow_report", "shadow_reminders", "shadow_focus"]:
         await query.edit_message_text(f"🔄 Executing {action.replace('_', ' ').title()}...")
         
         try:
@@ -354,19 +355,6 @@ async def handle_action_callback(query, context: ContextTypes.DEFAULT_TYPE):
     
     # Simple action responses for other actions
     action_responses = {
-        
-        # Shadow Work
-        "shadow_checkin": "✅ **Shadow Work Check-in**\n\n🧠 Daily shadow work reflection:\n• Emotional patterns\n• Behavioral triggers\n• Growth opportunities\n• Self-awareness insights\n\nUse /shadow_checkin for detailed check-in.",
-        
-        "shadow_log": "💡 **Log Shadow Work Insight**\n\n📝 Capture shadow work insights:\n• Emotional triggers\n• Behavioral patterns\n• Growth moments\n• Self-discovery\n\nUse /shadow_log for detailed logging.",
-        
-        "shadow_prompt": "🎯 **Get Shadow Work Prompt**\n\n💭 Explore your inner world:\n• Reflection questions\n• Growth prompts\n• Self-discovery exercises\n• Emotional awareness\n\nUse /shadow_prompt for detailed prompts.",
-        
-        "shadow_report": "📊 **Shadow Work Progress Report**\n\n📈 Your shadow work journey:\n• Progress tracking\n• Insights gained\n• Patterns identified\n• Growth areas\n\nUse /shadow_prompt for detailed reports.",
-        
-        "shadow_reminders": "🔔 **Shadow Work Reminders**\n\n⏰ Stay consistent with your shadow work:\n• Daily check-ins\n• Weekly reflections\n• Monthly reviews\n• Growth tracking\n\nUse /shadow_checkin for reminders.",
-        
-        "shadow_focus": "🎭 **Set Shadow Work Focus**\n\n🎯 Choose your focus area:\n• Emotional regulation\n• Behavioral patterns\n• Self-awareness\n• Growth goals\n\nUse /shadow_prompt for focus setting.",
         
         # Journal & Notes
         "journal_entry": "✍️ **Journal Entry**\n\n✍️ Capture your thoughts and experiences:\n• Daily reflections\n• Emotional processing\n• Goal tracking\n• Life insights\n\nUse /journal for detailed entries.",

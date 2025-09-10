@@ -19,7 +19,7 @@ class AutomationScriptExecutor:
     def __init__(self, config: Dict[str, Any]):
         self.config = config
         self.logger = get_logger(__name__)
-        self.scripts_path = config.get('paths', {}).get('automation_scripts', '../../../automation/scripts/')
+        self.scripts_path = config.get('paths', {}).get('automation_scripts', '../../automation/scripts/')
         
         # Map actions to script commands
         self.script_mappings = {
