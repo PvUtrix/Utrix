@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta
-import jwt
+from jose import jwt
 import os
 from passlib.context import CryptContext
 
@@ -111,7 +111,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
-    except jwt.PyJWTError:
+    except jwt.JWTError:
         raise credentials_exception
     user = get_user(fake_users_db, username=token_data.username)
     if user is None:
