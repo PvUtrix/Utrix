@@ -19,9 +19,34 @@ A **privacy-first, AI-powered system** for managing personal knowledge, projects
 - **📊 Real Data Only**: No fake/random data - all metrics must come from actual sources
 - **🔌 Integration Ready**: [Roadmap](automation/INTEGRATION_ROADMAP.md) for connecting real data sources
 
-## 🚀 Quick Start (3 Options)
+## 🚀 Quick Start (4 Options)
 
-### Option 1: Coolify Deployment (Recommended)
+### Option 1: GitHub Actions (Recommended for GitHub Users)
+
+```bash
+# 1. Fork or clone this repository
+git clone https://github.com/yourusername/personal-system.git
+cd personal-system
+
+# 2. Set up GitHub Secrets
+# Go to: Settings → Secrets and variables → Actions → Repository secrets
+# Add required secrets (see .github/ENVIRONMENT_VARIABLES.md)
+
+# 3. Push to trigger health monitoring
+git add .
+git commit -m "🔧 Add GitHub Actions health monitoring"
+git push origin main
+
+# 4. Check Actions tab for health reports
+```
+
+**Benefits:**
+- ✅ Secure environment variable management
+- ✅ Automated health monitoring
+- ✅ Failure notifications via Telegram
+- ✅ No local .env files needed
+
+### Option 2: Coolify Deployment
 
 ```bash
 # 1. Clone and setup
@@ -42,7 +67,7 @@ git push origin main
 
 **That's it!** Coolify handles the rest automatically.
 
-### Option 2: Local Development
+### Option 3: Local Development
 
 ```bash
 # 1. Setup environment

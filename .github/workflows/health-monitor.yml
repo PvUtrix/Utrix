@@ -1,0 +1,358 @@
+name: 🏥 System Health Monitor
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    inputs:
+      component:
+        description: 'Specific component to check'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - telegram_bot
+        - api_server
+        - serverless_functions
+        - external_services
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.9'
+  NODE_VERSION: '18'
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    name: 🏥 System Health Check
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install psutil requests pyyaml
+        
+    - name: 🏥 Run Health Dashboard
+      run: |
+        python3 automation/tools/system_health_dashboard/main.py --json > health_report.json
+        echo "Health check completed"
+        
+    - name: 📊 Generate Health Report
+      run: |
+        python3 automation/tools/system_health_dashboard/main.py --save github_health_report.txt
+        
+    - name: 📤 Upload Health Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: health-report-${{ github.run_number }}
+        path: |
+          health_report.json
+          github_health_report.txt
+        retention-days: 30
+        
+    - name: 🚨 Check for Critical Issues
+      id: health-check
+      run: |
+        # Parse health report and check for critical issues
+        HEALTH_SCORE=$(python3 -c "
+        import json
+        with open('health_report.json', 'r') as f:
+            data = json.load(f)
+        print(data.get('total_components', 0))
+        ")
+        
+        CRITICAL_COUNT=$(python3 -c "
+        import json
+        with open('health_report.json', 'r') as f:
+            data = json.load(f)
+        print(data.get('critical_components', 0))
+        ")
+        
+        echo "health_score=$HEALTH_SCORE" >> $GITHUB_OUTPUT
+        echo "critical_count=$CRITICAL_COUNT" >> $GITHUB_OUTPUT
+        
+        if [ "$CRITICAL_COUNT" -gt 0 ]; then
+          echo "❌ Critical issues detected: $CRITICAL_COUNT"
+          exit 1
+        else
+          echo "✅ No critical issues found"
+        fi
+        
+    - name: 💬 Comment on PR (if applicable)
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const report = fs.readFileSync('github_health_report.txt', 'utf8');
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `## 🏥 System Health Report\n\n\`\`\`\n${report}\n\`\`\``
+          });
+
+  telegram-bot-check:
+    runs-on: ubuntu-latest
+    name: 🤖 Telegram Bot Health Check
+    if: github.event.inputs.component == 'telegram_bot' || github.event.inputs.component == 'all' || github.event_name == 'schedule'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install python-telegram-bot pyyaml requests
+        
+    - name: 🤖 Test Telegram Bot Connection
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        python3 -c "
+        import requests
+        import os
+        
+        token = os.getenv('TELEGRAM_BOT_TOKEN')
+        if not token:
+            print('❌ TELEGRAM_BOT_TOKEN not set')
+            exit(1)
+            
+        # Test bot connection
+        response = requests.get(f'https://api.telegram.org/bot{token}/getMe')
+        if response.status_code == 200:
+            bot_info = response.json()
+            print(f'✅ Bot connected: @{bot_info[\"result\"][\"username\"]}')
+        else:
+            print(f'❌ Bot connection failed: {response.status_code}')
+            exit(1)
+        "
+
+  serverless-functions-check:
+    runs-on: ubuntu-latest
+    name: ☁️ Serverless Functions Check
+    if: github.event.inputs.component == 'serverless_functions' || github.event.inputs.component == 'all' || github.event_name == 'schedule'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install boto3 requests pyyaml
+        
+    - name: ☁️ Test AWS Connection
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+      run: |
+        python3 -c "
+        import boto3
+        import os
+        
+        try:
+            client = boto3.client('sts')
+            identity = client.get_caller_identity()
+            print(f'✅ AWS connected: {identity[\"Arn\"]}')
+        except Exception as e:
+            print(f'❌ AWS connection failed: {e}')
+            exit(1)
+        "
+        
+    - name: 🎤 Test ElevenLabs Connection
+      env:
+        ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      run: |
+        python3 -c "
+        import requests
+        import os
+        
+        api_key = os.getenv('ELEVENLABS_API_KEY')
+        if not api_key:
+            print('⚠️ ELEVENLABS_API_KEY not set (optional)')
+        else:
+            headers = {'xi-api-key': api_key}
+            response = requests.get('https://api.elevenlabs.io/v1/voices', headers=headers)
+            if response.status_code == 200:
+                print('✅ ElevenLabs connected')
+            else:
+                print(f'❌ ElevenLabs connection failed: {response.status_code}')
+        "
+
+  external-services-check:
+    runs-on: ubuntu-latest
+    name: 🌐 External Services Check
+    if: github.event.inputs.component == 'external_services' || github.event.inputs.component == 'all' || github.event_name == 'schedule'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pyyaml
+        
+    - name: 🗄️ Test Supabase Connection
+      env:
+        CORE_SUPABASE_URL: ${{ secrets.CORE_SUPABASE_URL }}
+        CORE_SUPABASE_ANON_KEY: ${{ secrets.CORE_SUPABASE_ANON_KEY }}
+      run: |
+        python3 -c "
+        import requests
+        import os
+        
+        url = os.getenv('CORE_SUPABASE_URL')
+        key = os.getenv('CORE_SUPABASE_ANON_KEY')
+        
+        if not url or not key:
+            print('❌ Supabase credentials not set')
+            exit(1)
+            
+        headers = {'apikey': key, 'Authorization': f'Bearer {key}'}
+        response = requests.get(f'{url}/rest/v1/', headers=headers)
+        
+        if response.status_code == 200:
+            print('✅ Supabase connected')
+        else:
+            print(f'❌ Supabase connection failed: {response.status_code}')
+            exit(1)
+        "
+        
+    - name: 🤖 Test OpenAI Connection
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        python3 -c "
+        import requests
+        import os
+        
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            print('⚠️ OPENAI_API_KEY not set (optional)')
+        else:
+            headers = {'Authorization': f'Bearer {api_key}'}
+            response = requests.get('https://api.openai.com/v1/models', headers=headers)
+            if response.status_code == 200:
+                print('✅ OpenAI connected')
+            else:
+                print(f'❌ OpenAI connection failed: {response.status_code}')
+        "
+
+  notify-on-failure:
+    runs-on: ubuntu-latest
+    name: 📢 Notify on Failure
+    needs: [health-check, telegram-bot-check, serverless-functions-check, external-services-check]
+    if: failure()
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📤 Download Health Report
+      uses: actions/download-artifact@v3
+      with:
+        name: health-report-${{ github.run_number }}
+        path: ./reports
+        
+    - name: 💬 Create Issue on Failure
+      uses: actions/github-script@v6
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      with:
+        script: |
+          const fs = require('fs');
+          const reportPath = './reports/github_health_report.txt';
+          
+          let reportContent = 'Health check failed - no report available';
+          if (fs.existsSync(reportPath)) {
+            reportContent = fs.readFileSync(reportPath, 'utf8');
+          }
+          
+          // Create GitHub issue
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `🚨 System Health Check Failed - ${new Date().toISOString()}`,
+            body: `## System Health Check Failed
+            
+            **Workflow:** ${{ github.workflow }}
+            **Run ID:** ${{ github.run_id }}
+            **Commit:** ${{ github.sha }}
+            
+            ### Health Report:
+            \`\`\`
+            ${reportContent}
+            \`\`\`
+            
+            Please check the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.`,
+            labels: ['bug', 'health-check', 'critical']
+          });
+          
+          console.log(`Created issue: ${issue.data.html_url}`);
+          
+          // Send Telegram notification if configured
+          const token = process.env.TELEGRAM_BOT_TOKEN;
+          const chatId = process.env.TELEGRAM_CHAT_ID;
+          
+          if (token && chatId) {
+            const message = `🚨 *System Health Check Failed*
+            
+            *Repository:* ${{ github.repository }}
+            *Workflow:* ${{ github.workflow }}
+            *Commit:* \`${{ github.sha.substring(0, 7) }}\`
+            
+            [View Issue](${issue.data.html_url})
+            [View Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            
+            const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+              })
+            });
+            
+            if (response.ok) {
+              console.log('Telegram notification sent');
+            } else {
+              console.log('Failed to send Telegram notification');
+            }
+          }
