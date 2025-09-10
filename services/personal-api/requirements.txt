@@ -29,8 +29,8 @@ pyyaml==6.0.1
 # Monitoring & Logging
 structlog==23.2.0
 
-# CORS
-python-cors==1.7.0
+# CORS (FastAPI has built-in CORS support)
+# python-cors==1.7.0  # This package doesn't exist
 
 # Production server
 gunicorn==21.2.0
