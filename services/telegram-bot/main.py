@@ -18,7 +18,7 @@ from bot.bot import PersonalSystemBot
 from config.config_manager import ConfigManager
 from utils.logger import setup_logging
 from scheduler import PersonalSystemScheduler
-from health_check import HealthCheck
+from health_check import HealthCheckServer
 
 
 async def main():
@@ -46,7 +46,7 @@ async def main():
         
         # Create health check server
         health_port = int(os.getenv('HEALTH_CHECK_PORT', '8000'))
-        health_check = HealthCheck(health_port)
+        health_check = HealthCheckServer(health_port)
         
         logger.info("Bot, scheduler, and health check initialized successfully. Starting...")
         
