@@ -1,0 +1,209 @@
+service: personal-system-serverless
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: eu-central-1
+  stage: prod
+  memorySize: 256
+  timeout: 30
+  deploymentBucket:
+    name: personal-system-serverless-deployments-680429660492
+    serverSideEncryption: AES256
+  environment:
+    # Core Database (Free Tier)
+    CORE_SUPABASE_URL: ${env:CORE_SUPABASE_URL, ''}
+    CORE_SUPABASE_ANON_KEY: ${env:CORE_SUPABASE_ANON_KEY, ''}
+    # Main Database (Self-hosted)
+    MAIN_SUPABASE_URL: ${env:MAIN_SUPABASE_URL, ''}
+    MAIN_SUPABASE_ANON_KEY: ${env:MAIN_SUPABASE_ANON_KEY, ''}
+    # ElevenLabs
+    ELEVENLABS_API_KEY: ${env:ELEVENLABS_API_KEY, ''}
+    ELEVENLABS_VOICE_ID: ${env:ELEVENLABS_VOICE_ID, '21m00Tcm4TlvDq8ikWAM'}
+    # Telegram
+    TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN, ''}
+    TELEGRAM_CHAT_ID: ${env:TELEGRAM_CHAT_ID, ''}
+    # Gitea (optional)
+    GITEA_URL: ${env:GITEA_URL, ''}
+    GITEA_TOKEN: ${env:GITEA_TOKEN, ''}
+    GITEA_WEBHOOK_SECRET: ${env:GITEA_WEBHOOK_SECRET, ''}
+    # Coolify (optional)
+    COOLIFY_URL: ${env:COOLIFY_URL, ''}
+    COOLIFY_API_TOKEN: ${env:COOLIFY_API_TOKEN, ''}
+    COOLIFY_PROJECT_UUID: ${env:COOLIFY_PROJECT_UUID, ''}
+    COOLIFY_APPLICATION_UUID: ${env:COOLIFY_APPLICATION_UUID, ''}
+
+functions:
+  # Daily Summary (simplified)
+  daily-summary:
+    handler: daily_summary_simple.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 12 * * ? *)  # Daily at 12 PM UTC
+          enabled: true
+    environment:
+      TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN, ''}
+      TELEGRAM_CHAT_ID: ${env:TELEGRAM_CHAT_ID, ''}
+
+  # CI/CD Webhook Handler (simplified)
+  gitea-webhook-handler:
+    handler: simple_test.lambda_handler  # Using simple test for now
+    timeout: 30
+    memorySize: 256
+    events:
+      - http:
+          path: /webhook/gitea
+          method: post
+          cors: true
+
+  # CI/CD Orchestrator (simplified)
+  cicd-orchestrator:
+    handler: simple_test.lambda_handler  # Using simple test for now
+    timeout: 60
+    memorySize: 256
+
+  # Coolify Deployer (moved to deployment/coolify/)
+  # coolify-deployer:
+  #   handler: ../../deployment/coolify/coolify_deployer.lambda_handler
+  #   timeout: 300
+  #   memorySize: 512
+  #   environment:
+  #     COOLIFY_URL: ${env:COOLIFY_URL, ''}
+  #     COOLIFY_API_TOKEN: ${env:COOLIFY_API_TOKEN, ''}
+  #     COOLIFY_PROJECT_UUID: ${env:COOLIFY_PROJECT_UUID, ''}
+  #     COOLIFY_APPLICATION_UUID: ${env:COOLIFY_APPLICATION_UUID, ''}
+
+  # Daily Voice Message (simplified) - DISABLED
+  # daily-voice-message:
+  #   handler: voice_generator_simple.lambda_handler
+  #   timeout: 120  # Longer timeout for voice generation
+  #   memorySize: 512  # More memory for voice processing
+  #   events:
+  #     - schedule:
+  #         rate: cron(0 7 * * ? *)  # Daily at 7 AM UTC
+  #         enabled: false
+
+  # Voice Content Generator (simplified)
+  voice-content-generator:
+    handler: voice_generator_simple.lambda_handler
+    timeout: 60
+
+  # ElevenLabs TTS (simplified)
+  elevenlabs-tts:
+    handler: voice_generator_simple.lambda_handler
+    timeout: 120
+    memorySize: 512
+
+  # Voice Transcription (ElevenLabs Scribe + OpenAI Whisper)
+  voice-transcription:
+    handler: voice_transcription_simple.lambda_handler
+    timeout: 30
+    memorySize: 512
+    events:
+      - http:
+          path: /voice-transcription
+          method: post
+          cors: true
+    environment:
+      ELEVENLABS_API_KEY: ${env:ELEVENLABS_API_KEY, ''}
+      OPENAI_API_KEY: ${env:OPENAI_API_KEY, ''}
+
+  # Data Sync Manager (simplified)
+  data-sync-manager:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: rate(4 hours)  # Every 4 hours
+          enabled: true
+
+  # Data Lifecycle Manager (simplified)
+  data-lifecycle-manager:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 2 ? * SUN *)  # Weekly on Sunday at 2 AM UTC
+          enabled: true
+
+  # Data Monitor (simplified)
+  data-monitor:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 9 * * ? *)  # Daily at 9 AM UTC
+          enabled: true
+
+  # Comprehensive Monitor (simplified)
+  comprehensive-monitor:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: rate(6 hours)  # Every 6 hours
+          enabled: true
+
+  # Cost Monitor (simplified)
+  cost-monitor:
+    handler: cost_monitor_simple.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 2 * * ? *)  # Daily at 2 AM UTC
+          enabled: true
+
+  # Daily Projection Calculator (simplified)
+  daily-projection:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 6 * * ? *)  # Daily at 6 AM UTC
+          enabled: true
+
+  # Home Server Archiver (simplified)
+  home-server-archiver:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 4 ? * SUN *)  # Weekly on Sunday at 4 AM UTC
+          enabled: true
+
+  # Multi-Tier Quota Manager (simplified)
+  multi-tier-quota-manager:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 3 * * ? *)  # Daily at 3 AM UTC
+          enabled: true
+
+  # Intelligent Load Balancer (simplified)
+  intelligent-load-balancer:
+    handler: simple_test.lambda_handler
+    events:
+      - http:
+          path: /load-balancer
+          method: any
+          cors: true
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: false
+    layer: false
+    slim: true
+    strip: false
+    noDeps: false
+
+package:
+  patterns:
+    - '!**/*.pyc'
+    - '!**/__pycache__'
+    - '!**/node_modules/**'
+    - '!**/.git/**'
+    - '!README.md'
+    - '!serverless.yml'
+    - '!requirements.txt'
+    - '!deploy.sh'
+    - '!run.sh'
+    - '!multi_tier_config.yaml'
+    - '!multi_tier_config.local.yaml'

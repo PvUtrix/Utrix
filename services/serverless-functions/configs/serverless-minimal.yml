@@ -1,0 +1,48 @@
+service: personal-system-serverless
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: eu-central-1
+  stage: dev
+  memorySize: 256
+  timeout: 30
+  deploymentBucket:
+    name: personal-system-serverless-deployments-680429660492
+    serverSideEncryption: AES256
+  environment:
+    CORE_SUPABASE_URL: ${env:CORE_SUPABASE_URL, ''}
+    CORE_SUPABASE_ANON_KEY: ${env:CORE_SUPABASE_ANON_KEY, ''}
+    TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN, ''}
+    TELEGRAM_CHAT_ID: ${env:TELEGRAM_CHAT_ID, ''}
+
+functions:
+  # Test function
+  test-function:
+    handler: simple_test.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 12 * * ? *)  # Daily at 12 PM UTC
+          enabled: false  # Disabled for testing
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    layer: false
+    slim: true
+    strip: false
+
+package:
+  patterns:
+    - '!**/*.pyc'
+    - '!**/__pycache__'
+    - '!**/node_modules/**'
+    - '!**/.git/**'
+    - '!README.md'
+    - '!serverless.yml'
+    - '!requirements.txt'

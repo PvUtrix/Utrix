@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  health-dashboard:
+    build: .
+    container_name: health-dashboard
+    restart: unless-stopped
+    environment:
+      # Dashboard Configuration
+      - DASHBOARD_HOST=0.0.0.0
+      - DASHBOARD_PORT=8000
+      - ENVIRONMENT=production
+      
+      # Monitoring Configuration
+      - MONITORING_INTERVAL=300
+      - ALERT_THRESHOLD=80
+      
+      # External Services
+      - TELEGRAM_BOT_URL=${TELEGRAM_BOT_URL}
+      - PERSONAL_API_URL=${PERSONAL_API_URL}
+      
+    volumes:
+      # Persistent data storage
+      - dashboard_data:/app/data
+      - dashboard_logs:/app/logs
+      - dashboard_config:/app/config
+      
+    ports:
+      - "8001:8000"
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+
+# Named volumes for persistent storage
+volumes:
+  dashboard_data:
+    driver: local
+  dashboard_logs:
+    driver: local
+  dashboard_config:
+    driver: local

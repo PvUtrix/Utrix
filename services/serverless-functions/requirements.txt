@@ -1,0 +1,28 @@
+# Core Dependencies
+boto3==1.28.0
+requests==2.31.0
+python-dateutil==2.8.2
+
+# Supabase (for multi-tier database)
+supabase==2.3.0
+gotrue>=2.4.1
+postgrest>=0.13.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.25.2
+
+# Configuration
+PyYAML==6.0.1
+
+# Voice Generation (ElevenLabs)
+# No additional packages needed - uses requests
+
+# Development
+pytest==7.4.3
+black==23.11.0
+flake8==6.1.0
+
+# Optional: For local testing
+moto==4.2.0  # AWS mock for testing
+pytest-mock==3.12.0

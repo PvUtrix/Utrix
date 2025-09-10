@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  # Telegram Bot Service
+  telegram-bot:
+    build:
+      context: ./services/telegram-bot
+      dockerfile: Dockerfile
+    container_name: personal-telegram-bot
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_USER_ID=${TELEGRAM_USER_ID}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - HEALTH_CHECK_PORT=8000
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - telegram_data:/app/data
+      - telegram_logs:/app/logs
+      - telegram_config:/app/config
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Personal API Service
+  personal-api:
+    build:
+      context: ./services/personal-api
+      dockerfile: Dockerfile
+    container_name: personal-api
+    restart: unless-stopped
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - API_KEY=${API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+    volumes:
+      - api_data:/app/data
+      - api_logs:/app/logs
+      - api_config:/app/config
+    ports:
+      - "8001:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Health Dashboard Service
+  health-dashboard:
+    build:
+      context: ./services/health-dashboard
+      dockerfile: Dockerfile
+    container_name: health-dashboard
+    restart: unless-stopped
+    environment:
+      - DASHBOARD_HOST=0.0.0.0
+      - DASHBOARD_PORT=8000
+      - ENVIRONMENT=production
+      - MONITORING_INTERVAL=300
+      - ALERT_THRESHOLD=80
+      - TELEGRAM_BOT_URL=http://telegram-bot:8000
+      - PERSONAL_API_URL=http://personal-api:8000
+    volumes:
+      - dashboard_data:/app/data
+      - dashboard_logs:/app/logs
+      - dashboard_config:/app/config
+    ports:
+      - "8002:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+
+# Named volumes for persistent storage
+volumes:
+  telegram_data:
+    driver: local
+  telegram_logs:
+    driver: local
+  telegram_config:
+    driver: local
+  api_data:
+    driver: local
+  api_logs:
+    driver: local
+  api_config:
+    driver: local
+  dashboard_data:
+    driver: local
+  dashboard_logs:
+    driver: local
+  dashboard_config:
+    driver: local

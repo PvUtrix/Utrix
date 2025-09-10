@@ -1,0 +1,304 @@
+# Multi-Tier Serverless Quota Management Configuration
+# Manages free tier quotas across AWS Lambda, Google Cloud Functions, and Azure Functions
+
+# Provider Configuration
+providers:
+  aws_lambda:
+    enabled: true
+    region: "us-east-1"
+    access_key_env: "AWS_ACCESS_KEY_ID"
+    secret_key_env: "AWS_SECRET_ACCESS_KEY"
+    session_token_env: "AWS_SESSION_TOKEN"  # Optional for temporary credentials
+    
+  google_cloud_functions:
+    enabled: true
+    project_id_env: "GCP_PROJECT_ID"
+    credentials_path_env: "GOOGLE_APPLICATION_CREDENTIALS"
+    region: "us-central1"
+    
+  azure_functions:
+    enabled: true
+    subscription_id_env: "AZURE_SUBSCRIPTION_ID"
+    resource_group_env: "AZURE_RESOURCE_GROUP"
+    function_app_env: "AZURE_FUNCTION_APP"
+    region: "East US"
+
+# Quota Management Settings
+quota_management:
+  # Thresholds for quota usage warnings and critical alerts
+  warning_threshold_percent: 80
+  critical_threshold_percent: 95
+  
+  # Auto-scaling and frequency adjustment
+  auto_scaling_enabled: true
+  frequency_adjustment_enabled: true
+  
+  # Projection calculation settings
+  projection_recalculation_hours: 24
+  projection_history_days: 30
+  
+  # Cost monitoring
+  cost_alert_threshold: 0.01  # $0.01
+  monthly_budget_limit: 0.10  # $0.10
+
+# Load Balancing Configuration
+load_balancing:
+  # Strategy: cost_optimized, performance, balanced
+  strategy: "cost_optimized"
+  
+  # Fallback behavior
+  fallback_enabled: true
+  fallback_strategy: "least_used"
+  
+  # Health checking
+  health_check_interval_minutes: 15
+  health_check_timeout_seconds: 30
+  
+  # Provider preferences (higher = more preferred)
+  provider_preferences:
+    aws_lambda: 3
+    google_cloud_functions: 2
+    azure_functions: 1
+
+# Function Classification and Routing
+function_routing:
+  # Function types and their preferred providers
+  function_types:
+    daily_summary:
+      preferred_providers: ["aws_lambda", "google_cloud_functions"]
+      estimated_duration_ms: 5000
+      memory_mb: 256
+      priority: "high"
+      
+    shadow_work_tracker:
+      preferred_providers: ["google_cloud_functions", "azure_functions"]
+      estimated_duration_ms: 2000
+      memory_mb: 128
+      priority: "normal"
+      
+    google_drive_sync:
+      preferred_providers: ["aws_lambda"]
+      estimated_duration_ms: 45000
+      memory_mb: 512
+      priority: "low"
+      
+    voice_generation:
+      preferred_providers: ["azure_functions", "aws_lambda"]
+      estimated_duration_ms: 10000
+      memory_mb: 1024
+      priority: "normal"
+      
+    data_processing:
+      preferred_providers: ["google_cloud_functions", "aws_lambda"]
+      estimated_duration_ms: 15000
+      memory_mb: 1024
+      priority: "normal"
+
+# Monitoring and Alerting
+monitoring:
+  # Enable various monitoring features
+  enable_usage_tracking: true
+  enable_cost_tracking: true
+  enable_performance_tracking: true
+  enable_health_checks: true
+  
+  # Alerting configuration
+  alerts:
+    # Quota usage alerts
+    quota_warning:
+      enabled: true
+      threshold_percent: 80
+      notification_channels: ["telegram", "email"]
+      
+    quota_critical:
+      enabled: true
+      threshold_percent: 95
+      notification_channels: ["telegram", "email", "sms"]
+      
+    # Cost alerts
+    cost_warning:
+      enabled: true
+      threshold_dollars: 0.01
+      notification_channels: ["telegram"]
+      
+    cost_critical:
+      enabled: true
+      threshold_dollars: 0.05
+      notification_channels: ["telegram", "email"]
+      
+    # Performance alerts
+    function_timeout:
+      enabled: true
+      threshold_percent: 5  # 5% timeout rate
+      notification_channels: ["telegram"]
+      
+    function_error:
+      enabled: true
+      threshold_percent: 10  # 10% error rate
+      notification_channels: ["telegram"]
+
+# Notification Configuration
+notifications:
+  telegram:
+    enabled: true
+    bot_token_env: "TELEGRAM_BOT_TOKEN"
+    chat_id_env: "TELEGRAM_CHAT_ID"
+    
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    username_env: "EMAIL_USERNAME"
+    password_env: "EMAIL_PASSWORD"
+    to_addresses: ["your-email@example.com"]
+    
+  sms:
+    enabled: false
+    provider: "twilio"  # or "aws_sns"
+    api_key_env: "SMS_API_KEY"
+    phone_number_env: "SMS_PHONE_NUMBER"
+
+# Data Storage and History
+data_storage:
+  # Local storage for quota history and projections
+  local_storage_path: "./quota_data"
+  
+  # Database storage (optional)
+  database:
+    enabled: false
+    type: "sqlite"  # or "postgresql", "mysql"
+    connection_string_env: "QUOTA_DB_CONNECTION_STRING"
+    
+  # Backup configuration
+  backup:
+    enabled: true
+    frequency: "daily"
+    retention_days: 30
+    destination: "local"  # or "s3", "gcs", "azure_blob"
+
+# Performance Optimization
+performance:
+  # Caching settings
+  cache:
+    enabled: true
+    ttl_minutes: 15
+    max_size_mb: 100
+    
+  # Batch processing
+  batch_processing:
+    enabled: true
+    batch_size: 100
+    batch_timeout_seconds: 30
+    
+  # Connection pooling
+  connection_pooling:
+    enabled: true
+    max_connections: 10
+    connection_timeout_seconds: 30
+
+# Security Configuration
+security:
+  # Encryption
+  encryption:
+    enabled: true
+    algorithm: "AES-256-GCM"
+    key_env: "QUOTA_ENCRYPTION_KEY"
+    
+  # Access control
+  access_control:
+    enabled: false
+    allowed_ips: []
+    api_key_required: false
+    api_key_env: "QUOTA_API_KEY"
+    
+  # Audit logging
+  audit_logging:
+    enabled: true
+    log_level: "INFO"
+    log_file: "./logs/quota_audit.log"
+
+# Development and Testing
+development:
+  # Mock providers for testing
+  mock_providers: false
+  
+  # Test data generation
+  generate_test_data: false
+  
+  # Debug mode
+  debug_mode: false
+  verbose_logging: false
+
+# Environment Variables Template
+environment_variables:
+  # AWS Configuration
+  AWS_ACCESS_KEY_ID: "your-aws-access-key"
+  AWS_SECRET_ACCESS_KEY: "your-aws-secret-key"
+  AWS_SESSION_TOKEN: "your-aws-session-token"  # Optional
+  
+  # Google Cloud Configuration
+  GCP_PROJECT_ID: "your-gcp-project-id"
+  GOOGLE_APPLICATION_CREDENTIALS: "/path/to/service-account.json"
+  
+  # Azure Configuration
+  AZURE_SUBSCRIPTION_ID: "your-azure-subscription-id"
+  AZURE_RESOURCE_GROUP: "your-resource-group"
+  AZURE_FUNCTION_APP: "your-function-app-name"
+  
+  # Notification Configuration
+  TELEGRAM_BOT_TOKEN: "your-telegram-bot-token"
+  TELEGRAM_CHAT_ID: "your-telegram-chat-id"
+  
+  # Email Configuration (if enabled)
+  EMAIL_USERNAME: "your-email@example.com"
+  EMAIL_PASSWORD: "your-email-password"
+  
+  # SMS Configuration (if enabled)
+  SMS_API_KEY: "your-sms-api-key"
+  SMS_PHONE_NUMBER: "+1234567890"
+  
+  # Database Configuration (if enabled)
+  QUOTA_DB_CONNECTION_STRING: "sqlite:///quota_data.db"
+  
+  # Security Configuration
+  QUOTA_ENCRYPTION_KEY: "your-32-character-encryption-key"
+  QUOTA_API_KEY: "your-api-key-for-access-control"
+
+# Setup Instructions
+setup_instructions:
+  aws_lambda: |
+    1. Create AWS account and IAM user
+    2. Generate access keys with Lambda permissions
+    3. Set environment variables
+    4. Test connection with AWS CLI
+    
+  google_cloud_functions: |
+    1. Create Google Cloud project
+    2. Enable Cloud Functions API
+    3. Create service account with Functions permissions
+    4. Download service account key
+    5. Set environment variables
+    
+  azure_functions: |
+    1. Create Azure account and subscription
+    2. Create resource group and function app
+    3. Get subscription ID and resource details
+    4. Set environment variables
+    5. Test with Azure CLI
+
+# Usage Examples
+usage_examples:
+  check_quota_status: |
+    python3 multi_tier_quota_manager.py --status
+    
+  get_projections: |
+    python3 multi_tier_quota_manager.py --projections
+    
+  test_provider_selection: |
+    python3 multi_tier_quota_manager.py --select-provider daily_summary
+    
+  adjust_frequency: |
+    python3 multi_tier_quota_manager.py --adjust-frequency daily_summary
+    
+  generate_report: |
+    python3 multi_tier_quota_manager.py --status > quota_report.json

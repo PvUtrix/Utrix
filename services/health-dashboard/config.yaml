@@ -1,0 +1,185 @@
+# System Health Dashboard Configuration
+# Personal System Health Monitoring Tool
+
+dashboard:
+  refresh_interval: 30  # seconds
+  max_history: 100      # number of metrics to keep in history
+  auto_refresh: true
+  show_detailed_metrics: true
+
+monitoring:
+  check_ports: true
+  check_processes: true
+  check_services: true
+  check_disk_space: true
+  check_memory: true
+  check_network: true
+
+alerts:
+  enable_alerts: true
+  critical_threshold: 80    # health score threshold for critical alerts
+  warning_threshold: 60     # health score threshold for warning alerts
+  notification_methods: ["console", "file"]
+
+components:
+  core_apps:
+    - name: "PersonalSystemBot"
+      type: "core_app"
+      port: null
+      process_name: "python"
+      start_script: "start_telegram_bot.sh"
+      dependencies: ["TELEGRAM_BOT_TOKEN"]
+      description: "Main Telegram bot interface"
+      
+    - name: "PersonalSystemAPI"
+      type: "core_app"
+      port: 8000
+      process_name: "python"
+      start_script: "start_main_api.sh"
+      dependencies: []
+      description: "Main API server"
+
+  project_apps:
+    - name: "HabitTracker"
+      type: "project_app"
+      port: 5000
+      process_name: "python"
+      start_script: "start_habit_tracker.sh"
+      dependencies: []
+      description: "Habit tracking web application"
+      
+    - name: "PresentationAnalyzer"
+      type: "project_app"
+      port: null
+      process_name: "python"
+      start_script: "start_presentation_analyzer.sh"
+      dependencies: ["GOOGLE_DRIVE_CREDENTIALS_PATH"]
+      description: "Google Drive presentation analyzer"
+
+  automation_tools:
+    - name: "TaskManager"
+      type: "automation_tool"
+      port: null
+      process_name: "python"
+      start_script: "start_task_manager.sh"
+      dependencies: []
+      description: "Task management and tracking"
+      
+    - name: "DailySummary"
+      type: "automation_tool"
+      port: null
+      process_name: "python"
+      start_script: "start_daily_summary.sh"
+      dependencies: []
+      description: "Daily summary generation"
+      
+    - name: "CleanupTool"
+      type: "automation_tool"
+      port: null
+      process_name: "python"
+      start_script: "start_cleanup_tool.sh"
+      dependencies: []
+      description: "System cleanup and optimization"
+      
+    - name: "CodeQualityChecker"
+      type: "automation_tool"
+      port: null
+      process_name: "python"
+      start_script: "start_code_quality_checker.sh"
+      dependencies: []
+      description: "Code quality analysis"
+      
+    - name: "LabAnalyzer"
+      type: "automation_tool"
+      port: null
+      process_name: "python"
+      start_script: "start_lab_analyzer.sh"
+      dependencies: []
+      description: "Laboratory result analysis"
+      
+    - name: "ReminderSystem"
+      type: "automation_tool"
+      port: null
+      process_name: "python"
+      start_script: "start_reminder_system.sh"
+      dependencies: []
+      description: "Automated reminders and notifications"
+
+  serverless_functions:
+    - name: "DailySummaryLambda"
+      type: "serverless_function"
+      port: null
+      process_name: null
+      start_script: null
+      dependencies: ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
+      description: "AWS Lambda daily summary function"
+      
+    - name: "DailyVoiceLambda"
+      type: "serverless_function"
+      port: null
+      process_name: null
+      start_script: null
+      dependencies: ["ELEVENLABS_API_KEY"]
+      description: "AWS Lambda voice message function"
+      
+    - name: "VoiceTranscription"
+      type: "serverless_function"
+      port: null
+      process_name: null
+      start_script: null
+      dependencies: ["ELEVENLABS_API_KEY", "OPENAI_API_KEY"]
+      description: "Voice transcription service"
+
+  external_services:
+    - name: "TelegramAPI"
+      type: "external_service"
+      port: null
+      process_name: null
+      start_script: null
+      dependencies: ["TELEGRAM_BOT_TOKEN"]
+      health_check_url: "https://api.telegram.org/bot{token}/getMe"
+      description: "Telegram Bot API"
+      
+    - name: "Supabase"
+      type: "external_service"
+      port: null
+      process_name: null
+      start_script: null
+      dependencies: ["CORE_SUPABASE_URL", "CORE_SUPABASE_ANON_KEY"]
+      health_check_url: "{url}/rest/v1/"
+      description: "Supabase database service"
+      
+    - name: "ElevenLabs"
+      type: "external_service"
+      port: null
+      process_name: null
+      start_script: null
+      dependencies: ["ELEVENLABS_API_KEY"]
+      health_check_url: "https://api.elevenlabs.io/v1/voices"
+      description: "ElevenLabs voice synthesis API"
+      
+    - name: "OpenAI"
+      type: "external_service"
+      port: null
+      process_name: null
+      start_script: null
+      dependencies: ["OPENAI_API_KEY"]
+      health_check_url: "https://api.openai.com/v1/models"
+      description: "OpenAI API service"
+
+  containers:
+    - name: "GitServer"
+      type: "container"
+      port: 3000
+      process_name: "gitea"
+      start_script: "projects/git-server/setup.sh"
+      dependencies: []
+      description: "Gitea Git server"
+      
+    - name: "CoolifyDeployer"
+      type: "container"
+      port: null
+      process_name: "coolify"
+      start_script: "deployment/coolify/coolify-deploy.sh"
+      dependencies: ["COOLIFY_URL", "COOLIFY_API_TOKEN"]
+      description: "Coolify deployment service"

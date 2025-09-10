@@ -1,0 +1,112 @@
+# Personal System Telegram Bot Configuration - Coolify Deployment
+# This configuration uses environment variables for security
+
+# =============================================================================
+# TELEGRAM BOT SETTINGS
+# =============================================================================
+telegram:
+  bot_token: "${TELEGRAM_BOT_TOKEN}"
+  allowed_users: ["${TELEGRAM_USER_ID}"]
+  admin_users: ["${TELEGRAM_USER_ID}"]
+
+# =============================================================================
+# PERSONAL SYSTEM PATHS (Container paths)
+# =============================================================================
+paths:
+  base_path: "/app"
+  automation_scripts: "/app/automation/scripts/"
+  journal: "/app/core/knowledge/journal/"
+  notes: "/app/core/knowledge/notes/"
+  shadow_work: "/app/core/identity/shadow_work.md"
+  templates: "/app/templates/"
+
+# =============================================================================
+# DATA STORAGE
+# =============================================================================
+storage:
+  data_dir: "/app/data/storage/"
+  cache_dir: "/app/data/cache/"
+  backup_dir: "/app/data/backups/"
+  encryption_key_file: "/app/data/keys/encryption.key"
+
+# =============================================================================
+# PRIVACY SETTINGS
+# =============================================================================
+privacy:
+  encrypt_sensitive_data: true
+  respect_private_markers: true
+  auto_backup: true
+  backup_frequency: "daily"
+
+# =============================================================================
+# FEATURES CONFIGURATION
+# =============================================================================
+features:
+  daily_summary: true
+  shadow_work_tracking: true
+  health_tracking: true
+  learning_tracking: true
+  journal_integration: true
+  task_management: true
+  system_status: true
+
+# =============================================================================
+# NOTIFICATIONS
+# =============================================================================
+notifications:
+  daily_reminder: "09:00"
+  evening_checkin: "21:00"
+  weekly_review: "sunday 20:00"
+  shadow_work_reminder: "18:00"
+
+# =============================================================================
+# INTEGRATION SETTINGS
+# =============================================================================
+integrations:
+  enable_external_apis: false
+  # API keys are now handled via environment variables
+
+# =============================================================================
+# OPENAI CONFIGURATION
+# =============================================================================
+openai:
+  api_key: "${OPENAI_API_KEY}"
+  model: "whisper-1"
+  max_file_size: 25
+  supported_formats: ["mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"]
+  enable_voice_transcription: true
+
+# =============================================================================
+# ELEVENLABS CONFIGURATION
+# =============================================================================
+elevenlabs:
+  api_key: "${ELEVENLABS_API_KEY}"
+  voice_id: "21m00Tcm4TlvDq8ikWAM"
+  enable_speech_to_text: true
+  enable_text_to_speech: false
+
+# =============================================================================
+# SERVERLESS CONFIGURATION
+# =============================================================================
+serverless:
+  transcription_url: "https://1pubjgwn81.execute-api.eu-central-1.amazonaws.com/prod/voice-transcription"
+  api_key: ""
+  enable_serverless_transcription: true
+
+# =============================================================================
+# LOGGING CONFIGURATION
+# =============================================================================
+logging:
+  level: "INFO"
+  file: "/app/logs/bot.log"
+  max_size: "10MB"
+  backup_count: 5
+
+# =============================================================================
+# COOLIFY SPECIFIC SETTINGS
+# =============================================================================
+coolify:
+  app_name: "${APP_NAME:-personal-telegram-bot}"
+  environment: "${ENVIRONMENT:-production}"
+  health_check_port: "${HEALTH_CHECK_PORT:-8000}"
+  enable_monitoring: true
