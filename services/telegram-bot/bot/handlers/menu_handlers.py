@@ -325,9 +325,215 @@ async def handle_action_callback(query, context: ContextTypes.DEFAULT_TYPE):
         
         return
     
+    # Handle shadow work actions with direct handlers
+    if action in ["shadow_checkin", "shadow_log", "shadow_prompt", "shadow_report", "shadow_reminders", "shadow_focus"]:
+        try:
+            # Import shadow work handlers
+            from bot.handlers import shadow_work_handlers
+            from integrations.shadow_work import ShadowWorkIntegration
+            
+            # Get shadow work integration
+            shadow_work = ShadowWorkIntegration()
+            user_id = context.user_data.get('user_id', 0)
+            
+            # Handle each shadow work action directly
+            if action == "shadow_checkin":
+                # Get today's check-in prompt
+                prompt = shadow_work.get_daily_checkin_prompt()
+                
+                checkin_message = f"""
+🌙 **Daily Shadow Work Check-in**
+
+**Today's Prompt:**
+{prompt}
+
+**Instructions:**
+1. Take a moment to reflect on this question
+2. Notice any resistance, fear, or discomfort
+3. Write down one shadow aspect you want to explore today
+4. Set intention to notice this pattern throughout the day
+
+**Quick Response:**
+Reply to this message with your reflection, or use:
+• `/shadow_log` to log a detailed insight
+• `/shadow_prompt` for another prompt
+
+Remember: Your shadow is not your enemy. It's a part of you that needs to be seen, heard, and integrated. 💜
+                """
+                
+                await query.edit_message_text(checkin_message, parse_mode='Markdown')
+                
+            elif action == "shadow_log":
+                log_message = """
+🌙 **Shadow Work Logging**
+
+Please share your shadow work insight or observation.
+
+**Examples:**
+• I noticed I was avoiding that difficult conversation
+• I felt defensive when someone criticized my work
+• I'm trying to control outcomes too much again
+
+**How to log:**
+• Reply to this message with your insight
+• Or use `/shadow_log [your insight]` - Log directly
+• Or use `/shadow_prompt` - Get a prompt to reflect on
+                """
+                
+                await query.edit_message_text(log_message, parse_mode='Markdown')
+                
+            elif action == "shadow_prompt":
+                # Get a random prompt
+                prompt = shadow_work.get_random_prompt()
+                
+                prompt_message = f"""
+🌙 **Shadow Work Prompt**
+
+**Reflection Question:**
+{prompt}
+
+**How to use this prompt:**
+1. Sit with this question for a few moments
+2. Notice what comes up - thoughts, feelings, resistance
+3. Write down your honest response
+4. Don't judge what emerges - just observe
+
+**Quick Actions:**
+• Reply with your reflection
+• `/shadow_log [your response]` - Log your insight
+• `/shadow_prompt` - Get another prompt
+
+**Remember:** Shadow work is about bringing light to the parts of yourself that you've hidden away. Be gentle with yourself. 💜
+                """
+                
+                await query.edit_message_text(prompt_message, parse_mode='Markdown')
+                
+            elif action == "shadow_report":
+                # Get user's shadow work statistics
+                stats = shadow_work.get_insight_stats(user_id)
+                recent_insights = shadow_work.get_recent_insights(user_id, 5)
+                
+                # Format the report
+                report_message = f"""
+📊 **Shadow Work Progress Report**
+
+**Your Statistics:**
+• Total Insights: {stats['total_insights']}
+• This Week: {stats['this_week']}
+• This Month: {stats['this_month']}
+• Last Insight: {stats['last_insight'][:10] if stats['last_insight'] else 'None'}
+
+**Recent Insights:**
+"""
+                
+                if recent_insights:
+                    for i, insight in enumerate(recent_insights, 1):
+                        date = insight['timestamp'][:10]
+                        content = insight['insight'][:100] + "..." if len(insight['insight']) > 100 else insight['insight']
+                        report_message += f"{i}. *{date}*: {content}\n\n"
+                else:
+                    report_message += "No insights logged yet. Start your shadow work journey! 🌙\n\n"
+                
+                report_message += """
+**Next Steps:**
+• Continue daily check-ins
+• Log insights as they arise
+• Practice self-compassion
+• Embrace your shadow with love
+
+**Quick Actions:**
+• `/shadow_checkin` - Daily check-in
+• `/shadow_log` - Log new insight
+• `/shadow_prompt` - Get reflection prompt
+
+Remember: Every insight is progress! 💜✨
+                """
+                
+                await query.edit_message_text(report_message, parse_mode='Markdown')
+                
+            elif action == "shadow_reminders":
+                reminders_message = """
+🔔 **Shadow Work Reminders**
+
+**Daily Practices:**
+• Morning check-in with your shadow
+• Notice resistance throughout the day
+• Log insights as they arise
+• Evening reflection on patterns
+
+**Weekly Practices:**
+• Review your shadow work progress
+• Identify recurring patterns
+• Set intentions for integration
+• Practice self-compassion
+
+**Monthly Practices:**
+• Deep dive into one shadow aspect
+• Celebrate your growth
+• Adjust your approach
+• Plan next month's focus
+
+**Quick Reminders:**
+• Your shadow is not your enemy
+• Every insight is valuable
+• Progress, not perfection
+• Self-compassion is key
+
+**Set Your Own Reminders:**
+• Use your phone's reminder app
+• Set daily shadow work time
+• Create accountability partners
+• Track your consistency
+
+**Remember:** Shadow work is a journey, not a destination. Be patient and kind with yourself. 🌙💜
+                """
+                
+                await query.edit_message_text(reminders_message, parse_mode='Markdown')
+                
+            elif action == "shadow_focus":
+                focus_message = """
+🎭 **Set Shadow Work Focus**
+
+What shadow aspect would you like to focus on this week?
+
+**Common Shadow Aspects:**
+• Perfectionism
+• People-pleasing
+• Control issues
+• Avoidance patterns
+• Self-criticism
+• Fear of vulnerability
+• Need for approval
+• Anger or resentment
+
+**How to use:**
+• `/shadow_focus [aspect]` - Set your focus
+• Example: `/shadow_focus perfectionism`
+• Example: `/shadow_focus people-pleasing`
+
+**Focus Benefits:**
+• Deeper self-awareness
+• Targeted growth
+• Pattern recognition
+• Integration practice
+
+**Quick Actions:**
+• `/shadow_prompt` - Get reflection prompt
+• `/shadow_log` - Log insights about this aspect
+• `/shadow_report` - See your progress
+
+What shadow aspect calls to you today? 🌙
+                """
+                
+                await query.edit_message_text(focus_message, parse_mode='Markdown')
+                
+        except Exception as e:
+            await query.edit_message_text(f"❌ Error executing {action}: {str(e)}")
+        
+        return
+    
     # Handle other actions with script execution
-    if action in ["log_health", "log_learning", "add_task", "quick_note", "morning_routine", "health_stats", 
-                  "shadow_checkin", "shadow_log", "shadow_prompt", "shadow_report", "shadow_reminders", "shadow_focus"]:
+    if action in ["log_health", "log_learning", "add_task", "quick_note", "morning_routine", "health_stats"]:
         await query.edit_message_text(f"🔄 Executing {action.replace('_', ' ').title()}...")
         
         try:

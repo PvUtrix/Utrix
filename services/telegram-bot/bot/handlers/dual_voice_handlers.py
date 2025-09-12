@@ -28,6 +28,8 @@ class DualVoiceHandler:
         if elevenlabs_config.get('api_key') and elevenlabs_config.get('enable_speech_to_text', True):
             self.elevenlabs_available = True
             self.elevenlabs_api_key = elevenlabs_config['api_key']
+            self.elevenlabs_language = elevenlabs_config.get('language', 'auto')
+            self.supported_languages = elevenlabs_config.get('supported_languages', ['en', 'ru'])
             self.logger.info("ElevenLabs Scribe configured as primary transcription service")
         else:
             self.elevenlabs_available = False
@@ -40,6 +42,8 @@ class DualVoiceHandler:
             self.openai_client = OpenAI(api_key=openai_config['api_key'])
             self.max_file_size = openai_config.get('max_file_size', 25)
             self.supported_formats = openai_config.get('supported_formats', ['mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'wav', 'webm'])
+            self.openai_language = openai_config.get('language', 'auto')
+            self.supported_languages = openai_config.get('supported_languages', ['en', 'ru'])
             self.logger.info("OpenAI Whisper configured as fallback transcription service")
         else:
             self.openai_available = False
@@ -47,6 +51,27 @@ class DualVoiceHandler:
         
         if not self.elevenlabs_available and not self.openai_available:
             self.logger.error("No transcription services configured")
+    
+    def _detect_language(self, text: str) -> str:
+        """Detect if text is Russian or English."""
+        # Simple language detection based on character patterns
+        russian_chars = set('абвгдеёжзийклмнопрстуфхцчшщъыьэюя')
+        text_lower = text.lower()
+        
+        # Count Russian characters
+        russian_count = sum(1 for char in text_lower if char in russian_chars)
+        total_chars = len([c for c in text_lower if c.isalpha()])
+        
+        if total_chars == 0:
+            return 'unknown'
+        
+        russian_ratio = russian_count / total_chars
+        
+        # If more than 30% of characters are Russian, consider it Russian
+        if russian_ratio > 0.3:
+            return 'ru'
+        else:
+            return 'en'
     
     async def handle_voice_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle incoming voice messages with dual transcription services."""
@@ -82,18 +107,20 @@ class DualVoiceHandler:
             
             transcription = result['transcription']
             service = result.get('service', 'unknown')
+            detected_language = self._detect_language(transcription)
             
-            # Show transcription with service indicator
+            # Show transcription with service indicator and language
+            language_emoji = "🇷🇺" if detected_language == 'ru' else "🇺🇸" if detected_language == 'en' else "🌍"
             service_indicator = "🎤 Voice Message Transcribed"
             if service == 'elevenlabs_scribe':
-                service_indicator = "🎤 Voice Message Transcribed (ElevenLabs Scribe)"
+                service_indicator = f"🎤 Voice Message Transcribed (ElevenLabs Scribe) {language_emoji}"
             elif service == 'openai_whisper':
-                service_indicator = "🎤 Voice Message Transcribed (OpenAI Whisper)"
+                service_indicator = f"🎤 Voice Message Transcribed (OpenAI Whisper) {language_emoji}"
             
             await processing_msg.edit_text(f"{service_indicator}:\n\n\"{transcription}\"")
             
-            # Process the transcription for commands
-            await self._process_transcription(update, context, transcription)
+            # Process the transcription for commands with language awareness
+            await self._process_transcription(update, context, transcription, detected_language)
             
         except Exception as e:
             self.logger.error(f"Error handling voice message: {e}")
@@ -198,6 +225,39 @@ class DualVoiceHandler:
     async def _process_transcription(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
         """Process the transcribed text for commands and actions."""
         try:
+            # Try multilingual processing first
+            try:
+                from integrations.simple_multilingual_agent import SimpleMultilingualAgent
+                
+                user_id = context.user_data.get('user_id', 0)
+                multilingual_agent = SimpleMultilingualAgent(self.config)
+                result = await multilingual_agent.process_message(text, user_id, "voice")
+                
+                if result["confidence"] > 0.3:  # Lower threshold for voice commands
+                    self.logger.info(f"✅ Multilingual processed voice command with intent: {result['intent']} (confidence: {result['confidence']})")
+                    
+                    # Handle specific intents
+                    if result["intent"] == "tasks":
+                        await self._handle_task_command(update, context, text)
+                    elif result["intent"] == "health":
+                        await self._handle_health_command(update, context, text)
+                    elif result["intent"] == "learning":
+                        await self._handle_learning_command(update, context, text)
+                    elif result["intent"] == "shadow_work":
+                        await self._handle_shadow_work_command(update, context, text)
+                    elif result["intent"] == "journal":
+                        await self._handle_note_command(update, context, text)
+                    else:
+                        # Send the multilingual response
+                        await update.message.reply_text(result["response_text"])
+                    return
+                else:
+                    self.logger.info(f"⚠️ Low confidence result from multilingual: {result['confidence']}, falling back to English patterns")
+                    
+            except Exception as e:
+                self.logger.warning(f"Multilingual processing failed, falling back to English: {e}")
+            
+            # Fallback to English pattern matching
             text_lower = text.lower().strip()
             
             # Health tracking
@@ -370,6 +430,30 @@ class DualVoiceHandler:
         except Exception as e:
             self.logger.error(f"Error handling note command: {e}")
             await update.message.reply_text(f"❌ Error saving note: {str(e)}")
+
+    async def _handle_shadow_work_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
+        """Handle shadow work-related voice commands."""
+        try:
+            # Extract shadow work content
+            shadow_content = text
+            
+            # Remove common prefixes
+            prefixes = ['shadow:', 'shadow work:', 'архетип:', 'тень:']
+            for prefix in prefixes:
+                if text.lower().startswith(prefix):
+                    shadow_content = text[len(prefix):].strip()
+                    break
+            
+            await update.message.reply_text(
+                f"🌙 Shadow Work Insight Logged\n\n"
+                f"Content: {shadow_content}\n"
+                f"Category: Voice Shadow Work\n\n"
+                f"💡 Remember: Your shadow is not your enemy. It's a part of you that needs to be seen, heard, and integrated with love and understanding."
+            )
+            
+        except Exception as e:
+            self.logger.error(f"Error handling shadow work command: {e}")
+            await update.message.reply_text(f"❌ Error saving shadow work insight: {str(e)}")
 
 
 # Global handler instance

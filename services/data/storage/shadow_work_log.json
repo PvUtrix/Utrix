@@ -1,0 +1,44 @@
+[
+  {
+    "timestamp": "2025-09-11T00:45:50.942317",
+    "user_id": 12345,
+    "insight": "Test insight: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T00:46:19.923919",
+    "user_id": 12346,
+    "insight": "Test insight 2: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T00:46:26.329636",
+    "user_id": 12347,
+    "insight": "Test insight 3: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:08:44.634931",
+    "user_id": 12348,
+    "insight": "Test insight 4: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:09:09.990432",
+    "user_id": 12349,
+    "insight": "Test insight 5: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:09:23.950917",
+    "user_id": 12350,
+    "insight": "Test insight 6: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:09:27.095417",
+    "user_id": 12351,
+    "insight": "Test insight 7: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  }
+]

@@ -28,6 +28,8 @@ class DualVoiceHandler:
         if elevenlabs_config.get('api_key') and elevenlabs_config.get('enable_speech_to_text', True):
             self.elevenlabs_available = True
             self.elevenlabs_api_key = elevenlabs_config['api_key']
+            self.elevenlabs_language = elevenlabs_config.get('language', 'auto')
+            self.supported_languages = elevenlabs_config.get('supported_languages', ['en', 'ru'])
             self.logger.info("ElevenLabs Scribe configured as primary transcription service")
         else:
             self.elevenlabs_available = False
@@ -40,6 +42,8 @@ class DualVoiceHandler:
             self.openai_client = OpenAI(api_key=openai_config['api_key'])
             self.max_file_size = openai_config.get('max_file_size', 25)
             self.supported_formats = openai_config.get('supported_formats', ['mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'wav', 'webm'])
+            self.openai_language = openai_config.get('language', 'auto')
+            self.supported_languages = openai_config.get('supported_languages', ['en', 'ru'])
             self.logger.info("OpenAI Whisper configured as fallback transcription service")
         else:
             self.openai_available = False
@@ -47,6 +51,34 @@ class DualVoiceHandler:
         
         if not self.elevenlabs_available and not self.openai_available:
             self.logger.error("No transcription services configured")
+    
+    def _detect_language(self, text: str) -> str:
+        """Detect if text is Russian or English. Only supports these two languages."""
+        # Russian character set
+        russian_chars = set('абвгдеёжзийклмнопрстуфхцчшщъыьэюя')
+        # Common Polish characters that should be rejected
+        polish_chars = set('ąćęłńóśźż')
+        
+        text_lower = text.lower()
+        
+        # Check for Polish characters - if found, treat as unsupported
+        if any(char in text_lower for char in polish_chars):
+            return 'unsupported'
+        
+        # Count Russian characters
+        russian_count = sum(1 for char in text_lower if char in russian_chars)
+        total_chars = len([c for c in text_lower if c.isalpha()])
+        
+        if total_chars == 0:
+            return 'unknown'
+        
+        russian_ratio = russian_count / total_chars
+        
+        # If more than 30% of characters are Russian, consider it Russian
+        if russian_ratio > 0.3:
+            return 'ru'
+        else:
+            return 'en'
     
     async def handle_voice_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle incoming voice messages with dual transcription services."""
@@ -82,18 +114,31 @@ class DualVoiceHandler:
             
             transcription = result['transcription']
             service = result.get('service', 'unknown')
+            detected_language = self._detect_language(transcription)
             
-            # Show transcription with service indicator
+            # Handle unsupported languages
+            if detected_language == 'unsupported':
+                await processing_msg.edit_text(
+                    "❌ **Unsupported Language Detected**\n\n"
+                    "I only support English and Russian languages. "
+                    "Please try speaking in English or Russian.\n\n"
+                    f"*Transcription:* \"{transcription}\"",
+                    parse_mode='Markdown'
+                )
+                return
+            
+            # Show transcription with service indicator and language
+            language_emoji = "🇷🇺" if detected_language == 'ru' else "🇺🇸" if detected_language == 'en' else "🌍"
             service_indicator = "🎤 Voice Message Transcribed"
             if service == 'elevenlabs_scribe':
-                service_indicator = "🎤 Voice Message Transcribed (ElevenLabs Scribe)"
+                service_indicator = f"🎤 Voice Message Transcribed (ElevenLabs Scribe) {language_emoji}"
             elif service == 'openai_whisper':
-                service_indicator = "🎤 Voice Message Transcribed (OpenAI Whisper)"
+                service_indicator = f"🎤 Voice Message Transcribed (OpenAI Whisper) {language_emoji}"
             
             await processing_msg.edit_text(f"{service_indicator}:\n\n\"{transcription}\"")
             
-            # Process the transcription for commands
-            await self._process_transcription(update, context, transcription)
+            # Process the transcription for commands with language awareness
+            await self._process_transcription(update, context, transcription, detected_language)
             
         except Exception as e:
             self.logger.error(f"Error handling voice message: {e}")
@@ -195,11 +240,62 @@ class DualVoiceHandler:
             self.logger.error(f"Error transcribing with OpenAI: {e}")
             return None
     
-    async def _process_transcription(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
-        """Process the transcribed text for commands and actions."""
+    async def _process_transcription(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str, language: str = 'en'):
+        """Process the transcribed text for commands and actions with language support."""
         try:
             text_lower = text.lower().strip()
             
+            # Process based on detected language
+            if language == 'ru':
+                await self._process_russian_text(update, context, text, text_lower)
+            else:
+                await self._process_english_text(update, context, text, text_lower)
+            
+        except Exception as e:
+            self.logger.error(f"Error processing transcription: {e}")
+            await update.message.reply_text(f"❌ Error processing command: {str(e)}")
+    
+    async def _process_russian_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str, text_lower: str):
+        """Process Russian text for commands and actions."""
+        try:
+            # Russian patterns for task management
+            if any(keyword in text_lower for keyword in ['задачи', 'задача', 'дела', 'дело', 'план', 'планы', 'главные']):
+                await self._handle_russian_task_command(update, context, text)
+                return
+            
+            # Russian patterns for health tracking
+            if any(keyword in text_lower for keyword in ['шаги', 'вес', 'сон', 'настроение', 'энергия', 'вода', 'упражнения']):
+                await self._handle_russian_health_command(update, context, text)
+                return
+            
+            # Russian patterns for learning
+            if any(keyword in text_lower for keyword in ['изучил', 'учил', 'курс', 'книга', 'статья', 'видео', 'урок']):
+                await self._handle_russian_learning_command(update, context, text)
+                return
+            
+            # Russian patterns for notes
+            if any(keyword in text_lower for keyword in ['заметка', 'запомни', 'идея', 'мысль', 'записать']):
+                await self._handle_russian_note_command(update, context, text)
+                return
+            
+            # Default response for unrecognized Russian commands
+            await update.message.reply_text(
+                "🤔 Я услышал вас, но не уверен, что вы хотите сделать. "
+                "Я поддерживаю только русский и английский языки.\n\n"
+                "Попробуйте сказать:\n"
+                "• \"Какие у меня задачи сегодня?\" (управление задачами)\n"
+                "• \"Я прошел 8500 шагов\" (отслеживание здоровья)\n"
+                "• \"Изучил Python\" (отслеживание обучения)\n"
+                "• \"Заметка: отличная идея...\" (быстрая заметка)"
+            )
+            
+        except Exception as e:
+            self.logger.error(f"Error processing Russian text: {e}")
+            await update.message.reply_text(f"❌ Ошибка обработки команды: {str(e)}")
+    
+    async def _process_english_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str, text_lower: str):
+        """Process English text for commands and actions."""
+        try:
             # Health tracking
             if any(keyword in text_lower for keyword in ['steps', 'weight', 'sleep', 'mood', 'energy', 'water', 'exercise']):
                 await self._handle_health_command(update, context, text)
@@ -220,9 +316,11 @@ class DualVoiceHandler:
                 await self._handle_note_command(update, context, text)
                 return
             
-            # Default response for unrecognized commands
+            # Default response for unrecognized English commands
             await update.message.reply_text(
-                "🤔 I heard you, but I'm not sure what you'd like me to do. Try saying:\n"
+                "🤔 I heard you, but I'm not sure what you'd like me to do. "
+                "I only support English and Russian languages.\n\n"
+                "Try saying:\n"
                 "• \"I took 8500 steps today\" (health tracking)\n"
                 "• \"I learned about Python\" (learning tracking)\n"
                 "• \"Add task: finish project\" (task management)\n"
@@ -230,7 +328,7 @@ class DualVoiceHandler:
             )
             
         except Exception as e:
-            self.logger.error(f"Error processing transcription: {e}")
+            self.logger.error(f"Error processing English text: {e}")
             await update.message.reply_text(f"❌ Error processing command: {str(e)}")
     
     async def _handle_health_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
@@ -370,6 +468,59 @@ class DualVoiceHandler:
         except Exception as e:
             self.logger.error(f"Error handling note command: {e}")
             await update.message.reply_text(f"❌ Error saving note: {str(e)}")
+    
+    # Russian command handlers
+    async def _handle_russian_task_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
+        """Handle Russian task-related voice commands."""
+        try:
+            # Check if asking for tasks
+            if any(keyword in text.lower() for keyword in ['какие', 'мои', 'задачи', 'сегодня', 'главные']):
+                # Get top 3 tasks
+                from services.task_integration import get_top_3_tasks, format_tasks_for_morning_routine
+                
+                tasks_result = get_top_3_tasks()
+                if tasks_result['success'] and tasks_result['tasks']:
+                    tasks_text = format_tasks_for_morning_routine(tasks_result['tasks'])
+                    await update.message.reply_text(
+                        f"📝 **Ваши главные задачи на сегодня:**\n\n{tasks_text}",
+                        parse_mode='Markdown'
+                    )
+                else:
+                    await update.message.reply_text(
+                        "📝 **Задачи на сегодня:**\n\n"
+                        "У вас нет конкретных задач на сегодня. "
+                        "Возможно, стоит спланировать день или поработать над долгосрочными целями!"
+                    )
+            else:
+                await update.message.reply_text(
+                    "✅ Команда по задачам получена. "
+                    "Попробуйте сказать \"Какие у меня задачи сегодня?\" для получения списка задач."
+                )
+                
+        except Exception as e:
+            self.logger.error(f"Error handling Russian task command: {e}")
+            await update.message.reply_text(f"❌ Ошибка обработки команды: {str(e)}")
+    
+    async def _handle_russian_health_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
+        """Handle Russian health-related voice commands."""
+        await update.message.reply_text(
+            "✅ Команда по здоровью получена. "
+            "Функция отслеживания здоровья на русском языке будет добавлена в следующих обновлениях."
+        )
+    
+    async def _handle_russian_learning_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
+        """Handle Russian learning-related voice commands."""
+        await update.message.reply_text(
+            "✅ Команда по обучению получена. "
+            "Функция отслеживания обучения на русском языке будет добавлена в следующих обновлениях."
+        )
+    
+    async def _handle_russian_note_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
+        """Handle Russian note-related voice commands."""
+        await update.message.reply_text(
+            "✅ Заметка сохранена. "
+            "Функция заметок на русском языке будет добавлена в следующих обновлениях."
+        )
 
 
 # Global handler instance

@@ -1,0 +1,35 @@
+{
+  "daily_checkins": {
+    "2025-09-11": {
+      "shadow_aspect": null,
+      "pattern_observed": null,
+      "integration_insight": null,
+      "timestamp": "2025-09-11T01:17:04.106839"
+    }
+  },
+  "weekly_explorations": {
+    "2025-09-08": {
+      "archetype": null,
+      "light_aspects": [],
+      "shadow_aspects": [],
+      "integration_practice": null,
+      "timestamp": "2025-09-11T01:17:17.100443"
+    }
+  },
+  "monthly_ceremonies": {},
+  "quarterly_dives": {},
+  "current_focus": {},
+  "insights": [
+    {
+      "insight": null,
+      "category": "general",
+      "timestamp": "2025-09-11T00:42:24.320616"
+    },
+    {
+      "insight": null,
+      "category": "general",
+      "timestamp": "2025-09-11T01:17:10.112220"
+    }
+  ],
+  "integration_wins": []
+}

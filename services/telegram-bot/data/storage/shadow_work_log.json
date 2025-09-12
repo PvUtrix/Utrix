@@ -1,0 +1,44 @@
+[
+  {
+    "timestamp": "2025-09-11T01:16:10.334254",
+    "user_id": 12352,
+    "insight": "Test insight 8: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:16:15.795131",
+    "user_id": 12353,
+    "insight": "Test insight 9: I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:16:29.980953",
+    "user_id": 12354,
+    "insight": "I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:16:29.981470",
+    "user_id": 12354,
+    "insight": "I feel defensive when criticized",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:18:34.889528",
+    "user_id": 12345,
+    "insight": "I noticed I avoid difficult conversations",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:18:34.890166",
+    "user_id": 12345,
+    "insight": "I feel defensive when criticized",
+    "type": "shadow_work_insight"
+  },
+  {
+    "timestamp": "2025-09-11T01:18:34.890395",
+    "user_id": 12345,
+    "insight": "I try to control outcomes too much",
+    "type": "shadow_work_insight"
+  }
+]

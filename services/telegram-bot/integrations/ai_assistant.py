@@ -58,6 +58,24 @@ class AIAssistant:
     
     async def get_response(self, message: str, user_id: int) -> str:
         """Get an intelligent response to a user message."""
+        
+        # Try multilingual processing first
+        try:
+            from .simple_multilingual_agent import SimpleMultilingualAgent
+            
+            multilingual_agent = SimpleMultilingualAgent(self.config)
+            result = await multilingual_agent.process_message(message, user_id, "text")
+            
+            if result["confidence"] > 0.5:
+                self.logger.info(f"✅ Multilingual processed message with intent: {result['intent']} (confidence: {result['confidence']})")
+                return result["response_text"]
+            else:
+                self.logger.info(f"⚠️ Low confidence result from multilingual: {result['confidence']}, falling back to local processing")
+                
+        except Exception as e:
+            self.logger.warning(f"Multilingual processing failed, falling back to local: {e}")
+        
+        # Fallback to original logic
         message_lower = message.lower()
         
         # Check for specific question types

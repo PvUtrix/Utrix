@@ -5,9 +5,23 @@
       "pattern_observed": null,
       "integration_insight": null,
       "timestamp": "2025-08-23T04:01:37.788661"
+    },
+    "2025-09-11": {
+      "shadow_aspect": null,
+      "pattern_observed": null,
+      "integration_insight": null,
+      "timestamp": "2025-09-11T00:05:40.901359"
     }
   },
-  "weekly_explorations": {},
+  "weekly_explorations": {
+    "2025-09-08": {
+      "archetype": null,
+      "light_aspects": [],
+      "shadow_aspects": [],
+      "integration_practice": null,
+      "timestamp": "2025-09-11T00:05:42.578025"
+    }
+  },
   "monthly_ceremonies": {},
   "quarterly_dives": {},
   "current_focus": {},

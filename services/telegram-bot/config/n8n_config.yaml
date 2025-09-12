@@ -1,0 +1,32 @@
+# n8n Integration Configuration
+n8n:
+  # Your n8n instance URL
+  base_url: "http://localhost:5678"  # Update this to your n8n instance URL
+  
+  # Authentication (choose one)
+  # Option 1: API Key (recommended)
+  api_key: ""  # Your n8n API key
+  
+  # Option 2: Username/Password (if no API key)
+  username: ""  # Your n8n username
+  password: ""  # Your n8n password
+  
+  # Webhook configuration
+  webhook_path: "multilingual-intent"
+  
+  # Timeout settings
+  timeout: 10  # seconds
+  
+  # Fallback settings
+  fallback_enabled: true  # Enable local processing if n8n is unavailable
+  
+  # OpenAI configuration for n8n workflow
+  openai:
+    api_key: ""  # Your OpenAI API key for the n8n workflow
+    model: "gpt-4o"
+    temperature: 0.3
+    max_tokens: 1000
+
+# Paths for user context data
+paths:
+  base_path: "../../../"  # Path to your personal system root

@@ -88,6 +88,9 @@ class PersonalSystemBot:
         self.application.add_handler(CommandHandler("shadow_checkin", self._with_auth(shadow_work_handlers.shadow_checkin_command)))
         self.application.add_handler(CommandHandler("shadow_log", self._with_auth(shadow_work_handlers.shadow_log_command)))
         self.application.add_handler(CommandHandler("shadow_prompt", self._with_auth(shadow_work_handlers.shadow_prompt_command)))
+        self.application.add_handler(CommandHandler("shadow_report", self._with_auth(shadow_work_handlers.shadow_report_command)))
+        self.application.add_handler(CommandHandler("shadow_reminders", self._with_auth(shadow_work_handlers.shadow_reminders_command)))
+        self.application.add_handler(CommandHandler("shadow_focus", self._with_auth(shadow_work_handlers.shadow_focus_command)))
         
         # Journal and notes
         self.application.add_handler(CommandHandler("journal", self._with_auth(journal_handlers.journal_command)))

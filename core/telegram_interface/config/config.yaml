@@ -60,13 +60,17 @@ openai:
   max_file_size: 25  # Maximum audio file size in MB
   supported_formats: ["mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"]
   enable_voice_transcription: true
+  language: "auto"  # Language detection: "auto", "en", "ru" (only English and Russian supported)
+  supported_languages: ["en", "ru"]  # ONLY English and Russian are supported - no other languages
 
 # ElevenLabs Configuration
 elevenlabs:
   api_key: "sk_9382e4b7a49fa13e8334898360f9e3bd75ee67cfb27492fc"  # Your ElevenLabs API key for Scribe (speech-to-text)
   voice_id: "21m00Tcm4TlvDq8ikWAM"  # Default voice ID for text-to-speech
   enable_speech_to_text: true  # Set to true to use ElevenLabs Scribe for transcription
-  enable_text_to_speech: false  # Set to true to enable text-to-speech features
+  enable_text_to_speech: true  # Set to true to enable text-to-speech features
+  language: "auto"  # Language detection: "auto", "en", "ru" (only English and Russian supported)
+  supported_languages: ["en", "ru"]  # ONLY English and Russian are supported - no other languages
 
 # Serverless Configuration
 serverless:

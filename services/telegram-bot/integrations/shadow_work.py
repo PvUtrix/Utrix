@@ -89,7 +89,10 @@ class ShadowWorkIntegration:
             }
             
             # Save to shadow work log file
-            log_file = Path("data/storage/shadow_work_log.json")
+            # Use absolute path from the telegram bot directory
+            current_dir = Path(__file__).parent.parent
+            log_file = current_dir / "data" / "storage" / "shadow_work_log.json"
+            
             log_file.parent.mkdir(parents=True, exist_ok=True)
             
             # Load existing logs
@@ -116,7 +119,9 @@ class ShadowWorkIntegration:
     def get_recent_insights(self, user_id: int, limit: int = 5) -> List[Dict[str, Any]]:
         """Get recent shadow work insights for a user."""
         try:
-            log_file = Path("data/storage/shadow_work_log.json")
+            # Use absolute path from the telegram bot directory
+            current_dir = Path(__file__).parent.parent
+            log_file = current_dir / "data" / "storage" / "shadow_work_log.json"
             
             if not log_file.exists():
                 return []
@@ -137,7 +142,9 @@ class ShadowWorkIntegration:
     def get_insight_stats(self, user_id: int) -> Dict[str, Any]:
         """Get shadow work statistics for a user."""
         try:
-            log_file = Path("data/storage/shadow_work_log.json")
+            # Use absolute path from the telegram bot directory
+            current_dir = Path(__file__).parent.parent
+            log_file = current_dir / "data" / "storage" / "shadow_work_log.json"
             
             if not log_file.exists():
                 return {

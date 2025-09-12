@@ -1,6 +1,10 @@
 # Personal System Telegram Bot - Production Requirements
 # Optimized for Coolify deployment
 
+# Build tools (required for numpy compilation)
+setuptools>=65.0.0
+wheel>=0.38.0
+
 # Core Telegram Bot
 python-telegram-bot==20.7
 
@@ -19,7 +23,7 @@ aiohttp>=3.8.0
 
 # Data processing (minimal for production)
 pandas==2.1.4
-numpy==1.24.3
+numpy>=1.24.0
 
 # Voice processing and AI (essential only)
 openai==1.3.0

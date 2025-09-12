@@ -1,0 +1,27 @@
+{
+  "services": [
+    {
+      "name": "Telegram Bot",
+      "url": "https://your-telegram-bot-domain.com",
+      "health_endpoint": "/health",
+      "description": "Personal Telegram bot for automation and notifications"
+    },
+    {
+      "name": "Personal API", 
+      "url": "https://your-personal-api-domain.com",
+      "health_endpoint": "/health",
+      "description": "FastAPI-based personal system API"
+    },
+    {
+      "name": "Health Dashboard",
+      "url": "https://your-health-dashboard-domain.com", 
+      "health_endpoint": "/health",
+      "description": "System health monitoring dashboard"
+    }
+  ],
+  "monitoring": {
+    "check_interval": 30,
+    "timeout": 10,
+    "retry_attempts": 3
+  }
+}

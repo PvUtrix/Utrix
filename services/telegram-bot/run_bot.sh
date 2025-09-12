@@ -43,13 +43,21 @@ source venv/bin/activate
 # Check if required packages are installed
 echo -e "${YELLOW}📦 Checking dependencies...${NC}"
 
-# Check if requirements.txt exists
-if [ -f "requirements.txt" ]; then
+# Upgrade pip and install build tools first
+echo -e "${YELLOW}🔧 Upgrading pip and installing build tools...${NC}"
+pip install --upgrade pip setuptools wheel
+
+# Check if requirements file exists (try minimal first)
+if [ -f "requirements-minimal.txt" ]; then
+    echo -e "${YELLOW}📥 Installing minimal dependencies from requirements-minimal.txt...${NC}"
+    pip install -r requirements-minimal.txt
+    echo -e "${GREEN}✅ Minimal dependencies installed${NC}"
+elif [ -f "requirements.txt" ]; then
     echo -e "${YELLOW}📥 Installing dependencies from requirements.txt...${NC}"
     pip install -r requirements.txt
     echo -e "${GREEN}✅ All dependencies installed${NC}"
 else
-    echo -e "${RED}❌ requirements.txt not found${NC}"
+    echo -e "${RED}❌ No requirements file found${NC}"
     exit 1
 fi
 

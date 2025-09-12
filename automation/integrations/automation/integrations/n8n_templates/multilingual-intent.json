@@ -1,0 +1,145 @@
+{
+  "name": "Multilingual Intent Detection",
+  "nodes": [
+    {
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "multilingual-intent",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "extract-data",
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "jsCode": "\n// Extract data from webhook\nconst text = $input.first().json.text;\nconst user_id = $input.first().json.user_id;\nconst context = $input.first().json.context;\nconst language_hint = $input.first().json.language_hint;\n\n// Prepare data for AI processing\nreturn {\n  text: text,\n  user_id: user_id,\n  context: context,\n  language_hint: language_hint,\n  timestamp: new Date().toISOString()\n};\n            "
+      }
+    },
+    {
+      "id": "ai-intent-detection",
+      "name": "AI Intent Detection",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 1000
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a multilingual personal assistant that understands user intent in multiple languages. Analyze the user's message and determine their intent.\n\nSupported intents:\n- tasks: Questions about tasks, projects, what to work on today\n- health: Health tracking, fitness, wellness questions\n- learning: Learning progress, courses, education\n- shadow_work: Shadow work, archetypes, personal development\n- journal: Journal entries, patterns, insights\n- goals: Goals, progress, achievements\n- values: Core values, life direction\n- help: General help, what can you do\n- unknown: Unclear or unrecognized intent\n\nRespond with a JSON object containing:\n- intent: The detected intent\n- confidence: Confidence score (0-1)\n- language: Detected language (en, ru, etc.)\n- response: A helpful response in the user's language\n- action: Any specific action to take\n- reasoning: Brief explanation of the intent detection"
+            },
+            {
+              "role": "user",
+              "content": "User message: \"{{ $json.text }}\"\nUser context: {{ JSON.stringify($json.context) }}\nLanguage hint: {{ $json.language_hint }}\n\nDetect the intent and provide a helpful response in the user's language."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process-response",
+      "name": "Process Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "jsCode": "\n// Parse AI response and structure the output\nconst aiResponse = $input.first().json.choices[0].message.content;\n\nlet parsedResponse;\ntry {\n  // Try to parse as JSON first\n  parsedResponse = JSON.parse(aiResponse);\n} catch (e) {\n  // If not JSON, create a structured response\n  parsedResponse = {\n    intent: \"unknown\",\n    confidence: 0.5,\n    language: \"en\",\n    response: aiResponse,\n    action: {},\n    reasoning: \"Could not parse AI response as JSON\"\n  };\n}\n\n// Add metadata\nparsedResponse.metadata = {\n  processed_at: new Date().toISOString(),\n  user_id: $('Extract Data').first().json.user_id,\n  original_text: $('Extract Data').first().json.text\n};\n\nreturn parsedResponse;\n            "
+      }
+    },
+    {
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      }
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "extract-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract-data": {
+      "main": [
+        [
+          {
+            "node": "ai-intent-detection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ai-intent-detection": {
+      "main": [
+        [
+          {
+            "node": "process-response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "process-response": {
+      "main": [
+        [
+          {
+            "node": "webhook-response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -157,6 +157,39 @@ class ServerlessVoiceHandler:
     async def _process_transcription(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
         """Process the transcribed text for commands and actions."""
         try:
+            # Try multilingual processing first
+            try:
+                from integrations.simple_multilingual_agent import SimpleMultilingualAgent
+                
+                user_id = context.user_data.get('user_id', 0)
+                multilingual_agent = SimpleMultilingualAgent(self.config)
+                result = await multilingual_agent.process_message(text, user_id, "voice")
+                
+                if result["confidence"] > 0.3:  # Lower threshold for voice commands
+                    self.logger.info(f"✅ Multilingual processed voice command with intent: {result['intent']} (confidence: {result['confidence']})")
+                    
+                    # Handle specific intents
+                    if result["intent"] == "tasks":
+                        await self._handle_task_command(update, context, text)
+                    elif result["intent"] == "health":
+                        await self._handle_health_command(update, context, text)
+                    elif result["intent"] == "learning":
+                        await self._handle_learning_command(update, context, text)
+                    elif result["intent"] == "shadow_work":
+                        await self._handle_shadow_work_command(update, context, text)
+                    elif result["intent"] == "journal":
+                        await self._handle_note_command(update, context, text)
+                    else:
+                        # Send the multilingual response
+                        await update.message.reply_text(result["response_text"])
+                    return
+                else:
+                    self.logger.info(f"⚠️ Low confidence result from multilingual: {result['confidence']}, falling back to English patterns")
+                    
+            except Exception as e:
+                self.logger.warning(f"Multilingual processing failed, falling back to English: {e}")
+            
+            # Fallback to English pattern matching
             text_lower = text.lower().strip()
             
             # Health tracking
@@ -334,6 +367,30 @@ class ServerlessVoiceHandler:
         except Exception as e:
             self.logger.error(f"Error handling note command: {e}")
             await update.message.reply_text(f"❌ Error saving note: {str(e)}")
+
+    async def _handle_shadow_work_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
+        """Handle shadow work-related voice commands."""
+        try:
+            # Extract shadow work content
+            shadow_content = text
+            
+            # Remove common prefixes
+            prefixes = ['shadow:', 'shadow work:', 'архетип:', 'тень:']
+            for prefix in prefixes:
+                if text.lower().startswith(prefix):
+                    shadow_content = text[len(prefix):].strip()
+                    break
+            
+            await update.message.reply_text(
+                f"🌙 Shadow Work Insight Logged\n\n"
+                f"Content: {shadow_content}\n"
+                f"Category: Voice Shadow Work\n\n"
+                f"💡 Remember: Your shadow is not your enemy. It's a part of you that needs to be seen, heard, and integrated with love and understanding."
+            )
+            
+        except Exception as e:
+            self.logger.error(f"Error handling shadow work command: {e}")
+            await update.message.reply_text(f"❌ Error saving shadow work insight: {str(e)}")
 
 
 # Global handler instance
