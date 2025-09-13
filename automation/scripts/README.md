@@ -255,10 +255,10 @@ python3 daily_operations/health/health_logger.py today
 
 ## 📚 Related Documentation
 
-- [Telegram Bot Integration](../core/telegram_interface/README.md)
-- [Automation Handlers](../core/telegram_interface/bot/handlers/automation_handlers.py)
-- [Button Integration Map](../core/telegram_interface/BUTTON_INTEGRATION_MAP.md)
-- [Implementation Roadmap](../core/telegram_interface/IMPLEMENTATION_ROADMAP.md)
+- [Telegram Bot Integration](../services/telegram-bot/README.md)
+- [Automation Handlers](../services/telegram-bot/bot/handlers/automation_handlers.py)
+- [Button Integration Map](../services/telegram-bot/BUTTON_INTEGRATION_MAP.md)
+- [Implementation Roadmap](../services/telegram-bot/IMPLEMENTATION_ROADMAP.md)
 
 ---
 

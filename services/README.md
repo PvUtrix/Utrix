@@ -7,8 +7,9 @@ This directory contains all deployable services for your personal system, organi
 ### 🤖 **Telegram Bot** (`telegram-bot/`)
 - **Purpose**: Primary user interface for your personal system
 - **Port**: 8000
-- **Features**: Voice commands, daily operations, automation integration
+- **Features**: Voice commands, LLM-powered intent parsing, daily operations, automation integration
 - **Deployment**: Coolify-ready with Docker Compose
+- **Latest Features**: Configurable LLM models, Russian/English support, complex command parsing
 
 ### 🔌 **Personal API** (`personal-api/`)
 - **Purpose**: Unified API interface for all personal data and services

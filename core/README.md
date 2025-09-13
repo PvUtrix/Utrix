@@ -24,7 +24,7 @@ This directory serves as the central hub for your personal development and life 
 - `workflows/` - Time-based workflow templates
 - `automation/scripts/` - Scripts that process core data
 - `config/global/` - Global system preferences
-- `core/telegram_interface/` - Primary interface for system interaction
+- Telegram interface moved to `services/telegram-bot/` - Primary interface for system interaction
 
 ## Last Updated
 2024-12-19 - Initial README creation

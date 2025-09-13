@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$SCRIPT_DIR"
-BOT_DIR="$PROJECT_ROOT/core/telegram_interface"
+BOT_DIR="$PROJECT_ROOT/services/telegram-bot"
 
 echo -e "${BLUE}🤖 Starting Personal System Telegram Bot${NC}"
 echo "Project root: $PROJECT_ROOT"
@@ -68,4 +68,4 @@ echo -e "${YELLOW}Press Ctrl+C to stop the bot${NC}"
 echo ""
 
 cd "$BOT_DIR"
-python bot/bot.py
+python main.py
