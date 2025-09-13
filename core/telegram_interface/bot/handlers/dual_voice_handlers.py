@@ -513,26 +513,44 @@ class DualVoiceHandler:
         try:
             # Extract task title from Russian text
             task_title = text
+            text_lower = text.lower()
             
-            # Remove common Russian prefixes
+            # Remove common Russian prefixes - check for exact matches first
             russian_prefixes = [
-                'надо добавить задачу',
-                'добавить задачу',
-                'создать задачу', 
-                'новая задача',
-                'добавь задачу',
-                'надо добавить',
-                'добавить',
-                'создать'
+                'надо добавить задачу,',
+                'надо добавить задачу ',
+                'добавить задачу,',
+                'добавить задачу ',
+                'создать задачу,',
+                'создать задачу ',
+                'новая задача,',
+                'новая задача ',
+                'добавь задачу ',
+                'надо добавить,',
+                'надо добавить ',
+                'добавить,',
+                'добавить ',
+                'создать,',
+                'создать '
             ]
             
+            # Try to find and remove the longest matching prefix
+            best_match = ""
+            best_length = 0
+            
             for prefix in russian_prefixes:
-                if text.lower().startswith(prefix):
-                    task_title = text[len(prefix):].strip()
-                    # Remove colon if present
-                    if task_title.startswith(':'):
-                        task_title = task_title[1:].strip()
-                    break
+                if text_lower.startswith(prefix) and len(prefix) > best_length:
+                    best_match = prefix
+                    best_length = len(prefix)
+            
+            if best_match:
+                task_title = text[len(best_match):].strip()
+            else:
+                # Fallback: try to find comma and take everything after it
+                if ',' in text:
+                    parts = text.split(',', 1)
+                    if len(parts) > 1:
+                        task_title = parts[1].strip()
             
             # Clean up the task title
             task_title = task_title.strip('.,!?')
