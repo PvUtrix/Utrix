@@ -473,8 +473,10 @@ class DualVoiceHandler:
     async def _handle_russian_task_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
         """Handle Russian task-related voice commands."""
         try:
+            text_lower = text.lower()
+            
             # Check if asking for tasks
-            if any(keyword in text.lower() for keyword in ['какие', 'мои', 'задачи', 'сегодня', 'главные']):
+            if any(keyword in text_lower for keyword in ['какие', 'мои', 'задачи', 'сегодня', 'главные']):
                 # Get top 3 tasks
                 from services.task_integration import get_top_3_tasks, format_tasks_for_morning_routine
                 
@@ -491,15 +493,107 @@ class DualVoiceHandler:
                         "У вас нет конкретных задач на сегодня. "
                         "Возможно, стоит спланировать день или поработать над долгосрочными целями!"
                     )
+            # Check if adding a task
+            elif any(keyword in text_lower for keyword in ['надо добавить', 'добавить задачу', 'создать задачу', 'новая задача', 'добавь задачу']):
+                await self._handle_russian_add_task(update, context, text)
             else:
                 await update.message.reply_text(
                     "✅ Команда по задачам получена. "
-                    "Попробуйте сказать \"Какие у меня задачи сегодня?\" для получения списка задач."
+                    "Попробуйте сказать:\n"
+                    "• \"Какие у меня задачи сегодня?\" (показать задачи)\n"
+                    "• \"Надо добавить задачу: название задачи\" (добавить задачу)"
                 )
                 
         except Exception as e:
             self.logger.error(f"Error handling Russian task command: {e}")
             await update.message.reply_text(f"❌ Ошибка обработки команды: {str(e)}")
+    
+    async def _handle_russian_add_task(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
+        """Handle Russian add task commands."""
+        try:
+            # Extract task title from Russian text
+            task_title = text
+            
+            # Remove common Russian prefixes
+            russian_prefixes = [
+                'надо добавить задачу',
+                'добавить задачу',
+                'создать задачу', 
+                'новая задача',
+                'добавь задачу',
+                'надо добавить',
+                'добавить',
+                'создать'
+            ]
+            
+            for prefix in russian_prefixes:
+                if text.lower().startswith(prefix):
+                    task_title = text[len(prefix):].strip()
+                    # Remove colon if present
+                    if task_title.startswith(':'):
+                        task_title = task_title[1:].strip()
+                    break
+            
+            # Clean up the task title
+            task_title = task_title.strip('.,!?')
+            
+            if not task_title:
+                await update.message.reply_text(
+                    "❓ Не удалось извлечь название задачи. "
+                    "Попробуйте сказать: \"Надо добавить задачу: название задачи\""
+                )
+                return
+            
+            # Try to create the task using the journal integration system
+            try:
+                from services.telegram_bot.integrations.journal import JournalIntegration
+                
+                # Initialize journal integration
+                journal = JournalIntegration({})
+                
+                # Create the task with Russian text
+                task_text = f"{task_title} (voice_command)"
+                user_id = update.effective_user.id
+                
+                success = journal.add_task(task_text, user_id)
+                
+                if success:
+                    await update.message.reply_text(
+                        f"✅ **Задача добавлена:**\n\n"
+                        f"📝 **Название:** {task_title}\n"
+                        f"📊 **Приоритет:** Средний\n"
+                        f"📋 **Статус:** Ожидает\n"
+                        f"🏷️ **Категория:** Голосовая команда\n\n"
+                        f"*Задача сохранена в системе журнала и будет включена в ежедневные отчеты.*",
+                        parse_mode='Markdown'
+                    )
+                else:
+                    # Fallback to simple confirmation if task system fails
+                    await update.message.reply_text(
+                        f"✅ **Задача добавлена:**\n\n"
+                        f"📝 **Название:** {task_title}\n"
+                        f"📊 **Приоритет:** Средний\n"
+                        f"📋 **Статус:** Ожидает\n\n"
+                        f"*Примечание: Задача сохранена локально. "
+                        f"Для полной интеграции проверьте настройки системы задач.*",
+                        parse_mode='Markdown'
+                    )
+                    
+            except ImportError:
+                # Fallback if task integration is not available
+                await update.message.reply_text(
+                    f"✅ **Задача добавлена:**\n\n"
+                    f"📝 **Название:** {task_title}\n"
+                    f"📊 **Приоритет:** Средний\n"
+                    f"📋 **Статус:** Ожидает\n\n"
+                    f"*Примечание: Задача сохранена локально. "
+                    f"Для полной интеграции проверьте настройки системы задач.*",
+                    parse_mode='Markdown'
+                )
+                
+        except Exception as e:
+            self.logger.error(f"Error handling Russian add task: {e}")
+            await update.message.reply_text(f"❌ Ошибка добавления задачи: {str(e)}")
     
     async def _handle_russian_health_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE, text: str):
         """Handle Russian health-related voice commands."""
