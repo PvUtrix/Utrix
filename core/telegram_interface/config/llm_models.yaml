@@ -1,0 +1,175 @@
+# LLM Model Configuration for Personal System Telegram Bot
+# Configure different models for different use cases to optimize cost and performance
+
+# Model configurations for different use cases
+llm_models:
+  # Voice command intent parsing - use fast, cheap model
+  voice_intent_parsing:
+    model: "gpt-4o-mini"
+    temperature: 0.1
+    max_tokens: 500
+    description: "Fast, cheap model for parsing voice command intents"
+    cost_tier: "low"
+  
+  # Voice response generation - quick responses
+  voice_response_generation:
+    model: "gpt-4o-mini"
+    temperature: 0.3
+    max_tokens: 300
+    description: "Quick responses for voice commands"
+    cost_tier: "low"
+  
+  # Text message intent parsing - slightly more sophisticated
+  text_intent_parsing:
+    model: "gpt-4o-mini"
+    temperature: 0.1
+    max_tokens: 400
+    description: "Parse text message intents"
+    cost_tier: "low"
+  
+  # Text response generation - high quality for text
+  text_response_generation:
+    model: "gpt-4o"
+    temperature: 0.7
+    max_tokens: 800
+    description: "High-quality responses for text messages"
+    cost_tier: "medium"
+  
+  # Shadow work analysis - deep, thoughtful analysis
+  shadow_work_analysis:
+    model: "gpt-4o"
+    temperature: 0.5
+    max_tokens: 1200
+    description: "Deep analysis of shadow work patterns"
+    cost_tier: "high"
+  
+  # Task analysis - efficient task processing
+  task_analysis:
+    model: "gpt-4o-mini"
+    temperature: 0.2
+    max_tokens: 600
+    description: "Analyze task patterns and priorities"
+    cost_tier: "low"
+  
+  # Health analysis - medical/wellness insights
+  health_analysis:
+    model: "gpt-4o-mini"
+    temperature: 0.3
+    max_tokens: 500
+    description: "Analyze health data and patterns"
+    cost_tier: "low"
+  
+  # Learning analysis - educational insights
+  learning_analysis:
+    model: "gpt-4o-mini"
+    temperature: 0.3
+    max_tokens: 500
+    description: "Analyze learning progress and recommendations"
+    cost_tier: "low"
+  
+  # General chat - conversational AI
+  general_chat:
+    model: "gpt-4o"
+    temperature: 0.8
+    max_tokens: 1000
+    description: "General conversational AI"
+    cost_tier: "medium"
+
+# Model selection strategies
+model_strategies:
+  # Cost optimization - prefer cheaper models
+  cost_optimized:
+    voice_intent_parsing: "gpt-4o-mini"
+    voice_response_generation: "gpt-4o-mini"
+    text_intent_parsing: "gpt-4o-mini"
+    text_response_generation: "gpt-4o-mini"
+    shadow_work_analysis: "gpt-4o-mini"
+    task_analysis: "gpt-4o-mini"
+    health_analysis: "gpt-4o-mini"
+    learning_analysis: "gpt-4o-mini"
+    general_chat: "gpt-4o-mini"
+  
+  # Performance optimization - use best models
+  performance_optimized:
+    voice_intent_parsing: "gpt-4o"
+    voice_response_generation: "gpt-4o"
+    text_intent_parsing: "gpt-4o"
+    text_response_generation: "gpt-4o"
+    shadow_work_analysis: "gpt-4o"
+    task_analysis: "gpt-4o"
+    health_analysis: "gpt-4o"
+    learning_analysis: "gpt-4o"
+    general_chat: "gpt-4o"
+  
+  # Balanced - mix of cost and performance
+  balanced:
+    voice_intent_parsing: "gpt-4o-mini"
+    voice_response_generation: "gpt-4o-mini"
+    text_intent_parsing: "gpt-4o-mini"
+    text_response_generation: "gpt-4o"
+    shadow_work_analysis: "gpt-4o"
+    task_analysis: "gpt-4o-mini"
+    health_analysis: "gpt-4o-mini"
+    learning_analysis: "gpt-4o-mini"
+    general_chat: "gpt-4o"
+
+# Cost tracking and limits
+cost_management:
+  # Daily cost limits (in USD)
+  daily_limits:
+    voice_intent_parsing: 0.50
+    voice_response_generation: 0.30
+    text_intent_parsing: 0.40
+    text_response_generation: 2.00
+    shadow_work_analysis: 3.00
+    task_analysis: 0.50
+    health_analysis: 0.50
+    learning_analysis: 0.50
+    general_chat: 2.00
+  
+  # Monthly cost limits (in USD)
+  monthly_limits:
+    total: 50.00
+    voice_commands: 15.00
+    text_messages: 20.00
+    analysis_tasks: 15.00
+  
+  # Fallback behavior when limits are reached
+  fallback_behavior: "use_fallback_parsing"  # or "reject_request" or "use_cheaper_model"
+
+# Model availability and fallbacks
+model_fallbacks:
+  # If primary model is unavailable, use these fallbacks
+  gpt-4o:
+    - "gpt-4o-mini"
+    - "gpt-4-turbo"
+    - "gpt-3.5-turbo"
+  
+  gpt-4o-mini:
+    - "gpt-3.5-turbo"
+    - "fallback_parsing"
+  
+  gpt-4-turbo:
+    - "gpt-4o"
+    - "gpt-4o-mini"
+    - "gpt-3.5-turbo"
+
+# Performance monitoring
+monitoring:
+  # Track response times
+  track_response_times: true
+  
+  # Track token usage
+  track_token_usage: true
+  
+  # Track costs
+  track_costs: true
+  
+  # Log model performance
+  log_performance: true
+  
+  # Alert thresholds
+  alerts:
+    high_cost_threshold: 5.00  # USD per day
+    slow_response_threshold: 5.0  # seconds
+    low_confidence_threshold: 0.5
